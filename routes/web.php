@@ -43,6 +43,9 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('/logout/submit', 'Backend\Auth\LoginController@logout')->name('admin.logout.submit');
 
     Route::get('/search-rda', 'Backend\AdminsController@searchRda')->name('admin.search.rda');
+    Route::get('/search-rda', 'Backend\InscripcionController@searchRda')->name('admin.searchInscripcion.rda');
+    Route::get('/get-turnos', 'Backend\InscripcionController@getTurnos')->name('admin.search.turnos');
+    Route::get('/formularioPdf/{pi_id}', 'Backend\InscripcionController@formularioPdf')->name('admin.inscripcion.formulariopdf');
     // Forget Password Routes
     Route::get('/password/reset', 'Backend\Auth\ForgetPasswordController@showLinkRequestForm')->name('admin.password.request');
     Route::post('/password/reset/submit', 'Backend\Auth\ForgetPasswordController@reset')->name('admin.password.update');
@@ -62,9 +65,7 @@ Route::group(['prefix' => 'configuracion'], function () {
     Route::post('storeduracion', 'Configuracion\ProgramaController@storeDuracion')->name('configuracion.programa.storeduracion');
     Route::post('storemodalidad', 'Configuracion\ProgramaController@storeModalidad')->name('configuracion.programa.storemodalidad');
 
-
     Route::resource('sede', 'Configuracion\SedeController', ['names' => 'configuracion.sede']);
-
 
 
 });

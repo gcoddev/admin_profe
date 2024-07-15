@@ -78,7 +78,7 @@
                                                 <th>Nro</th>
                                                 <th>Nombre</th>
                                                 <th>Estado</th>
-                                                <th>Fecha Creado</th>
+                                                <th>Fecha Actualizado</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -97,7 +97,7 @@
                                                 <th>Nro</th>
                                                 <th>Nombre</th>
                                                 <th>Estado</th>
-                                                <th>Fecha Creado</th>
+                                                <th>Fecha Actualizado</th>
                                             </tr>
                                         </tfoot>
                                     </table>

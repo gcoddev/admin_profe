@@ -79,7 +79,7 @@
                                                 <th>Codigo</th>
                                                 <th>Nombre</th>
                                                 <th>Estado</th>
-                                                <th>Fecha Creado</th>
+                                                <th>Fecha Actualizado</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -100,7 +100,7 @@
                                                 <th>Codigo</th>
                                                 <th>Nombre</th>
                                                 <th>Estado</th>
-                                                <th>Fecha Creado</th>
+                                                <th>Fecha Actualizado</th>
                                             </tr>
                                         </tfoot>
                                     </table>

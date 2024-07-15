@@ -79,7 +79,7 @@
                                                 <th>Nombre Distrito</th>
                                                 <th>Nombre Departamento</th>
                                                 <th>Estado</th>
-                                                <th>Fecha Creado</th>
+                                                <th>Fecha Actualizado</th>
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>
@@ -108,7 +108,7 @@
                                                 <th>Nombre Distrito</th>
                                                 <th>Nombre Departamento</th>
                                                 <th>Estado</th>
-                                                <th>Fecha Creado</th>
+                                                <th>Fecha Actualizado</th>
                                                 <th>Acciones</th>
                                             </tr>
                                         </tfoot>

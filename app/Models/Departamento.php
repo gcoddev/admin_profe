@@ -18,6 +18,7 @@ class Departamento extends Model
     // Permitir la asignación masiva en estos campos
     protected $fillable = [
         'dep_nombre',
+        'dep_abreviacion',
         'dep_estado',
     ];
 }

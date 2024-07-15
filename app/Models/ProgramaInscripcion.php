@@ -14,7 +14,6 @@ class ProgramaInscripcion extends Model
     protected $primaryKey = 'pi_id';
 
     protected $fillable = [
-        'pi_doc_preinscripcion',
         'pi_doc_digital',
         'pi_estado',
         'per_id',

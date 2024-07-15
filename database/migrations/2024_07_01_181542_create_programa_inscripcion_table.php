@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('programa_inscripcion', function (Blueprint $table) {
             $table->bigIncrements('pi_id');
-            $table->string('pi_doc_preinscripcion');
-            $table->string('pi_doc_digital');
+            $table->string('pi_doc_digital')->nullable();
             $table->enum('pi_estado', ['activo', 'inactivo','eliminado'])->default('activo');
             $table->bigInteger('per_id')
                 ->constrained()
