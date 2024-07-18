@@ -164,6 +164,17 @@ class RolePermissionSeeder extends Seeder
                     'inscripcion.view',
                     'inscripcion.edit',
                     'inscripcion.delete',
+                    'inscripcion.modulo',
+                    'inscripcion.pdf',
+                    'inscripcion.estado',
+                ]
+            ],
+            [
+                'group_name' => 'Baucher',
+                'permissions' => [
+                    'baucher.create',
+                    'baucher.view',
+                    'baucher.edit',
                 ]
             ],
             [

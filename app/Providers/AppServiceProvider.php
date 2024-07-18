@@ -27,5 +27,6 @@ class AppServiceProvider extends ServiceProvider
         if (env('REDIRECT_HTTPS')) {
             URL::forceScheme('https');
         }
+        //URL::forceScheme('https');
     }
 }

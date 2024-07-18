@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('programa_baucher', function (Blueprint $table) {
             $table->bigIncrements('pro_bau_id');
-            $table->bigInteger('pro_bau_imagen');
+            $table->string('pro_bau_imagen');
             $table->bigInteger('pro_bau_nro_deposito')->nullable()->default(null);
             $table->integer('pro_bau_monto');
             $table->date('pro_bau_fecha');

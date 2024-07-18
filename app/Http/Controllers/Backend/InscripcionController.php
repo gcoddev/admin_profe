@@ -8,8 +8,10 @@ use Illuminate\Support\Str; // Añade esta línea para importar la clase Str
 use App\Models\Programa;
 use App\Models\Sede;
 use App\Models\MapPersona;
+use App\Models\ProgramaBaucher;
 use App\Models\ProgramaInscripcion;
 use App\Models\ProgramaModalidad;
+use App\Models\ProgramaInscripcionEstado;
 use App\Models\ProgramaVersion;
 use App\Models\ProgramaRestriccion;
 use App\Models\ProgramaTipo;
@@ -21,7 +23,8 @@ use Spatie\Permission\Models\Permission;
 use Maatwebsite\Excel\Facades\Excel;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Barryvdh\DomPDF\Facade\Pdf;
-
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Redirect;
 
 class InscripcionController extends Controller
 {
@@ -58,11 +61,15 @@ class InscripcionController extends Controller
                         ->get();
         if (!is_null($this->user->pro_ids)) {
             $proIds = json_decode($this->user->pro_ids);
-            $inscripciones->whereIn('programa.pro_id', $proIds);
+            if (!empty($proIds)) { // Verifica si $sedesIds no está vacío
+                $inscripciones->whereIn('programa.pro_id', $proIds);
+            }
         }
         if (!is_null($this->user->sede_ids)) {
             $sedeIds = json_decode($this->user->sede_ids);
-            $inscripciones->whereIn('sede.sede_id', $sedeIds);
+            if (!empty($sedesIds)) { // Verifica si $sedesIds no está vacío
+                $inscripciones->whereIn('sede.sede_id', $sedeIds);
+            }
         }
 
         // Agregar verificación de restricciones
@@ -123,8 +130,9 @@ class InscripcionController extends Controller
                 }
             }
         }
+        $baucheres= ProgramaBaucher::all();
         //$mapPersona = MapPersona::paginate(100);
-        return view('backend.pages.inscripcion.index', compact(['inscripciones']));
+        return view('backend.pages.inscripcion.index', compact(['inscripciones','baucheres']));
     }
     /**
      * Show the form for creating a new resource.
@@ -137,13 +145,17 @@ class InscripcionController extends Controller
         // Obtener todas las sedes filtradas por sede_ids del usuario
         $sede = Sede::when($this->user->sede_ids, function ($query) {
             $sedeIds = json_decode($this->user->sede_ids);
-            $query->whereIn('sede_id', $sedeIds);
+            if (!empty($sedesIds)) { // Verifica si $sedesIds no está vacío
+                $query->whereIn('sede_id', $sedeIds);
+            }
         })->get();
 
         // Obtener todos los programas filtrados por pro_ids del usuario
         $programa = Programa::when($this->user->pro_ids, function ($query) {
             $proIds = json_decode($this->user->pro_ids);
-            $query->whereIn('pro_id', $proIds);
+            if (!empty($proIds)) { // Verifica si $sedesIds no está vacío
+                $query->whereIn('pro_id', $proIds);
+            }
         })->get();
 
         return view('backend.pages.inscripcion.create', compact('sede','programa'));
@@ -252,12 +264,10 @@ class InscripcionController extends Controller
         // Crear la inscripción
         $inscripcion = new ProgramaInscripcion();
         $inscripcion->per_id = $persona->per_id; // Asignar el per_id obtenido
-        $inscripcion->pi_doc_preinscripcion = "preinscripcion.pdf"; // Asignar el per_id obtenido
-        $inscripcion->pi_doc_digital = "doc_digital.pdf"; // Asignar el per_id obtenido
         $inscripcion->pro_id = $request->pro_id;
         $inscripcion->pro_tur_id = $request->pro_tur_id;
         $inscripcion->sede_id = $request->sede_id;
-        $inscripcion->pie_id = 2;
+        $inscripcion->pie_id = 1;
         // Añadir otros campos según tu estructura de datos
 
         // Guardar la inscripción
@@ -349,56 +359,210 @@ class InscripcionController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit(string $pi_id)
-{
-    if (is_null($this->user) || !$this->user->can('inscripcion.edit')) {
-        abort(403, 'Sorry !! You are Unauthorized to edit any admin !');
+    {
+        if (is_null($this->user) || !$this->user->can('inscripcion.edit')) {
+            abort(403, 'Sorry !! You are Unauthorized to edit any admin !');
+        }
+
+        $pi_id = decrypt($pi_id);
+
+        // Obtener todas las sedes filtradas por sede_ids del usuario
+        $sede = Sede::when($this->user->sede_ids, function ($query) {
+            $sedeIds = json_decode($this->user->sede_ids);
+            if (!empty($sedesIds)) { // Verifica si $sedesIds no está vacío
+                $query->whereIn('sede_id', $sedeIds);
+            }
+        })->get();
+
+        // Obtener todos los programas filtrados por pro_ids del usuario
+        $programa = Programa::when($this->user->pro_ids, function ($query) {
+            $proIds = json_decode($this->user->pro_ids);
+            if (!empty($proIds)) { // Verifica si $sedesIds no está vacío
+                $query->whereIn('pro_id', $proIds);
+            }
+        })->get();
+
+        // Obtener las inscripciones filtradas por pi_id
+        $inscripcion = DB::table('programa_inscripcion')
+            ->join('map_persona', 'programa_inscripcion.per_id', '=', 'map_persona.per_id')
+            ->join('map_especialidad', 'map_persona.esp_id', '=', 'map_especialidad.esp_id')
+            ->join('map_cargo', 'map_persona.car_id', '=', 'map_cargo.car_id')
+            ->join('map_nivel', 'map_persona.niv_id', '=', 'map_nivel.niv_id')
+            ->join('map_categoria', 'map_persona.cat_id', '=', 'map_categoria.cat_id')
+            ->join('map_subsistema', 'map_persona.sub_id', '=', 'map_subsistema.sub_id')
+            ->join('genero', 'map_persona.gen_id', '=', 'genero.gen_id')
+            ->join('programa', 'programa_inscripcion.pro_id', '=', 'programa.pro_id')
+            ->join('programa_turno', 'programa_inscripcion.pro_tur_id', '=', 'programa_turno.pro_tur_id')
+            ->join('sede', 'programa_inscripcion.sede_id', '=', 'sede.sede_id')
+            ->join('programa_inscripcion_estado', 'programa_inscripcion.pie_id', '=', 'programa_inscripcion_estado.pie_id')
+            ->where('programa_inscripcion.pi_id', $pi_id) // Filtrar por pi_id
+            ->select('programa_inscripcion.*', 'map_persona.*', 'map_especialidad.esp_nombre', 'map_cargo.car_nombre',
+                'programa.pro_nombre', 'programa.pro_costo', 'map_subsistema.sub_nombre', 'map_nivel.niv_nombre',
+                'map_categoria.cat_nombre', 'genero.gen_nombre',
+                'programa_turno.pro_tur_nombre', 'sede.sede_nombre', 'programa_inscripcion_estado.pie_nombre')
+            ->first();
+        // Obtener los bauchers relacionados con la inscripción filtrada por pi_id
+        $bauchers = ProgramaBaucher::where('pi_id', $pi_id)->get();
+        $inscripcionestado = ProgramaInscripcionEstado::all();
+        return view('backend.pages.inscripcion.edit', compact('inscripcion', 'programa', 'sede', 'bauchers','inscripcionestado'));
     }
-
-    $pi_id = decrypt($pi_id);
-
-    // Obtener todas las sedes filtradas por sede_ids del usuario
-    $sede = Sede::when($this->user->sede_ids, function ($query) {
-        $sedeIds = json_decode($this->user->sede_ids);
-        $query->whereIn('sede_id', $sedeIds);
-    })->get();
-
-    // Obtener todos los programas filtrados por pro_ids del usuario
-    $programa = Programa::when($this->user->pro_ids, function ($query) {
-        $proIds = json_decode($this->user->pro_ids);
-        $query->whereIn('pro_id', $proIds);
-    })->get();
-
-    // Obtener las inscripciones filtradas por pi_id
-    $inscripcion = DB::table('programa_inscripcion')
-        ->join('map_persona', 'programa_inscripcion.per_id', '=', 'map_persona.per_id')
-        ->join('map_especialidad', 'map_persona.esp_id', '=', 'map_especialidad.esp_id')
-        ->join('map_cargo', 'map_persona.car_id', '=', 'map_cargo.car_id')
-        ->join('map_nivel', 'map_persona.niv_id', '=', 'map_nivel.niv_id')
-        ->join('map_categoria', 'map_persona.cat_id', '=', 'map_categoria.cat_id')
-        ->join('map_subsistema', 'map_persona.sub_id', '=', 'map_subsistema.sub_id')
-        ->join('genero', 'map_persona.gen_id', '=', 'genero.gen_id')
-        ->join('programa', 'programa_inscripcion.pro_id', '=', 'programa.pro_id')
-        ->join('programa_turno', 'programa_inscripcion.pro_tur_id', '=', 'programa_turno.pro_tur_id')
-        ->join('sede', 'programa_inscripcion.sede_id', '=', 'sede.sede_id')
-        ->join('programa_inscripcion_estado', 'programa_inscripcion.pie_id', '=', 'programa_inscripcion_estado.pie_id')
-        ->where('programa_inscripcion.pi_id', $pi_id) // Filtrar por pi_id
-        ->select('programa_inscripcion.*', 'map_persona.*', 'map_especialidad.esp_nombre', 'map_cargo.car_nombre',
-            'programa.pro_nombre', 'programa.pro_costo', 'map_subsistema.sub_nombre', 'map_nivel.niv_nombre',
-            'map_categoria.cat_nombre', 'genero.gen_nombre',
-            'programa_turno.pro_tur_nombre', 'sede.sede_nombre', 'programa_inscripcion_estado.pie_nombre')
-        ->first();
-
-    return view('backend.pages.inscripcion.edit', compact('inscripcion', 'programa', 'sede'));
-}
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
     {
-        //
-    }
+        $inscripcionId = decrypt($id); // Asegúrate de que $id sea el ID correcto de la inscripción
 
+        // Validación de los datos del formulario
+        $request->validate([
+            'per_rda' => 'required|numeric',
+            'nombre' => 'required|string',
+            'apellidos' => 'required|string',
+            'per_celular' => ['required', 'digits:8', 'regex:/^[67]\d{7}$/'],
+            'sede_id' => 'required|exists:sede,sede_id',
+            'pro_id' => 'required|exists:programa,pro_id',
+            'pi_doc_digital.*' => 'nullable|file|max:5120|mimes:pdf',
+        ], [
+            'per_rda.required' => 'El campo RDA es obligatorio.',
+            'per_rda.numeric' => 'El campo RDA debe ser numérico.',
+            'sede_id.required' => 'Debe seleccionar una sede válida.',
+            'sede_id.exists' => 'La sede seleccionada no es válida.',
+            'pro_id.required' => 'Debe seleccionar un programa válido.',
+            'pro_id.exists' => 'El programa seleccionado no es válido.',
+            'per_celular.required' => 'El número de celular es obligatorio.',
+            'per_celular.digits' => 'El número de celular debe tener exactamente 8 dígitos.',
+            'per_celular.regex' => 'El número de celular debe comenzar con 6 o 7 y tener 8 dígitos en total.',
+            'pi_doc_digital.*.file' => 'El archivo adjunto debe ser un archivo.',
+            'pi_doc_digital.*.max' => 'El archivo adjunto no debe superar los 5MB.',
+            'pi_doc_digital.*.mimes' => 'El archivo adjunto debe ser de tipo PDF.',
+        ]);
+
+        // Buscar la persona por per_rda para obtener el per_id
+        $persona = MapPersona::where('per_rda', $request->per_rda)->first();
+
+        // Verificar si la persona existe
+        if (!$persona) {
+            return redirect()->back()->with('error', 'La persona con RDA proporcionado no fue encontrada.');
+        }
+
+        // Actualizar el celular si se proporcionó en la solicitud
+        $persona->per_celular = $request->per_celular;
+        $persona->per_correo = $request->per_correo;
+        $persona->save();
+
+        // Actualizar la inscripción
+        $inscripcion = ProgramaInscripcion::findOrFail($inscripcionId);
+        $inscripcion->sede_id = $request->sede_id;
+
+        $inscripcion->pro_tur_id = $request->pro_tur_id;
+        $inscripcion->pro_id = $request->pro_id;
+        $inscripcion->pie_id = $request->pie_id;
+        $inscripcion->pi_modulo = $request->pi_modulo;
+
+        if ($request->hasFile('pi_doc_digital')) {
+            $documento = $request->file('pi_doc_digital');
+            // Generar un nombre único basado en per_rda y la fecha actual
+            $nombreDocumento = $persona->per_rda . '_' . now()->format('YmdHis') . '.' . $documento->getClientOriginalExtension();
+
+            // Almacenar el documento en la carpeta 'pdfDocumentos' dentro del directorio 'storage/app'
+            Storage::disk('local')->putFileAs('pdfDocumentos', $documento, $nombreDocumento);
+
+            // Guardar el nombre del documento en la base de datos junto con la inscripción
+            $inscripcion->pi_doc_digital = $nombreDocumento;
+        }
+
+        $inscripcion->save();
+
+        // Redireccionar a una ruta adecuada después de editar la inscripción
+        return redirect()->route('admin.inscripcion.index')->with('success', 'La inscripción se ha actualizado correctamente.');
+    }
+    public function baucherpost(Request $request, $id)
+    {
+        // Validación de los campos
+        $request->validate([
+            'pro_bau_imagen' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'pro_bau_nro_deposito' => 'required|numeric',
+            'pro_bau_monto' => 'required|numeric',
+            'pro_bau_fecha' => 'required|date',
+            'pro_bau_tipo_pago' => 'required|string|max:255',
+        ]);
+
+        // Encuentra la inscripción
+        $baucher = new ProgramaBaucher();
+
+         // Manejo de la imagen
+        if ($request->hasFile('pro_bau_imagen')) {
+            $image = $request->file('pro_bau_imagen');
+            $nro_deposito = $request->input('pro_bau_nro_deposito');
+            $extension = $image->getClientOriginalExtension();
+            $name = $nro_deposito . '.' . $extension;
+
+            // Guarda la imagen en storage/app/public/images/bauchers
+            $path = $request->file('pro_bau_imagen')->storeAs('public/bauchers', $name);
+
+            // Generar URL Correcta
+            $baucher->pro_bau_imagen = str_replace('public/', '', $path);
+        }
+
+        // Guarda otros campos
+        $baucher->pi_id = $id;
+        $baucher->pro_bau_nro_deposito = $request->input('pro_bau_nro_deposito');
+        $baucher->pro_bau_monto = $request->input('pro_bau_monto');
+        $baucher->pro_bau_fecha = $request->input('pro_bau_fecha');
+        $baucher->pro_bau_tipo_pago = $request->input('pro_bau_tipo_pago');
+
+        // Guarda la inscripción
+        $baucher->save();
+        // Redirecciona a la página de edición con el ID encriptado de la inscripción
+        $inscripcionId = encrypt($id); // Asegúrate de que $id sea el ID correcto de la inscripción
+        return Redirect::route('admin.inscripcion.edit', ['inscripcion' => $inscripcionId])->with('success', 'El baucher se ha creado correctamente.');
+    }
+    public function baucherUpdate( $pi_id, $pro_bau_id, Request $request)
+    {
+        // Validación de datos del formulario
+        $request->validate([
+            'pro_bau_nro_deposito' => 'required|string',
+            'pro_bau_monto' => 'required|numeric',
+            'pro_bau_fecha' => 'required|date',
+            'pro_bau_tipo_pago' => 'required|string',
+            'pro_bau_imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validación para imagen
+        ]);
+
+        // Obtener el baucher específico por ID
+        $baucher = ProgramaBaucher::findOrFail($pro_bau_id);
+
+        // Actualizar los campos del baucher
+        $baucher->pro_bau_nro_deposito = $request->input('pro_bau_nro_deposito');
+        $baucher->pro_bau_monto = $request->input('pro_bau_monto');
+        $baucher->pro_bau_fecha = $request->input('pro_bau_fecha');
+        $baucher->pro_bau_tipo_pago = $request->input('pro_bau_tipo_pago');
+
+       // Manejar la subida de imagen si se ha proporcionado una nueva
+        if ($request->hasFile('pro_bau_imagen')) {
+            // Eliminar la imagen anterior si existe
+            if ($baucher->pro_bau_imagen && Storage::exists($baucher->pro_bau_imagen)) {
+                Storage::delete($baucher->pro_bau_imagen);
+            }
+
+            // Guardar la nueva imagen con el mismo nombre basado en pro_bau_nro_deposito
+            $image = $request->file('pro_bau_imagen');
+            $nro_deposito = $request->input('pro_bau_nro_deposito');
+            $extension = $image->getClientOriginalExtension();
+            $name = $nro_deposito . '.' . $extension;
+
+            $path = $request->file('pro_bau_imagen')->storeAs('public/bauchers', $name);
+
+            // Generar URL Correcta
+            $baucher->pro_bau_imagen = str_replace('public/', '', $path);
+        }
+        // Guardar los cambios en el baucher
+        $baucher->save();
+
+        // Redirecciona a la página de edición con el ID encriptado de la inscripción
+        $inscripcionId = encrypt($pi_id);
+        return Redirect::route('admin.inscripcion.edit', ['inscripcion' => $inscripcionId])->with('success', 'El baucher se ha actualizado correctamente.');
+    }
     /**
      * Remove the specified resource from storage.
      */

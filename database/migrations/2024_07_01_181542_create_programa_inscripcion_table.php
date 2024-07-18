@@ -15,6 +15,7 @@ return new class extends Migration
             $table->bigIncrements('pi_id');
             $table->string('pi_doc_digital')->nullable();
             $table->enum('pi_estado', ['activo', 'inactivo','eliminado'])->default('activo');
+            $table->enum('pi_modulo', ['modulo 1', 'modulo 2', 'modulo 3', 'modulo 4', 'modulo 5', 'modulo 6', 'modulo 7', 'inhabilitado'])->default('modulo 1');
             $table->bigInteger('per_id')
                 ->constrained()
                 ->onDelete('cascade')

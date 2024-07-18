@@ -72,6 +72,7 @@
                                                 <th>Nombre</th>
                                                 <th>Sede</th>
                                                 <th>Turno</th>
+                                                <th>Baucher</th>
                                                 <th>Estado</th>
                                                 <th>Fecha Actualizado</th>
                                                 <th>Acciones</th>
@@ -83,7 +84,13 @@
                                                     <td>{{ $loop->index + 1 }}</td>
                                                     <td>
                                                         Nombre: {{ $inscripcion->per_nombre1 }} {{ $inscripcion->per_nombre2 }} {{ $inscripcion->per_apellido1 }} {{ $inscripcion->per_apellido2 }} <br>
-                                                        RDA: {{ $inscripcion->per_rda }}
+                                                        RDA: {{ $inscripcion->per_rda }}<br>
+                                                        En funcion: 
+                                                        @if ($inscripcion->per_en_funcion == 1)
+                                                            SI
+                                                        @else
+                                                            NO
+                                                        @endif
                                                         @if (!empty($inscripcion->per_celular))
                                                         <br>Celular: <a href="https://wa.me/{{ '+591' . $inscripcion->per_celular }}" target="_blank">{{ $inscripcion->per_celular }}</a>
                                                         @endif
@@ -96,7 +103,16 @@
                                                         Sede: {{ $inscripcion->sede_nombre }}
                                                     </td>
                                                     <td>{{ $inscripcion->pro_tur_nombre }}</td>
-
+                                                    <td>
+                                                        @foreach ($baucheres as $baucher)
+                                                            @if ($baucher->pi_id == $inscripcion->pi_id)
+                                                                <a href="{{ Storage::url($baucher->pro_bau_imagen) }}?{{ \Illuminate\Support\Str::random(8) }}"
+                                                                data-lightbox="{{$baucher->pi_id}}" data-title="{{ $baucher->pro_bau_nro_deposito}}">
+                                                                {{ $baucher->pro_bau_nro_deposito}}
+                                                                </a>
+                                                            @endif
+                                                        @endforeach
+                                                    </td>
                                                     <td>
                                                         @if ($inscripcion->pie_nombre == 'INSCRITO')
                                                             <span class="label label-success">
@@ -130,6 +146,7 @@
                                                 <th>Nombre</th>
                                                 <th>Sede</th>
                                                 <th>Turno</th>
+                                                <th>Baucher</th>
                                                 <th>Estado</th>
                                                 <th>Fecha Actualizado</th>
                                                 <th>Acciones</th>

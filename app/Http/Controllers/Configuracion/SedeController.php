@@ -48,12 +48,17 @@ class SedeController extends Controller
         // Verificar si hay filtro por sede_ids
         if (!is_null($this->user->sede_ids)) {
             $sedesIds = json_decode($this->user->sede_ids);
-            $sedeturnos->whereIn('sede.sede_id', $sedesIds);
+
+            if (!empty($sedesIds)) { // Verifica si $sedesIds no está vacío
+                $sedeturnos->whereIn('sede.sede_id', $sedesIds);
+            }
         }
         // Verificar si hay filtro por pro_ids
         if (!is_null($this->user->pro_ids)) {
             $proIds = json_decode($this->user->pro_ids);
-            $sedeturnos->whereIn('programa.pro_id', $proIds);
+            if (!empty($proIds)) { // Verifica si $sedesIds no está vacío
+                $sedeturnos->whereIn('programa.pro_id', $proIds);
+            }
         }
 
         // Obtener los resultados
@@ -82,12 +87,20 @@ class SedeController extends Controller
 
         // Obtener programas y sedes originales
         $programasOriginal = Programa::when(!is_null($this->user->pro_ids), function ($query) use ($proIds) {
+            if (!empty($proIds)) { // Verifica si $proIds no está vacío
                 return $query->whereIn('pro_id', $proIds);
-            })->get();
-
+            } else {
+                return $query; // Devuelve el query sin modificar si $proIds está vacío
+            }
+        })->get();
+        
         $sedesOriginal = Sede::when(!is_null($this->user->sede_ids), function ($query) use ($sedesIds) {
-                return $query->whereIn('sede_id', $query);
-            })->get();
+            if (!empty($sedesIds)) { // Verifica si $sedesIds no está vacío
+                return $query->whereIn('sede_id', $sedesIds);
+            } else {
+                return $query; // Devuelve el query sin modificar si $sedesIds está vacío
+            }
+        })->get();
 
         // Filtrar los programas y sedes para mostrar solo los que aún pueden formar nuevas combinaciones válidas
         $programas = $programasOriginal->filter(function($programa) use ($existingCombinations, $sedesOriginal) {

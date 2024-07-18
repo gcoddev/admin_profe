@@ -42,7 +42,10 @@ Route::group(['prefix' => 'admin'], function () {
     // Logout Routes
     Route::post('/logout/submit', 'Backend\Auth\LoginController@logout')->name('admin.logout.submit');
 
-    Route::get('/search-rda', 'Backend\AdminsController@searchRda')->name('admin.search.rda');
+    Route::post('/baucherpost/{id}', 'Backend\InscripcionController@baucherpost')->name('admin.inscripcion.baucherpost');
+    Route::put('/baucherupdate/{pi_id}/{pro_bau_id}', 'Backend\InscripcionController@baucherupdate')->name('admin.inscripcion.baucherupdate');
+
+    Route::get('/searchrda', 'Backend\AdminsController@searchRda')->name('admin.search.rda');
     Route::get('/search-rda', 'Backend\InscripcionController@searchRda')->name('admin.searchInscripcion.rda');
     Route::get('/get-turnos', 'Backend\InscripcionController@getTurnos')->name('admin.search.turnos');
     Route::get('/formularioPdf/{pi_id}', 'Backend\InscripcionController@formularioPdf')->name('admin.inscripcion.formulariopdf');

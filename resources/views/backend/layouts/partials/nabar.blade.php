@@ -169,25 +169,31 @@
                 </ul>
             </li>
             @endif
+            @if ($usr->can('programa.view'))
             <li class>
                 <a href="{{ route('admin.programa.index') }}">
                     <span class="pcoded-micon"><i class="feather icon-menu"></i></span>
                     <span class="pcoded-mtext">Programas</span>
                 </a>
             </li>
+            @endif
+            @if ($usr->can('sede.view'))
             <li class>
                 <a href="{{ route('admin.sede.index') }}">
                     <span class="pcoded-micon"><i class="feather icon-menu"></i></span>
                     <span class="pcoded-mtext">Sedes</span>
                 </a>
             </li>
+            @endif
+            @if ($usr->can('inscripcion.view'))
             <li class>
                 <a href="{{ route('admin.inscripcion.index') }}">
                     <span class="pcoded-micon"><i class="feather icon-menu"></i></span>
                     <span class="pcoded-mtext">Inscripciones</span>
                 </a>
             </li>
-            <li class="pcoded-hasmenu">
+            @endif
+            {{-- <li class="pcoded-hasmenu">
                 <a href="javascript:void(0)">
                     <span class="pcoded-micon"><i class="feather icon-layers"></i></span>
                     <span class="pcoded-mtext">Widget</span>
@@ -270,7 +276,7 @@
                     <span class="pcoded-mtext">Submit Issue</span>
                 </a>
             </li>
-        </ul>
+        </ul> --}}
     </div>
 </nav>
 <!-- header area end -->

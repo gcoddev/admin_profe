@@ -50,7 +50,10 @@ class RestriccionController extends Controller
         // Verificar si hay filtro por pro_ids
         if (!is_null($this->user->pro_ids)) {
             $proIds = json_decode($this->user->pro_ids);
-            $restriccionesQuery->whereIn('programa.pro_id', $proIds);
+            if (!empty($proIds)) { // Verifica si $sedesIds no está vacío
+                $restriccionesQuery->whereIn('programa.pro_id', $proIds);
+            }
+
         }
 
         // Obtener los resultados
@@ -75,7 +78,9 @@ class RestriccionController extends Controller
         })
         ->when(!is_null($this->user->pro_ids), function ($query) {
             $proIds = json_decode($this->user->pro_ids);
-            return $query->whereIn('pro_id', $proIds);
+            if (!empty($proIds)) { // Verifica si $sedesIds no está vacío
+                return $query->whereIn('pro_id', $proIds);
+            }
         })
         ->get();
         $generos = Genero::all();
@@ -123,27 +128,34 @@ class RestriccionController extends Controller
     {
         //
     }
-
     public function edit(string $id)
     {
-        if (is_null($this->user) || !$this->user->can('admin.edit')) {
+        if (is_null($this->user) || !$this->user->can('restriccion.edit')) {
             abort(403, 'Sorry !! You are Unauthorized to edit any admin !');
         }
 
         $restriccion = ProgramaRestriccion::findOrFail($id);
-        $proIds = json_decode($this->user->pro_ids);
 
         // Obtener los programas que aún no tienen restricciones asociadas o que corresponden a la restricción actual
-        $programas = Programa::when(!is_null($this->user->pro_ids), function ($query) use ($proIds, $restriccion) {
-            return $query->whereNotIn('pro_id', function($query) use ($restriccion) {
-                $query->select('pro_id')->from('programa_restriccion')->where('pro_id', '!=', $restriccion->pro_id);
-            })->whereIn('pro_id', $proIds);
+        $programas = Programa::where(function ($query) use ($restriccion) {
+            $query->whereNotExists(function ($subQuery) use ($restriccion) {
+                $subQuery->select(DB::raw(1))
+                    ->from('programa_restriccion')
+                    ->whereColumn('programa_restriccion.pro_id', 'programa.pro_id')
+                    ->where('programa_restriccion.id', '!=', $restriccion->id);
+            });
+
+            if (!is_null($this->user->pro_ids)) {
+                $proIds = json_decode($this->user->pro_ids);
+                $query->whereIn('pro_id', $proIds);
+            }
         })->get();
 
         $turnos = ProgramaTurno::all();
 
         return view('backend.pages.configuracion.restriccion.edit', compact('restriccion', 'programas', 'turnos'));
     }
+
 
     public function update(Request $request, string $id)
     {
