@@ -52,6 +52,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('/search-rda', 'Backend\InscripcionController@searchRda')->name('admin.searchInscripcion.rda');
     Route::get('/get-turnos', 'Backend\InscripcionController@getTurnos')->name('admin.search.turnos');
     Route::get('/formularioPdf/{pi_id}', 'Backend\InscripcionController@formularioPdf')->name('admin.inscripcion.formulariopdf');
+    Route::get('/inscripcionPdf/{pi_id}', 'Backend\InscripcionController@inscripcionPdf')->name('admin.inscripcion.inscripcionpdf');
     // Forget Password Routes
     Route::get('/password/reset', 'Backend\Auth\ForgetPasswordController@showLinkRequestForm')->name('admin.password.request');
     Route::post('/password/reset/submit', 'Backend\Auth\ForgetPasswordController@reset')->name('admin.password.update');

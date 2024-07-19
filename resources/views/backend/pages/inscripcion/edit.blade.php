@@ -163,7 +163,7 @@
                                     </div>
                                     <label for="documentos" class="col-sm-2 col-form-label">Adjuntar Documentos</label>
                                     <div class="col-sm-4">
-                                        <input type="file" class="form-control" id="documentos" name="documentos">
+                                        <input type="file" class="form-control" id="pi_doc_digital" name="pi_doc_digital">
                                         <span class="j-hint">Agregar Documentos: pdf 5Mb</span>
                                     </div>
                                 </div>

@@ -173,16 +173,39 @@
                                                                     <td>{{ $inscripcion->updated_at }}</td>
                                                                     <td>
                                                                         @if (Auth::guard('admin')->user()->can('inscripcion.edit'))
-                                                                        <a href="{{ route('admin.inscripcion.edit', encrypt($inscripcion->pi_id)) }}"
-                                                                            class="btn btn-outline-info waves-effect waves-light m-r-20">
-                                                                            <i class="icofont icofont-pencil-alt-5"></i>
-                                                                        </a>
+                                                                            <a href="{{ route('admin.inscripcion.edit', encrypt($inscripcion->pi_id)) }}"
+                                                                                class="btn btn-outline-info waves-effect waves-light m-r-20">
+                                                                                <i class="icofont icofont-pencil-alt-5"></i>
+                                                                            </a>
+                                                                        @endif
+                                                                        @if (Auth::guard('admin')->user()->can('inscripcion.delete'))
+                                                                            <a href="{{ route('admin.inscripcion.edit', encrypt($inscripcion->pi_id)) }}"
+                                                                                class="btn btn-outline-danger waves-effect waves-light m-r-20">
+                                                                                <i class="icofont icofont-ui-delete"></i>
+                                                                            </a>
                                                                         @endif
                                                                         @if (Auth::guard('admin')->user()->can('inscripcion.pdf'))
-                                                                        <a href="{{ route('admin.inscripcion.formulariopdf', encrypt($inscripcion->pi_id)) }}"
-                                                                            class="btn btn-outline-danger waves-effect waves-light m-r-20">
-                                                                            <i class="icofont icofont-file-pdf"></i>
-                                                                        </a>
+                                                                            @if ($inscripcion->pie_nombre == 'INSCRITO')
+                                                                                
+                                                                                @if ($totalMonto >= $inscripcion->pro_costo)
+                                                                                    <a href="{{ route('admin.inscripcion.inscripcionpdf', encrypt($inscripcion->pi_id)) }}"
+                                                                                        class="btn btn-outline-danger waves-effect waves-light m-r-20">
+                                                                                        <i class="icofont icofont-file-pdf"></i>
+                                                                                    </a>
+                                                                                @else
+                                                                                    {{-- <a href="{{ route('admin.inscripcion.baucher', encrypt($inscripcion->pi_id)) }}"
+                                                                                        class="btn btn-outline-info waves-effect waves-light m-r-20">
+                                                                                        <i class="icofont icofont-pencil-alt-5"></i>
+                                                                                    </a> --}}
+                                                                                @endif
+                                                                            @elseif ($inscripcion->pie_nombre == 'PREINSCRITO')
+                                                                                <a href="{{ route('admin.inscripcion.formulariopdf', encrypt($inscripcion->pi_id)) }}"
+                                                                                    class="btn btn-outline-danger waves-effect waves-light m-r-20">
+                                                                                    <i class="icofont icofont-file-pdf"></i>
+                                                                                </a>
+                                                                            @else
+                                                                            
+                                                                            @endif
                                                                         @endif
                                                                     </td>
                                                                 </tr>
