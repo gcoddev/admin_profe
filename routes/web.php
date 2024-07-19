@@ -32,6 +32,9 @@ Route::group(['prefix' => 'admin'], function () {
     Route::resource('admins', 'Backend\AdminsController', ['names' => 'admin.admins']);
     Route::resource('programa', 'Backend\ProgramaController', ['names' => 'admin.programa']);
     Route::resource('inscripcion', 'Backend\InscripcionController', ['names' => 'admin.inscripcion']);
+    Route::get('inscripcionIn/{sede_id}', 'Backend\InscripcionController@index')->name('admin.inscripcion.index');
+    Route::get('inscripcionI/{sede_id}', 'Backend\InscripcionController@create')->name('admin.inscripcion.create');
+    // Route::get('inscripcion/{sede_id}', 'Backend\InscripcionController@indexSede', ['names' => 'admin.inscripcion.indexsede']);
     Route::resource('sede', 'Backend\SedeController', ['names' => 'admin.sede']);
 
 

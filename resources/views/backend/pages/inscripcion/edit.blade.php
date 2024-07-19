@@ -42,6 +42,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="header-title">Agregar Inscripcion</h4>
+                            
                             @include('backend.layouts.partials.messages')
 
                             <form action="{{ route('admin.inscripcion.update', encrypt($inscripcion->pi_id)) }}" method="POST" enctype="multipart/form-data">
@@ -100,13 +101,10 @@
                                 <div class="row form-group">
                                     <label class="col-sm-1 col-form-label">Sede</label>
                                     <div class="col-sm-3">
-                                        <select name="sede_id" id="sede" class="form-control">
-                                            <option value="">Seleccione una sede</option>
-                                            @foreach ($sede as $s)
-                                                <option value="{{ $s->sede_id }}"
-                                                    {{ $inscripcion->sede_id == $s->sede_id ? 'selected' : '' }}>
-                                                    {{ $s->sede_nombre }}</option>
-                                            @endforeach
+                                        <select name="sede_id" id="sede" class="form-control" readonly>
+                                            <option value="{{ $sede->sede_id }}"
+                                                {{ $sede->sede_id == $sede->sede_id ? 'selected' : '' }} >
+                                                {{$sede->dep_nombre }} - {{ $sede->sede_nombre }}</option>
                                         </select>
                                     </div>
                                     <label class="col-sm-1 col-form-label">Programa</label>
@@ -155,22 +153,29 @@
                                         <select name="pie_id" id="estado" class="form-control">
                                             <option value="">Seleccione estado</option>
                                             @foreach ($inscripcionestado as $estado)
-                                                <option value="{{ $estado->pie_id }}"
-                                                    {{ $inscripcion->pie_id == $estado->pie_id ? 'selected' : '' }}>
+                                                @if (!(count($bauchers) == 0 && $estado->pie_nombre == 'INSCRITO'))
+                                                    <option value="{{ $estado->pie_id }}"
+                                                        {{ $inscripcion->pie_id == $estado->pie_id ? 'selected' : '' }}>
                                                     {{ $estado->pie_nombre }}</option>
+                                                @endif
                                             @endforeach
                                         </select>
                                     </div>
                                     <label for="documentos" class="col-sm-2 col-form-label">Adjuntar Documentos</label>
                                     <div class="col-sm-4">
-                                        <input type="file" class="form-control-file" id="documentos" name="documentos" multiple>
+                                        <input type="file" class="form-control" id="documentos" name="documentos">
+                                        <span class="j-hint">Agregar Documentos: pdf 5Mb</span>
                                     </div>
                                 </div>
 
 
                                 <!-- Campo oculto para per_id -->
                                 <input type="hidden" id="per_id" name="per_id">
-
+                                @if (count($bauchers) == 0)
+                                    <div class="alert alert-warning mt-3" role="alert">
+                                        <strong>Atención:</strong> Para habilitar el estado "INSCRITO" primero debe agregar al menos un baucher.
+                                    </div>
+                                @endif
 
                                 <button type="submit" class="btn btn-primary mt-4 pr-4 pl-4" id="submitBtn">Guardar
                                     Inscripcion
@@ -184,6 +189,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="header-title">Bauchers</h4>
+                            
                             @foreach ($bauchers as $baucher)
                                 <div class="row mb-3">
                                     <div class="col-md-4">

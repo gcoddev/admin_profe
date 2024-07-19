@@ -14,6 +14,7 @@ class Programa extends Model
 
     protected $fillable = [
         'pro_nombre',
+        'pro_nombre_abre',
         'pro_contenido',
         'pro_horario',
         'pro_carga_horaria',

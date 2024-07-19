@@ -15,6 +15,7 @@ return new class extends Migration
             $table->bigIncrements('sede_id');
             $table->string('sede_imagen')->nullable()->default(null);
             $table->string('sede_nombre');
+            $table->string('sede_nombre_abre');
             $table->text('sede_descripcion');
             $table->string('sede_imagen_responsable1')->nullable();
             $table->string('sede_nombre_responsable1')->nullable();

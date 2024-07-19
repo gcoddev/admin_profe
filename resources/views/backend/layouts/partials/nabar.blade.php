@@ -1,5 +1,7 @@
 @php
+    use Illuminate\Support\Facades\DB;
     $usr = Auth::guard('admin')->user();
+    $sedes = DB::table('sede')->get();
 @endphp
 <!-- nabar area start -->
 <nav class="pcoded-navbar">
@@ -186,13 +188,35 @@
             </li>
             @endif
             @if ($usr->can('inscripcion.view'))
-            <li class>
-                <a href="{{ route('admin.inscripcion.index') }}">
-                    <span class="pcoded-micon"><i class="feather icon-menu"></i></span>
-                    <span class="pcoded-mtext">Inscripciones</span>
-                </a>
-            </li>
+                <li class="pcoded-hasmenu">
+                    <a href="javascript:void(0)">
+                        <span class="pcoded-micon"><i class="feather icon-sidebar"></i></span>
+                        <span class="pcoded-mtext">Inscripciones</span>
+                    </a>
+                    <ul class="pcoded-submenu">
+                        @foreach($sedes as $sede)
+                            @if (!is_null($usr->sede_ids) && !empty(json_decode($usr->sede_ids)))
+                                @if (in_array($sede->sede_id, json_decode($usr->sede_ids)))
+                                    <li>
+                                        <a href="{{ route('admin.inscripcion.index', ['sede_id' => encrypt($sede->sede_id)]) }}">
+                                            <span class="pcoded-micon"><i class="feather icon-menu"></i></span>
+                                            <span class="pcoded-mtext">{{ $sede->sede_nombre }}</span>
+                                        </a>
+                                    </li>
+                                @endif
+                            @else
+                                <li>
+                                    <a href="{{ route('admin.inscripcion.index', ['sede_id' => encrypt($sede->sede_id)]) }}">
+                                        <span class="pcoded-micon"><i class="feather icon-menu"></i></span>
+                                        <span class="pcoded-mtext">{{ $sede->sede_nombre }}</span>
+                                    </a>
+                                </li>
+                            @endif
+                        @endforeach
+                    </ul>
+                </li>
             @endif
+
             {{-- <li class="pcoded-hasmenu">
                 <a href="javascript:void(0)">
                     <span class="pcoded-micon"><i class="feather icon-layers"></i></span>

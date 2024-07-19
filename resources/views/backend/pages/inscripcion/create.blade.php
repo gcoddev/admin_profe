@@ -54,7 +54,7 @@
                                     </div>
                                     <div class="col-sm-2">
                                         <input type="number" class="form-control" id="per_rda" name="per_rda"
-                                        placeholder="Ingrese el RDA">
+                                        placeholder="Ingrese el RDA" required>
                                     </div>
                                     <div class="col-sm-1 col-form-label">
                                         <label for="nombre">Nombres</label>
@@ -96,16 +96,13 @@
                                 <div class="row form-group">
                                     <label class="col-sm-1 col-form-label">Sede</label>
                                     <div class="col-sm-3">
-                                        <select name="sede_id" id="sede" class="form-control">
-                                            <option value="">Seleccione una sede</option>
-                                            @foreach ($sede as $s)
-                                                <option value="{{ $s->sede_id }}">{{ $s->sede_nombre }}</option>
-                                            @endforeach
+                                        <select name="sede_id" id="sede" class="form-control" readonly>
+                                            <option value="{{ $sede->sede_id }}">{{ $sede->sede_nombre }}</option>
                                         </select>
                                     </div>
                                     <label class="col-sm-1 col-form-label">Programa</label>
                                     <div class="col-sm-3">
-                                        <select name="pro_id" id="programa" class="form-control">
+                                        <select name="pro_id" id="programa" class="form-control" required>
                                             <option value="">Seleccione un programa</option>
                                             @foreach ($programa as $prog)
                                                 <option value="{{ $prog->pro_id }}">{{ $prog->pro_nombre }}</option>
@@ -114,7 +111,7 @@
                                     </div>
                                     <label class="col-sm-1 col-form-label">Turno</label>
                                     <div class="col-sm-3">
-                                        <select name="pro_tur_id" id="turno" class="form-control">
+                                        <select name="pro_tur_id" id="turno" class="form-control" required>
                                             <option value="">Seleccione un turno</option>
                                         </select>
                                     </div>

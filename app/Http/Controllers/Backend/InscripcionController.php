@@ -37,41 +37,38 @@ class InscripcionController extends Controller
             return $next($request);
         });
     }
-    public function index()
+    public function index(Request $request)
     {
         if (is_null($this->user) || !$this->user->can('inscripcion.view')) {
             abort(403, 'Lo siento !! ¡No estás autorizado a ver ningún inscripcion!');
         }
+
+        $sede_id = $request->sede_id;
         $inscripciones = DB::table('programa_inscripcion')
-            ->join('map_persona', 'programa_inscripcion.per_id', '=', 'map_persona.per_id')
-            ->join('map_especialidad', 'map_persona.esp_id', '=', 'map_especialidad.esp_id')
-            ->join('map_cargo', 'map_persona.car_id', '=', 'map_cargo.car_id')
-            ->join('map_nivel', 'map_persona.niv_id', '=', 'map_nivel.niv_id')
-            ->join('map_categoria', 'map_persona.cat_id', '=', 'map_categoria.cat_id')
-            ->join('map_subsistema', 'map_persona.sub_id', '=', 'map_subsistema.sub_id')
-            ->join('genero', 'map_persona.gen_id', '=', 'genero.gen_id')
-            ->join('programa', 'programa_inscripcion.pro_id', '=', 'programa.pro_id')
-            ->join('programa_turno', 'programa_inscripcion.pro_tur_id', '=', 'programa_turno.pro_tur_id')
-            ->join('sede', 'programa_inscripcion.sede_id', '=', 'sede.sede_id')
-            ->join('programa_inscripcion_estado', 'programa_inscripcion.pie_id', '=', 'programa_inscripcion_estado.pie_id')
-            ->select('programa_inscripcion.*', 'map_persona.*','map_especialidad.esp_nombre', 'map_cargo.car_nombre',
-                        'programa.pro_nombre', 'programa.pro_costo', 'map_subsistema.sub_nombre', 'map_nivel.niv_nombre',
-                        'map_categoria.cat_nombre', 'genero.gen_nombre',
-                        'programa_turno.pro_tur_nombre', 'sede.sede_nombre', 'programa_inscripcion_estado.pie_nombre')
-                        ->get();
+        ->join('map_persona', 'programa_inscripcion.per_id', '=', 'map_persona.per_id')
+        ->join('map_especialidad', 'map_persona.esp_id', '=', 'map_especialidad.esp_id')
+        ->join('map_cargo', 'map_persona.car_id', '=', 'map_cargo.car_id')
+        ->join('map_nivel', 'map_persona.niv_id', '=', 'map_nivel.niv_id')
+        ->join('map_categoria', 'map_persona.cat_id', '=', 'map_categoria.cat_id')
+        ->join('map_subsistema', 'map_persona.sub_id', '=', 'map_subsistema.sub_id')
+        ->join('genero', 'map_persona.gen_id', '=', 'genero.gen_id')
+        ->join('programa', 'programa_inscripcion.pro_id', '=', 'programa.pro_id')
+        ->join('programa_turno', 'programa_inscripcion.pro_tur_id', '=', 'programa_turno.pro_tur_id')
+        ->join('sede', 'programa_inscripcion.sede_id', '=', 'sede.sede_id')
+        ->join('departamento', 'sede.dep_id', '=', 'departamento.dep_id')
+        ->join('programa_inscripcion_estado', 'programa_inscripcion.pie_id', '=', 'programa_inscripcion_estado.pie_id')
+        ->where('sede.sede_id', decrypt($sede_id))
+        ->select('programa_inscripcion.*', 'map_persona.*', 'map_especialidad.esp_nombre', 'map_cargo.car_nombre',
+                    'programa.pro_nombre', 'programa.pro_nombre_abre', 'programa.pro_costo', 'map_subsistema.sub_nombre', 'map_nivel.niv_nombre',
+                    'map_categoria.cat_nombre', 'genero.gen_nombre',
+                    'programa_turno.pro_tur_nombre', 'sede.sede_nombre','sede.sede_nombre_abre', 'departamento.dep_nombre', 'programa_inscripcion_estado.pie_nombre')
+        ->get();
         if (!is_null($this->user->pro_ids)) {
             $proIds = json_decode($this->user->pro_ids);
             if (!empty($proIds)) { // Verifica si $sedesIds no está vacío
                 $inscripciones->whereIn('programa.pro_id', $proIds);
             }
         }
-        if (!is_null($this->user->sede_ids)) {
-            $sedeIds = json_decode($this->user->sede_ids);
-            if (!empty($sedesIds)) { // Verifica si $sedesIds no está vacío
-                $inscripciones->whereIn('sede.sede_id', $sedeIds);
-            }
-        }
-
         // Agregar verificación de restricciones
         foreach ($inscripciones as $inscripcion) {
             $inscripcion->cumple_restricciones = true; // Inicialmente asumimos que cumple
@@ -130,26 +127,28 @@ class InscripcionController extends Controller
                 }
             }
         }
+        // Agrupar las inscripciones por pro_id
         $baucheres= ProgramaBaucher::all();
         //$mapPersona = MapPersona::paginate(100);
-        return view('backend.pages.inscripcion.index', compact(['inscripciones','baucheres']));
+        return view('backend.pages.inscripcion.index', compact(['inscripciones','baucheres','sede_id']));
     }
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        if (is_null($this->user) || !$this->user->can('programa.create')) {
+        if (is_null($this->user) || !$this->user->can('inscripcion.create')) {
             abort(403, 'Sorry !! You are Unauthorized to create any role !');
         }
-        // Obtener todas las sedes filtradas por sede_ids del usuario
-        $sede = Sede::when($this->user->sede_ids, function ($query) {
-            $sedeIds = json_decode($this->user->sede_ids);
-            if (!empty($sedesIds)) { // Verifica si $sedesIds no está vacío
-                $query->whereIn('sede_id', $sedeIds);
-            }
-        })->get();
+        // Decodificar el parámetro $sede_id
+        $decryptedSedeId = decrypt($request->sede_id);
 
+        // Realizar la consulta utilizando el método when para aplicar la condición si es necesario
+        // $sede = Sede::where('sede_id', $decryptedSedeId)->first();
+        $sede = Sede::join('departamento', 'sede.dep_id', '=', 'departamento.dep_id')
+            ->where('sede.sede_id', $decryptedSedeId)
+            ->select('sede.*', 'departamento.dep_nombre') // Selecciona los campos necesarios
+            ->first();
         // Obtener todos los programas filtrados por pro_ids del usuario
         $programa = Programa::when($this->user->pro_ids, function ($query) {
             $proIds = json_decode($this->user->pro_ids);
@@ -225,12 +224,14 @@ class InscripcionController extends Controller
             'per_celular' => ['required', 'digits:8', 'regex:/^[67]\d{7}$/'],
             'sede_id' => 'required|exists:sede,sede_id',
             'pro_id' => 'required|exists:programa,pro_id',
+            'pro_tur_id' => 'required',
         ], [
             'per_rda.required' => 'El campo RDA es obligatorio.',
             'per_rda.numeric' => 'El campo RDA debe ser numérico.',
             'per_id.exists' => 'El valor seleccionado para per_id no es válido.',
             'sede_id.required' => 'Debe seleccionar una sede válida.',
             'sede_id.exists' => 'La sede seleccionada no es válida.',
+            'pro_tur_id.required' => 'Debe seleccionar un turno válido.',
             'pro_id.required' => 'Debe seleccionar un programa válido.',
             'pro_id.exists' => 'El programa seleccionado no es válido.',
             'per_celular.required' => 'El número de celular es obligatorio.',
@@ -274,7 +275,7 @@ class InscripcionController extends Controller
         $inscripcion->save();
 
         // Redireccionar con mensaje de éxito
-        return redirect()->route('admin.inscripcion.index')->with('success', 'La inscripción se ha creado correctamente.');
+        return redirect()->route('admin.inscripcion.index', ['sede_id' => encrypt($request->sede_id)])->with('success', 'La inscripción se ha creado correctamente.');
     }
     public function formularioPdf($pi_id)
     {
@@ -367,12 +368,13 @@ class InscripcionController extends Controller
         $pi_id = decrypt($pi_id);
 
         // Obtener todas las sedes filtradas por sede_ids del usuario
-        $sede = Sede::when($this->user->sede_ids, function ($query) {
-            $sedeIds = json_decode($this->user->sede_ids);
-            if (!empty($sedesIds)) { // Verifica si $sedesIds no está vacío
-                $query->whereIn('sede_id', $sedeIds);
-            }
-        })->get();
+        // $sede = Sede::when($this->user->sede_ids, function ($query) {
+        //     $sedeIds = json_decode($this->user->sede_ids);
+        //     if (!empty($sedesIds)) { // Verifica si $sedesIds no está vacío
+        //         $query->whereIn('sede_id', $sedeIds);
+        //     }
+        // })->get();
+
 
         // Obtener todos los programas filtrados por pro_ids del usuario
         $programa = Programa::when($this->user->pro_ids, function ($query) {
@@ -401,6 +403,10 @@ class InscripcionController extends Controller
                 'map_categoria.cat_nombre', 'genero.gen_nombre',
                 'programa_turno.pro_tur_nombre', 'sede.sede_nombre', 'programa_inscripcion_estado.pie_nombre')
             ->first();
+        $sede = Sede::join('departamento', 'sede.dep_id', '=', 'departamento.dep_id')
+            ->where('sede.sede_id', $inscripcion->sede_id)
+            ->select('sede.*', 'departamento.dep_nombre') // Selecciona los campos necesarios
+            ->first();
         // Obtener los bauchers relacionados con la inscripción filtrada por pi_id
         $bauchers = ProgramaBaucher::where('pi_id', $pi_id)->get();
         $inscripcionestado = ProgramaInscripcionEstado::all();
@@ -423,6 +429,7 @@ class InscripcionController extends Controller
             'sede_id' => 'required|exists:sede,sede_id',
             'pro_id' => 'required|exists:programa,pro_id',
             'pi_doc_digital.*' => 'nullable|file|max:5120|mimes:pdf',
+            'pro_tur_id' => 'required',
         ], [
             'per_rda.required' => 'El campo RDA es obligatorio.',
             'per_rda.numeric' => 'El campo RDA debe ser numérico.',
@@ -433,6 +440,7 @@ class InscripcionController extends Controller
             'per_celular.required' => 'El número de celular es obligatorio.',
             'per_celular.digits' => 'El número de celular debe tener exactamente 8 dígitos.',
             'per_celular.regex' => 'El número de celular debe comenzar con 6 o 7 y tener 8 dígitos en total.',
+            'pro_tur_id.required' => 'Debe seleccionar un turno válido.',
             'pi_doc_digital.*.file' => 'El archivo adjunto debe ser un archivo.',
             'pi_doc_digital.*.max' => 'El archivo adjunto no debe superar los 5MB.',
             'pi_doc_digital.*.mimes' => 'El archivo adjunto debe ser de tipo PDF.',
@@ -475,7 +483,7 @@ class InscripcionController extends Controller
         $inscripcion->save();
 
         // Redireccionar a una ruta adecuada después de editar la inscripción
-        return redirect()->route('admin.inscripcion.index')->with('success', 'La inscripción se ha actualizado correctamente.');
+        return redirect()->route('admin.inscripcion.index', ['sede_id' => encrypt($request->sede_id)])->with('success', 'La inscripción se ha actualizado correctamente.');
     }
     public function baucherpost(Request $request, $id)
     {
@@ -487,6 +495,13 @@ class InscripcionController extends Controller
             'pro_bau_fecha' => 'required|date',
             'pro_bau_tipo_pago' => 'required|string|max:255',
         ]);
+        // Verifica si el número de depósito ya existe en la base de datos
+        $nro_deposito = $request->input('pro_bau_nro_deposito');
+        $existingBaucher = ProgramaBaucher::where('pro_bau_nro_deposito', $nro_deposito)->first();
+        if ($existingBaucher) {
+            // Redirige con un mensaje de error si el número de depósito ya existe
+            return redirect()->back()->withErrors(['pro_bau_nro_deposito' => 'El número de depósito ya está registrado en el sistema.'])->withInput();
+        }
 
         // Encuentra la inscripción
         $baucher = new ProgramaBaucher();

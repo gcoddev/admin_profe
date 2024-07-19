@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('programa', function (Blueprint $table) {
             $table->bigIncrements('pro_id');
             $table->string('pro_nombre');
+            $table->string('pro_nombre_abre');
             $table->text('pro_contenido');
             $table->string('pro_horario')->nullable();
             $table->integer('pro_carga_horaria');

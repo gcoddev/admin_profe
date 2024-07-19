@@ -15,6 +15,7 @@ class Sede extends Model
     protected $fillable = [
         'sede_imagen',
         'sede_nombre',
+        'sede_nombre_abre',
         'sede_descripcion',
         'sede_imagen_responsable1',
         'sede_nombre_responsable1',
