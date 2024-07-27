@@ -59,9 +59,9 @@
                                             <a href="https://profe.minedu.gob.bo/"><b class="f-w-600">Volver al sitio web</b></a>
                                         </p>
                                     </div>
-                                    <div class="col-md-2">
+                                    {{-- <div class="col-md-2">
                                         <img src="../files/assets/images/auth/Logo-small-bottom.png" alt="small-logo.png" />
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                         </div>

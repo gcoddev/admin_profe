@@ -1,22 +1,3 @@
-<!-- Bootstrap Css -->
-<link rel="stylesheet" type="text/css"
-    href="{{ asset('backend/files/bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
-
-<link rel="stylesheet" type="text/css" href="{{ asset('backend/files/assets/icon/themify-icons/themify-icons.css') }}">
-
-<link rel="stylesheet" type="text/css" href="{{ asset('backend/files/assets/icon/icofont/css/icofont.css') }}">
-
-<link rel="stylesheet" type="text/css" href="{{ asset('backend/files/assets/css/style.css') }}">
-<link rel="icon" href="{{ asset('assets/profe/icono.png')}}" type="image/x-icon" />
-
-<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600" rel="stylesheet" />
-
-<link rel="stylesheet" type="text/css" href="{{ asset('backend/files/assets/icon/font-awesome/css/font-awesome.min.css') }}">
-
-<link rel="stylesheet" type="text/css" href="{{ asset('backend/files/assets/icon/feather/css/feather.css') }}" />
-<link rel="stylesheet" type="text/css" href="{{ asset('backend/files/assets/css/jquery.mCustomScrollbar.css') }}" />
-
-
 <style id='wp-emoji-styles-inline-css' type='text/css'>
     img.wp-smiley,
     img.emoji {
@@ -49,37 +30,50 @@
         text-decoration: none
     }
 </style>
+
 <link rel='stylesheet' id='contact-form-7-css'
-    href='{{ asset('frontend/wp-content/plugins/contact-form-7/includes/css/styles.css') }}' type='text/css' media='all' />
-<link rel='stylesheet' id='redux-extendify-styles-css'
-    href='{{ asset('frontend/wp-content/plugins/redux-framework/redux-core/assets/css/extendify-utilities.css') }}' type='text/css'
+    href='{{ asset('frontend/wp-content/plugins/contact-form-7/includes/css/styles.css') }}' type='text/css'
     media='all' />
+<link rel='stylesheet' id='redux-extendify-styles-css'
+    href='{{ asset('frontend/wp-content/plugins/redux-framework/redux-core/assets/css/extendify-utilities.css') }}'
+    type='text/css' media='all' />
 <link rel='stylesheet' id='qeducato-google-fonts-css'
     href='https://fonts.googleapis.com/css2?family=Jost%3Aital%2Cwght%400%2C100%3B0%2C200%3B0%2C300%3B0%2C400%3B0%2C500%3B0%2C600%3B0%2C700%3B0%2C800%3B0%2C900%3B1%2C100%3B1%2C200%3B1%2C300%3B1%2C400%3B1%2C500%3B1%2C600%3B1%2C700%3B1%2C800%3B1%2C900&amp;display=swap&amp;ver=6.5.5'
     type='text/css' media='all' />
-<link rel='stylesheet' id='bootstrap-css' href='{{ asset('frontend/wp-content/themes/qeducato/inc/assets/css/bootstrap.min.css') }}'
-    type='text/css' media='all' />
-<link rel='stylesheet' id='animate-css' href='{{ asset('frontend/wp-content/themes/qeducato/inc/assets/css/animate.min.css') }}'
-    type='text/css' media='all' />
+<link rel='stylesheet' id='bootstrap-css'
+    href='{{ asset('frontend/wp-content/themes/qeducato/inc/assets/css/bootstrap.min.css') }}' type='text/css'
+    media='all' />
+<link rel='stylesheet' id='animate-css'
+    href='{{ asset('frontend/wp-content/themes/qeducato/inc/assets/css/animate.min.css') }}' type='text/css'
+    media='all' />
 <link rel='stylesheet' id='magnific-popup-css'
-    href='{{ asset('frontend/wp-content/themes/qeducato/inc/assets/css/magnific-popup.css') }}' type='text/css' media='all' />
+    href='{{ asset('frontend/wp-content/themes/qeducato/inc/assets/css/magnific-popup.css') }}' type='text/css'
+    media='all' />
 <link rel='stylesheet' id='fontawesome-all-css'
-    href='{{ asset('frontend/wp-content/themes/qeducato/inc/assets/fontawesome/css/all.min.css') }}' type='text/css' media='all' />
-<link rel='stylesheet' id='dripicons-css' href='{{ asset('frontend/wp-content/themes/qeducato/inc/assets/css/dripicons.css') }}'
-    type='text/css' media='all' />
+    href='{{ asset('frontend/wp-content/themes/qeducato/inc/assets/fontawesome/css/all.min.css') }}' type='text/css'
+    media='all' />
+<link rel='stylesheet' id='dripicons-css'
+    href='{{ asset('frontend/wp-content/themes/qeducato/inc/assets/css/dripicons.css') }}' type='text/css'
+    media='all' />
 <link rel='stylesheet' id='slick-css' href='{{ asset('frontend/wp-content/themes/qeducato/inc/assets/css/slick.css') }}'
     type='text/css' media='all' />
-<link rel='stylesheet' id='meanmenu-css' href='{{ asset('frontend/wp-content/themes/qeducato/inc/assets/css/meanmenu.css') }}'
-    type='text/css' media='all' />
-<link rel='stylesheet' id='qeducato-default-css' href='{{ asset('frontend/wp-content/themes/qeducato/inc/assets/css/default.css') }}'
-    type='text/css' media='all' />
-<link rel='stylesheet' id='qeducato-style-css' href='{{ asset('frontend/wp-content/themes/qeducato/inc/assets/css/style.css') }}'
-    type='text/css' media='all' />
+<link rel='stylesheet' id='meanmenu-css'
+    href='{{ asset('frontend/wp-content/themes/qeducato/inc/assets/css/meanmenu.css') }}' type='text/css'
+    media='all' />
+<link rel='stylesheet' id='qeducato-default-css'
+    href='{{ asset('frontend/wp-content/themes/qeducato/inc/assets/css/default.css') }}' type='text/css'
+    media='all' />
+<link rel='stylesheet' id='qeducato-style-css'
+    href='{{ asset('frontend/wp-content/themes/qeducato/inc/assets/css/style.css') }}' type='text/css'
+    media='all' />
 <link rel='stylesheet' id='qeducato-responsive-css'
-    href='{{ asset('frontend/wp-content/themes/qeducato/inc/assets/css/responsive.css') }}' type='text/css' media='all' />
+    href='{{ asset('frontend/wp-content/themes/qeducato/inc/assets/css/responsive.css') }}' type='text/css'
+    media='all' />
 <link rel='stylesheet' id='recent-posts-widget-with-thumbnails-public-style-css'
-    href='{{ asset('frontend/wp-content/plugins/recent-posts-widget-with-thumbnails/public.css') }}' type='text/css' media='all' />
-<script defer type="text/javascript" src="{{ asset('frontend/wp-includes/js/jquery/jquery.min.js') }}" id="jquery-core-js"></script>
+    href='{{ asset('frontend/wp-content/plugins/recent-posts-widget-with-thumbnails/public.css') }}' type='text/css'
+    media='all' />
+<script defer type="text/javascript" src="{{ asset('frontend/wp-includes/js/jquery/jquery.min.js') }}"
+    id="jquery-core-js"></script>
 <script defer type="text/javascript" src="{{ asset('frontend/wp-includes/js/jquery/jquery-migrate.min.js') }}"
     id="jquery-migrate-js"></script>
 <link rel="https://api.w.org/" href="{{ asset('frontend/wp-json/index.html') }}" />
@@ -94,11 +88,12 @@
 <meta name="generator" content="Redux 4.4.15" />
 <meta name="generator"
     content="Elementor 3.20.3; features: e_optimized_assets_loading, e_optimized_css_loading, additional_custom_breakpoints, block_editor_assets_optimize, e_image_loading_optimization; settings: css_print_method-external, google_font-enabled, font_display-auto">
-<link rel="icon" href="{{ asset('frontend/wp-content/uploads/2023/03/cropped-sve-icon7-32x32.html" sizes="32x32') }}" />
-<link rel="icon" href="{{ asset('frontend/wp-content/uploads/2023/03/cropped-sve-icon7-192x192.html" sizes="192x192') }}" />
-<link rel="apple-touch-icon" href="{{ asset('frontend/wp-content/uploads/2023/03/cropped-sve-icon7-180x180.html') }}" />
-<meta name="msapplication-TileImage"
-    content="https://wpdemo.zcubethemes.com/qeducato/wp-content/uploads/2023/03/cropped-sve-icon7-270x270.png" />
+<link rel="icon"
+    href="{{ asset('frontend/wp-content/uploads/2023/03/cropped-sve-icon7-32x32.html" sizes="32x32') }}" />
+<link rel="icon"
+    href="{{ asset('frontend/wp-content/uploads/2023/03/cropped-sve-icon7-192x192.html" sizes="192x192') }}" />
+<link rel="apple-touch-icon"
+    href="{{ asset('frontend/wp-content/uploads/2023/03/cropped-sve-icon7-180x180.html') }}" />
 <style id="qeducato_data-dynamic-css" title="dynamic-css" class="redux-options-output">
     body,
     .widget_categories a {
@@ -110,8 +105,10 @@
     }
 
     .breadcrumb-area {
-        background-color: #20282E;
-        background-image: url('{{ asset('frontend/wp-content/uploads/2023/03/bdrc-bg.png') }}');
+        background-color: rgba(32, 40, 46, 0.8); /* Fondo con un poco de transparencia */
+        background-image: url('{{ asset('assets/evento/30072024_afiche.webp') }}');
+        background-blend-mode: overlay; /* Mezcla el color de fondo y la imagen */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Añade sombra */
     }
 
     .footer-bg {

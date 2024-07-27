@@ -1,369 +1,165 @@
-@php
-    use Illuminate\Support\Facades\DB;
-    $usr = Auth::guard('admin')->user();
-    $sedes = DB::table('sede')->get();
-@endphp
-<!-- nabar area start -->
-<nav class="pcoded-navbar">
-    <div class="pcoded-inner-navbar main-menu">
-        <div class="pcoded-navigatio-lavel">ADMINISTRADOR</div>
-        <ul class="pcoded-item pcoded-left-item">
-            @if ($usr->can('dashboard.view'))
-                <li class="{{ Route::is('admin.dashboard') ? 'active' : '' }}">
-                    <a href="{{ route('admin.dashboard') }}">
-                        <span class="pcoded-micon"><i class="feather icon-home"></i></span>
-                        <span class="pcoded-mtext">Dashboard</span>
-                    </a>
-                </li>
-            @endif
-            @if ($usr->can('role.create') || $usr->can('role.view') || $usr->can('role.edit') || $usr->can('role.delete'))
-                <li
-                    class="pcoded-hasmenu {{ Route::is('admin.roles.create') || Route::is('admin.roles.index') || Route::is('admin.roles.edit') ? 'active' : '' }}">
-                    <a href="javascript:void(0)">
-                        <span class="pcoded-micon"><i class="icofont icofont-shield"></i></span>
-                        <span>
-                            Roles & Permisos
-                        </span></a>
-                    <ul class="pcoded-submenu">
-                        @if ($usr->can('role.view'))
-                            <li
-                                class="{{ Route::is('admin.roles.index') || Route::is('admin.roles.edit') ? 'active' : '' }}">
-                                <a href="{{ route('admin.roles.index') }}">
-                                    <span class="pcoded-mtext">Todos Roles
-                                    </span>
-                                </a>
-                            </li>
-                        @endif
-                        @if ($usr->can('role.create'))
-                            <li class="{{ Route::is('admin.roles.create') ? 'active' : '' }}">
-                                <a href="{{ route('admin.roles.create') }}">
-                                    <span class="pcoded-mtext">Crear
-                                        Rol</span>
-                                </a>
-                            </li>
-                        @endif
-                    </ul>
-                </li>
-            @endif
-
-
-            @if ($usr->can('admin.create') || $usr->can('admin.view') || $usr->can('admin.edit') || $usr->can('admin.delete'))
-                <li
-                    class="pcoded-hasmenu {{ Route::is('admin.admins.create') || Route::is('admin.admins.index') || Route::is('admin.admins.edit') ? 'active' : '' }}">
-                    <a href="javascript:void(0)">
-                        <span class="pcoded-micon"><i class="icofont icofont-shield-alt"></i></span>
-                        <span>
-                            Admins
-                        </span></a>
-                    </a>
-                    <ul class="pcoded-submenu">
-
-                        @if ($usr->can('admin.view'))
-                            <li
-                                class="{{ Route::is('admin.admins.index') || Route::is('admin.admins.edit') ? 'active' : '' }}">
-                                <a href="{{ route('admin.admins.index') }}"><span class="pcoded-mtext">Todos Admins</a>
-                            </li>
-                        @endif
-
-                        @if ($usr->can('admin.create'))
-                            <li class="{{ Route::is('admin.admins.create') ? 'active' : '' }}">
-                                <a href="{{ route('admin.admins.create') }}"><span class="pcoded-mtext">Crear Admin</a>
-                            </li>
-                        @endif
-                    </ul>
-                </li>
-            @endif
-
-            </li>
-            @if ($usr->can('migracion.view'))
-            <li class="pcoded-hasmenu">
-
-                <a href="javascript:void(0)">
-                    <span class="pcoded-micon"><i class="feather icon-sidebar"></i></span>
-                    <span class="pcoded-mtext">Migraciones</span>
-                    {{-- <span class="pcoded-badge label label-warning">NEW</span> --}}
-                </a>
-
-                <ul class="pcoded-submenu">
-                    <li class="pcoded-hasmenu">
-                        <a href="javascript:void(0)">
-                            <span class="pcoded-mtext">Ciudad</span>
-                        </a>
-                        <ul class="pcoded-submenu">
-                            <li class=" ">
-                                <a href="{{ route('migration.distrito.index') }}">
-                                    <span class="pcoded-mtext">Distrito</span>
-                                </a>
-                            </li>
-                            <li class=" ">
-                                <a href="{{ route('migration.departamento.index') }}">
-                                    <span class="pcoded-mtext">Departamento</span>
-                                </a>
+<header class="header-area header-three">
+    <!-- header -->
+    <div class="header-top second-header d-none d-md-block">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-4 col-md-4 d-none d-lg-block">
+                    <div class="header-social">
+                        {{-- <span>
+                            Síganos:-
+                            <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" title="LinkedIn"><i class="fab fa-instagram"></i></a>
+                            <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" title="Twitter"><i class="fab fa-youtube"></i></a>
+                        </span> --}}
+                        <!--  /social media icon redux -->
+                    </div>
+                </div>
+                <div class="col-lg-8 col-md-8 d-none d-lg-block text-right">
+                    <div class="header-cta">
+                        <ul>
+                            {{-- <li>
+                                <div class="call-box">
+                                    <div class="icon">
+                                        <img src="{{ asset('frontend/wp-content/themes/qeducato/inc/assets/images/phone-call.png') }}"
+                                            alt="https://wpdemo.zcubethemes.com/qeducato/wp-content/themes/qeducato/inc/assets/images/phone-call.png" />
+                                    </div>
+                                    <div class="text">
+                                        <span>Call Now !</span>
+                                        <strong><a href="tel:+917052101786">+91 7052 101 786</a></strong>
+                                    </div>
+                                </div>
+                            </li> --}}
+                            <li>
+                                <div class="call-box">
+                                    <div class="icon">
+                                        <img src="{{ asset('frontend/wp-content/themes/qeducato/inc/assets/images/mailing.png') }}"
+                                            alt="https://wpdemo.zcubethemes.com/qeducato/wp-content/themes/qeducato/inc/assets/images/mailing.png" />
+                                    </div>
+                                    <div class="text">
+                                        <span>Correo</span>
+                                        <strong><a href="mailto:info@example.com">
+                                                profe@iipp.edu.bo
+                                            </a></strong>
+                                    </div>
+                                </div>
                             </li>
                         </ul>
-                    </li>
-                    <li class="pcoded-hasmenu">
-                        <a href="javascript:void(0)">
-                            <span class="pcoded-mtext">Otros</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="header-sticky" class="menu-area">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-xl-3 col-lg-3">
+                    <div class="logo">
+                        <!-- LOGO IMAGE -->
+                        <!-- For Retina Ready displays take a image with double the amount of pixels that your image will be displayed (e.g 268 x 60 pixels) -->
+                        <a href="#" class="navbar-brand logo-black">
+                            <!-- Logo Standard -->
+                            <img src="{{ asset('assets/profe/logoprofe.jpg')}}" alt="PROFE"
+                                title="" width="70%" />
                         </a>
-                        <ul class="pcoded-submenu">
-                            <li class=" ">
-                                <a href="{{ route('migration.especialidad.index') }}">
-                                    <span class="pcoded-mtext">Especialidad</span>
-                                </a>
-                            </li>
-                            <li class=" ">
-                                <a href="{{ route('migration.cargo.index') }}">
-                                    <span class="pcoded-mtext">Cargo</span>
-                                </a>
-                            </li>
-                            <li class=" ">
-                                <a href="{{ route('migration.unidadeducativa.index') }}">
-                                    <span class="pcoded-mtext">Unidad Educativa</span>
-                                </a>
-                            </li>
-                            <li class="">
-                                <a href="{{ route('migration.otros.index') }}">
-                                    <span class="pcoded-mtext">Otros</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class=" ">
-                        <a href="{{ route('migration.usuarios.index') }}">
-                            <span class="pcoded-mtext">Personas</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            @endif
-            @if ($usr->can('configuracion_programa.view'))
-            <li class="pcoded-hasmenu">
-
-                <a href="javascript:void(0)">
-                    <span class="pcoded-micon"><i class="feather icon-sidebar"></i></span>
-                    <span class="pcoded-mtext">Configuraciones</span>
-                    {{-- <span class="pcoded-badge label label-warning">NEW</span> --}}
-                </a>
-
-                <ul class="pcoded-submenu">
-                    <li class=" ">
-                        <a href="{{ route('configuracion.programa.index') }}">
-                            <span class="pcoded-mtext">Programa</span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="{{ route('configuracion.sede.index') }}">
-                            <span class="pcoded-mtext">Sede Cupos - Turnos</span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="{{ route('configuracion.programa.index') }}">
-                            <span class="pcoded-mtext">Evento</span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="{{ route('configuracion.restriccion.index') }}">
-                            <span class="pcoded-mtext">Programa Restricciones</span>
-                        </a>
-                    </li>
-
-                </ul>
-            </li>
-            @endif
-            @if ($usr->can('programa.view'))
-            <li class>
-                <a href="{{ route('admin.programa.index') }}">
-                    <span class="pcoded-micon"><i class="feather icon-menu"></i></span>
-                    <span class="pcoded-mtext">Programas</span>
-                </a>
-            </li>
-            @endif
-            @if ($usr->can('sede.view'))
-            <li class>
-                <a href="{{ route('admin.sede.index') }}">
-                    <span class="pcoded-micon"><i class="feather icon-menu"></i></span>
-                    <span class="pcoded-mtext">Sedes</span>
-                </a>
-            </li>
-            @endif
-            @if ($usr->can('inscripcion.view'))
-                <li class="pcoded-hasmenu">
-                    <a href="javascript:void(0)">
-                        <span class="pcoded-micon"><i class="feather icon-sidebar"></i></span>
-                        <span class="pcoded-mtext">Inscripciones</span>
-                    </a>
-                    <ul class="pcoded-submenu">
-                        @foreach($sedes as $sede)
-                            @if (!is_null($usr->sede_ids) && !empty(json_decode($usr->sede_ids)))
-                                @if (in_array($sede->sede_id, json_decode($usr->sede_ids)))
-                                    <li>
-                                        <a href="{{ route('admin.inscripcion.index', ['sede_id' => encrypt($sede->sede_id)]) }}">
-                                            <span class="pcoded-micon"><i class="feather icon-menu"></i></span>
-                                            <span class="pcoded-mtext">{{ $sede->sede_nombre }}</span>
-                                        </a>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6">
+                    <div class="main-menu text-right text-xl-right">
+                        <nav id="mobile-menu">
+                            <div id="cssmenu" class="menu-main-menu-container">
+                                <ul id="menu-main-menu" class="menu">
+                                    <li id="menu-item-113"
+                                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home current-menu-item page_item page-item-9 current_page_item current-menu-ancestor current-menu-parent current_page_parent current_page_ancestor menu-item-has-children menu-item-113">
+                                        {{-- <a href="index.html" aria-current="page">Home</a>
+                                        <ul class="sub-menu">
+                                            <li id="menu-item-112"
+                                                class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home current-menu-item page_item page-item-9 current_page_item menu-item-112">
+                                                <a href="index.html" aria-current="page">Home Page 01</a>
+                                            </li>
+                                            <li id="menu-item-115"
+                                                class="menu-item menu-item-type-post_type menu-item-object-page menu-item-115">
+                                                <a href="home-page-02/index.html">Home Page 02</a>
+                                            </li>
+                                            <li id="menu-item-114"
+                                                class="menu-item menu-item-type-post_type menu-item-object-page menu-item-114">
+                                                <a href="home-page-03/index.html">Home Page 03</a>
+                                            </li>
+                                        </ul> --}}
                                     </li>
-                                @endif
-                            @else
-                                <li>
-                                    <a href="{{ route('admin.inscripcion.index', ['sede_id' => encrypt($sede->sede_id)]) }}">
-                                        <span class="pcoded-micon"><i class="feather icon-menu"></i></span>
-                                        <span class="pcoded-mtext">{{ $sede->sede_nombre }}</span>
-                                    </a>
-                                </li>
-                            @endif
-                        @endforeach
-                    </ul>
-                </li>
-            @endif
+                                    <li id="menu-item-116"
+                                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-116">
+                                        {{-- <a href="about-us/index.html">About Us</a> --}}
+                                    </li>
+                                    <li id="menu-item-117"
+                                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-117">
+                                        {{-- <a href="our-courses/index.html">Courses</a>
+                                        <ul class="sub-menu">
+                                            <li id="menu-item-2866"
+                                                class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2866">
+                                                <a href="our-courses/index.html">Our Courses</a>
+                                            </li>
+                                            <li id="menu-item-2865"
+                                                class="menu-item menu-item-type-post_type menu-item-object-kidscourses menu-item-2865">
+                                                <a href="kidscourses/langue-class/index.html">Course Details</a>
+                                            </li>
+                                        </ul> --}}
+                                    </li>
+                                    <li id="menu-item-118"
+                                        class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-118">
+                                        {{-- <a href="#">Pages</a>
+                                        <ul class="sub-menu">
+                                            <li id="menu-item-123"
+                                                class="menu-item menu-item-type-post_type menu-item-object-page menu-item-123">
+                                                <a href="our-event/index.html">Event</a>
+                                            </li>
+                                            <li id="menu-item-122"
+                                                class="menu-item menu-item-type-post_type menu-item-object-page menu-item-122">
+                                                <a href="our-gallery/index.html">Gallery</a>
+                                            </li>
+                                            <li id="menu-item-119"
+                                                class="menu-item menu-item-type-post_type menu-item-object-page menu-item-119">
+                                                <a href="pricing/index.html">Pricing</a>
+                                            </li>
+                                            <li id="menu-item-120"
+                                                class="menu-item menu-item-type-post_type menu-item-object-page menu-item-120">
+                                                <a href="faq/index.html">Faq</a>
+                                            </li>
+                                            <li id="menu-item-121"
+                                                class="menu-item menu-item-type-post_type menu-item-object-page menu-item-121">
+                                                <a href="teacher/index.html">Teacher</a>
+                                            </li>
+                                        </ul> --}}
+                                    </li>
+                                    <li id="menu-item-124"
+                                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-124">
+                                        {{-- <a href="blog/index.html">Eventos</a> --}}
+                                    </li>
+                                    <li id="menu-item-125"
+                                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-125">
+                                        {{-- <a href="contact/index.html">Contact</a> --}}
+                                    </li>
+                                </ul>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-3 text-right d-none d-lg-block text-right text-xl-right">
+                    <div class="login">
+                        <ul>
 
-            {{-- <li class="pcoded-hasmenu">
-                <a href="javascript:void(0)">
-                    <span class="pcoded-micon"><i class="feather icon-layers"></i></span>
-                    <span class="pcoded-mtext">Widget</span>
-                    <span class="pcoded-badge label label-danger">100+</span>
-                </a>
-                <ul class="pcoded-submenu">
-                    <li class=" ">
-                        <a href="default/widget-statistic.html">
-                            <span class="pcoded-mtext">Statistic</span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="default/widget-data.html">
-                            <span class="pcoded-mtext">Data</span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="default/widget-chart.html">
-                            <span class="pcoded-mtext">Chart Widget</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-        <div class="pcoded-navigatio-lavel">Other</div>
-        <ul class="pcoded-item pcoded-left-item">
-            <li class="pcoded-hasmenu">
-                <a href="javascript:void(0)">
-                    <span class="pcoded-micon"><i class="feather icon-list"></i></span>
-                    <span class="pcoded-mtext">Administrador</span>
-                </a>
-
-                <ul class="pcoded-submenu">
-
-
-
-                    <li class="pcoded-hasmenu">
-                        <a href="javascript:void(0)">
-                            <span class="pcoded-mtext">Menu Level 2.2</span>
-                        </a>
-                        <ul class="pcoded-submenu">
-                            <li class>
-                                <a href="javascript:void(0)">
-                                    <span class="pcoded-mtext">Menu Level 3.1</span>
-                                </a>
+                            <li>
+                                <div class="second-header-btn">
+                                    <a href="#" class="btn">EVENTO</a>
+                                </div>
                             </li>
                         </ul>
-                    </li>
-                    <li class>
-                        <a href="javascript:void(0)">
-                            <span class="pcoded-mtext">Menu Level 2.3</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li class>
-                <a href="javascript:void(0)" class="disabled">
-                    <span class="pcoded-micon"><i class="feather icon-power"></i></span>
-                    <span class="pcoded-mtext">Disabled Menu</span>
-                </a>
-            </li>
-            <li class>
-                <a href="default/sample-page.html">
-                    <span class="pcoded-micon"><i class="feather icon-watch"></i></span>
-                    <span class="pcoded-mtext">Sample Page</span>
-                </a>
-            </li>
-        </ul>
-        <div class="pcoded-navigatio-lavel">Support</div>
-        <ul class="pcoded-item pcoded-left-item">
-            <li class>
-                <a href="http://html.codedthemes.com/Adminty/doc" target="_blank">
-                    <span class="pcoded-micon"><i class="feather icon-monitor"></i></span>
-                    <span class="pcoded-mtext">Documentation</span>
-                </a>
-            </li>
-            <li class>
-                <a href="#" target="_blank">
-                    <span class="pcoded-micon"><i class="feather icon-help-circle"></i></span>
-                    <span class="pcoded-mtext">Submit Issue</span>
-                </a>
-            </li>
-        </ul> --}}
-    </div>
-</nav>
-<!-- header area end -->
-{{-- <div class="sidebar-menu">
-    <div class="sidebar-header">
-        <div class="logo">
-            <a href="{{ route('admin.dashboard') }}">
-                <h2 class="text-white">Admin</h2>
-            </a>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="mobile-menu"></div>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="main-menu">
-        <div class="menu-inner">
-            <nav>
-                <ul class="metismenu" id="menu">
-
-                    @if ($usr->can('dashboard.view'))
-                    <li class="active">
-                        <a href="javascript:void(0)" aria-expanded="true"><i class="ti-dashboard"></i><span>dashboard</span></a>
-                        <ul class="collapse">
-                            <li class="{{ Route::is('admin.dashboard') ? 'active' : '' }}"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                        </ul>
-                    </li>
-                    @endif
-
-                    @if ($usr->can('role.create') || $usr->can('role.view') || $usr->can('role.edit') || $usr->can('role.delete'))
-                    <li>
-                        <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-tasks"></i><span>
-                            Roles & Permissions
-                        </span></a>
-                        <ul class="collapse {{ Route::is('admin.roles.create') || Route::is('admin.roles.index') || Route::is('admin.roles.edit') || Route::is('admin.roles.show') ? 'in' : '' }}">
-                            @if ($usr->can('role.view'))
-                                <li class="{{ Route::is('admin.roles.index')  || Route::is('admin.roles.edit') ? 'active' : '' }}"><a href="{{ route('admin.roles.index') }}">All Roles</a></li>
-                            @endif
-                            @if ($usr->can('role.create'))
-                                <li class="{{ Route::is('admin.roles.create')  ? 'active' : '' }}"><a href="{{ route('admin.roles.create') }}">Create Role</a></li>
-                            @endif
-                        </ul>
-                    </li>
-                    @endif
-
-
-                    @if ($usr->can('admin.create') || $usr->can('admin.view') || $usr->can('admin.edit') || $usr->can('admin.delete'))
-                    <li>
-                        <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-user"></i><span>
-                            Admins
-                        </span></a>
-                        <ul class="collapse {{ Route::is('admin.admins.create') || Route::is('admin.admins.index') || Route::is('admin.admins.edit') || Route::is('admin.admins.show') ? 'in' : '' }}">
-
-                            @if ($usr->can('admin.view'))
-                                <li class="{{ Route::is('admin.admins.index')  || Route::is('admin.admins.edit') ? 'active' : '' }}"><a href="{{ route('admin.admins.index') }}">All Admins</a></li>
-                            @endif
-
-                            @if ($usr->can('admin.create'))
-                                <li class="{{ Route::is('admin.admins.create')  ? 'active' : '' }}"><a href="{{ route('admin.admins.create') }}">Create Admin</a></li>
-                            @endif
-                        </ul>
-                    </li>
-                    @endif
-
-                </ul>
-            </nav>
-        </div>
-    </div>
-</div> --}}
-<!-- sidebar menu area end -->
+</header>

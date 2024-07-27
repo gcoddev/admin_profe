@@ -134,6 +134,11 @@
                             <span class="pcoded-mtext">Personas</span>
                         </a>
                     </li>
+                    <li class=" ">
+                        <a href="{{ route('migration.inscripciones.index') }}">
+                            <span class="pcoded-mtext">Inscripciones</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
             @endif
@@ -178,6 +183,14 @@
                     <span class="pcoded-mtext">Programas</span>
                 </a>
             </li>
+            @endif
+            @if ($usr->can('comunicado.view'))
+                <li class>
+                    <a href="{{ route('admin.inscripcion.buscadorpersona') }}">
+                        <span class="pcoded-micon"><i class="feather icon-menu"></i></span>
+                        <span class="pcoded-mtext">Buscardor</span>
+                    </a>
+                </li>
             @endif
             @if ($usr->can('sede.view'))
             <li class>

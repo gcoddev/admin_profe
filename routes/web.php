@@ -13,14 +13,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Route::get('/', function () {
+    return view('welcome');
+});
 
 Auth::routes();
 
-Route::get('/', 'HomeController@redirectAdmin')->name('index');
-Route::get('/home', 'HomeController@index')->name('home');
+// Route::get('/', 'HomeController@redirectAdmin')->name('index');
+//Route::get('/home', 'HomeController@index')->name('home');
+// Route::get('/evento', 'Frontend\EventoController@index')->name('evento.index');
+Route::get('/evento/25', 'Frontend\EventoController@index')->name('evento.show');
+Route::post('/evento/inscripcion', 'Frontend\EventoController@storeParticipante')->name('evento.storeParticipante');
+Route::get('evento/comprobanteParticipante/{parametros}','Frontend\EventoController@comprobanteParticipante')->name('evento.comprobanteParticipante');
+Route::get('evento/comprobanteParticipantePdf/{parametros}', 'Frontend\EventoController@comprobanteParticipantePdf')->name('evento.comprobanteParticipantePdf');
 
 /**
  * Admin routes
@@ -31,7 +36,6 @@ Route::group(['prefix' => 'admin'], function () {
     Route::resource('users', 'Backend\UsersController', ['names' => 'admin.users']);
     Route::resource('admins', 'Backend\AdminsController', ['names' => 'admin.admins']);
     Route::resource('programa', 'Backend\ProgramaController', ['names' => 'admin.programa']);
-    Route::resource('inscripcion', 'Backend\InscripcionController', ['names' => 'admin.inscripcion']);
     Route::get('inscripcionIn/{sede_id}', 'Backend\InscripcionController@index')->name('admin.inscripcion.index');
     Route::get('inscripcionI/{sede_id}', 'Backend\InscripcionController@create')->name('admin.inscripcion.create');
     // Route::get('inscripcion/{sede_id}', 'Backend\InscripcionController@indexSede', ['names' => 'admin.inscripcion.indexsede']);

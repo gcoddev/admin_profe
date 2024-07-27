@@ -109,25 +109,30 @@
                                     </div>
                                     <label class="col-sm-1 col-form-label">Programa</label>
                                     <div class="col-sm-3">
-                                        <select name="pro_id" id="programa" class="form-control">
-                                            <option value="">Seleccione un programa</option>
-                                            @foreach ($programa as $prog)
+                                        <select name="pro_id" id="programa" class="form-control" readonly>
+                                            
+                                            <option value="{{ $programa->pro_id }}"
+                                                {{ $programa->pro_id == $programa->pro_id ? 'selected' : '' }} >
+                                                {{ $programa->pro_nombre }}</option>
+                                            {{-- 
+                                                <option value="">Seleccione un programa</option>
+                                                @foreach ($programa as $prog)
                                                 <option value="{{ $prog->pro_id }}"
                                                     {{ $inscripcion->pro_id == $prog->pro_id ? 'selected' : '' }}>
                                                     {{ $prog->pro_nombre }}</option>
-                                            @endforeach
+                                            @endforeach --}}
                                         </select>
                                     </div>
 
                                     <div class="col-sm-3">
-                                        <select name="pro_tur_id" id="turno" class="form-control">
+                                        <select name="pro_tur_id" id="turno" class="form-control" required>
                                             <option value="">Seleccione un turno</option>
-
                                         </select>
                                     </div>
+                                    
                                 </div>
                                 <div class="row form-group">
-                                    <label class="col-sm-1 col-form-label">Módulo</label>
+                                    {{-- <label class="col-sm-1 col-form-label">Módulo</label>
                                     <div class="col-sm-2">
                                         <select name="pi_modulo" id="sede" class="form-control">
                                             <option value="{{ $inscripcion->pi_modulo }}">
@@ -147,8 +152,8 @@
                                             <option value="inhabilitado">
                                                     inhabilitado</option>
                                         </select>
-                                    </div>
-                                    <label class="col-sm-1 col-form-label">Estado</label>
+                                    </div> --}}
+                                    {{-- <label class="col-sm-1 col-form-label">Estado</label>
                                     <div class="col-sm-2">
                                         <select name="pie_id" id="estado" class="form-control">
                                             <option value="">Seleccione estado</option>
@@ -160,12 +165,12 @@
                                                 @endif
                                             @endforeach
                                         </select>
-                                    </div>
-                                    <label for="documentos" class="col-sm-2 col-form-label">Adjuntar Documentos</label>
+                                    </div> --}}
+                                    {{-- <label for="documentos" class="col-sm-2 col-form-label">Adjuntar Documentos</label>
                                     <div class="col-sm-4">
                                         <input type="file" class="form-control" id="pi_doc_digital" name="pi_doc_digital">
                                         <span class="j-hint">Agregar Documentos: pdf 5Mb</span>
-                                    </div>
+                                    </div> --}}
                                 </div>
 
 
@@ -173,7 +178,7 @@
                                 <input type="hidden" id="per_id" name="per_id">
                                 @if (count($bauchers) == 0)
                                     <div class="alert alert-warning mt-3" role="alert">
-                                        <strong>Atención:</strong> Para habilitar el estado "INSCRITO" primero debe agregar al menos un baucher.
+                                        <strong>Atención:</strong> Debe agregar baucher.
                                     </div>
                                 @endif
 
@@ -378,8 +383,7 @@
                 $('#sede, #programa').on('change', function() {
                     var sedeId = $('#sede').val();
                     var proId = $('#programa').val();
-                    var selectedTurnoId =
-                    '{{ $inscripcion->pro_tur_id }}'; // Assuming you have $inscripcion variable in your Blade
+                    var selectedTurnoId = '{{ $inscripcion->pro_tur_id }}'; // Asumiendo que tienes la variable $inscripcion en tu Blade
 
                     if (sedeId && proId) {
                         $.ajax({
@@ -393,11 +397,8 @@
                                 $('#turno').html('<option value="">Seleccione un turno</option>');
                                 if (response.length > 0) {
                                     response.forEach(function(turno) {
-                                        var selected = turno.pro_tur_id == selectedTurnoId ?
-                                            'selected' : '';
-                                        $('#turno').append(
-                                            `<option value="${turno.pro_tur_id}" ${selected}>${turno.pro_tur_nombre}</option>`
-                                        );
+                                        var selected = turno.pro_tur_id == selectedTurnoId ? 'selected' : '';
+                                        $('#turno').append(`<option value="${turno.pro_tur_id}" ${selected}>${turno.pro_tur_nombre}</option>`);
                                     });
                                 }
                             },

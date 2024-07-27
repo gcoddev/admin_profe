@@ -18,7 +18,7 @@ class HomeController extends Controller
 
     public function redirectAdmin()
     {
-        return redirect()->route('admin.dashboard');
+        return redirect()->route('evento.show');
     }
 
     /**

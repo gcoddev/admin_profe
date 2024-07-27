@@ -66,7 +66,13 @@
                                     <div class="sub-title">{{ $inscripciones->first()->dep_nombre ?? '' }} -
                                         {{ $inscripciones->first()->sede_nombre ?? 'Nombre de Sede' }}
                                     </div>
-
+                                            <h6>Total de Baucheres Registrados</h6>
+                                            @if(isset($totalBaucheresPorSede))
+                                                <p><strong>Total Baucheres:</strong> {{ $totalBaucheresPorSede->total_baucheres }}</p>
+                                            @else
+                                                <p>No hay baucheres registrados para esta sede.</p>
+                                            @endif
+                                        <!-- El resto de tu contenido aquí -->
                                     @include('backend.layouts.partials.messages')
                                     @if (Auth::guard('admin')->user()->can('inscripcion.create'))
                                         <a class="btn btn-out btn-success btn-square"
@@ -105,16 +111,17 @@
                                                         </thead>
                                                         <tbody>
                                                             @foreach ($inscripcionesGrouped as $inscripcion)
-                                                                <tr
-                                                                    class="{{ !$inscripcion->cumple_restricciones ? 'table-danger' : '' }}">
+                                                                <tr>
                                                                     <td>{{ $loop->index + 1 }}</td>
                                                                     <td>
                                                                         {{ $inscripcion->per_nombre1 }}
                                                                         {{ $inscripcion->per_nombre2 }}
                                                                         {{ $inscripcion->per_apellido1 }}
                                                                         {{ $inscripcion->per_apellido2 }}
-                                                                        <strong>|RDA:</strong>
+                                                                        <br><strong>|RDA:</strong>
                                                                         {{ $inscripcion->per_rda }}<br>
+                                                                        <strong>|CI:</strong>
+                                                                        {{ $inscripcion->per_ci }}<br>
                                                                         <strong>En funcion:
                                                                             {{ $inscripcion->per_en_funcion ? 'SI' : 'NO' }}
                                                                         </strong>
@@ -123,14 +130,10 @@
                                                                                 href="https://wa.me/{{ '+591' . $inscripcion->per_celular }}"
                                                                                 target="_blank">{{ $inscripcion->per_celular }}</a><br>
                                                                         @endif
-                                                                        @if (!$inscripcion->cumple_restricciones)
-                                                                            <strong>Motivo:
-                                                                                {{ $inscripcion->porque_no_cumple }}</strong>
-                                                                        @endif
                                                                     </td>
                                                                     <td>{{ $inscripcion->pro_tur_nombre }}</td>
                                                                     <td>
-                                                                    @php
+                                                                    {{-- @php
                                                                         $totalMonto = 0;
                                                                     @endphp
                                                                     @foreach ($baucheres as $baucher)
@@ -149,14 +152,14 @@
                                                                                 $totalMonto += $baucher->pro_bau_monto;
                                                                             @endphp
                                                                         @endif
-                                                                    @endforeach
-                                                                    <div class="mt-2 font-weight-bold">
+                                                                    @endforeach --}}
+                                                                    {{-- <div class="mt-2 font-weight-bold">
                                                                         @if ($totalMonto >= $inscripcion->pro_costo)
                                                                             <span class="text-success">Total completado: {{ $totalMonto }} Bs.</span>
                                                                         @else
                                                                             <span class="text-danger">Monto faltante: {{ $inscripcion->pro_costo - $totalMonto }} Bs.</span>
                                                                         @endif
-                                                                    </div>
+                                                                    </div> --}}
                                                                     </td>
                                                                     <td>
                                                                         @if ($inscripcion->pie_nombre == 'INSCRITO')
@@ -187,17 +190,17 @@
                                                                         @if (Auth::guard('admin')->user()->can('inscripcion.pdf'))
                                                                             @if ($inscripcion->pie_nombre == 'INSCRITO')
                                                                                 
-                                                                                @if ($totalMonto >= $inscripcion->pro_costo)
-                                                                                    <a href="{{ route('admin.inscripcion.inscripcionpdf', encrypt($inscripcion->pi_id)) }}"
+                                                                                {{-- @if ($totalMonto >= $inscripcion->pro_costo) --}}
+                                                                                    {{-- <a href="{{ route('admin.inscripcion.inscripcionpdf', encrypt($inscripcion->pi_id)) }}"
                                                                                         class="btn btn-outline-danger waves-effect waves-light m-r-20">
                                                                                         <i class="icofont icofont-file-pdf"></i>
-                                                                                    </a>
-                                                                                @else
+                                                                                    </a> --}}
+                                                                                {{-- @else --}}
                                                                                     {{-- <a href="{{ route('admin.inscripcion.baucher', encrypt($inscripcion->pi_id)) }}"
                                                                                         class="btn btn-outline-info waves-effect waves-light m-r-20">
                                                                                         <i class="icofont icofont-pencil-alt-5"></i>
                                                                                     </a> --}}
-                                                                                @endif
+                                                                                {{-- @endif --}}
                                                                             @elseif ($inscripcion->pie_nombre == 'PREINSCRITO')
                                                                                 <a href="{{ route('admin.inscripcion.formulariopdf', encrypt($inscripcion->pi_id)) }}"
                                                                                     class="btn btn-outline-danger waves-effect waves-light m-r-20">
@@ -235,37 +238,7 @@
 
 
 @section('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const sedeSelect = document.getElementById('sede');
-            const programaSelect = document.getElementById('programa');
-            const turnoSelect = document.getElementById('turno');
-
-            function updateTurnos() {
-                const sedeId = sedeSelect.value;
-                const proId = programaSelect.value;
-
-                if (sedeId && proId) {
-                    fetch(`/get-turnos?sede_id=${sedeId}&pro_id=${proId}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            turnoSelect.innerHTML = '<option value="">Seleccione un turno</option>';
-                            if (data.length > 0) {
-                                data.forEach(turno => {
-                                    turnoSelect.innerHTML +=
-                                        `<option value="${turno.pro_tur_id}">${turno.pro_tur_nombre}</option>`;
-                                });
-                            }
-                        });
-                } else {
-                    turnoSelect.innerHTML = '<option value="">Seleccione un turno</option>';
-                }
-            }
-
-            sedeSelect.addEventListener('change', updateTurnos);
-            programaSelect.addEventListener('change', updateTurnos);
-        });
-    </script>
+    
     <script src="{{ asset('backend/files/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('backend/files/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js') }}">
     </script>
@@ -281,20 +254,29 @@
     </script>
     <script src="{{ asset('backend/files/assets/pages/data-table/js/data-table-custom.js') }}"></script>
     <script>
-        /*================================
-                        datatable active
-                        ==================================*/
-        if ($('#dataTable').length) {
-            $('#dataTable').DataTable({
-                responsive: true
-            });
-        }
         $(document).ready(function() {
+            // Inicializar las tablas
+            var tables = [];
             @foreach ($inscripciones->groupBy('pro_id') as $pro_id => $inscripcionesGrouped)
-                $('#dataTable{{ $loop->index }}').DataTable({
-                    responsive: false
+                var table{{ $loop->index }} = $('#dataTable{{ $loop->index }}').DataTable({
+                    responsive: false,
+                    searching: true // Activa la búsqueda interna de DataTables
                 });
+                tables.push(table{{ $loop->index }});
             @endforeach
+    
+            // Configurar el buscador general
+            $('#searchInput').on('keyup', function() {
+                var searchValue = $(this).val().toLowerCase();
+                tables.forEach(function(table) {
+                    table.columns().every(function() {
+                        var column = this;
+                        column.search(searchValue, false, true).draw();
+                    });
+                });
+            });
         });
     </script>
+    
+    
 @endsection
