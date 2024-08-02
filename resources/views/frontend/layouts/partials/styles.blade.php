@@ -76,10 +76,9 @@
     id="jquery-core-js"></script>
 <script defer type="text/javascript" src="{{ asset('frontend/wp-includes/js/jquery/jquery-migrate.min.js') }}"
     id="jquery-migrate-js"></script>
-<link rel="https://api.w.org/" href="{{ asset('frontend/wp-json/index.html') }}" />
+{{-- <link rel="https://api.w.org/" href="{{ asset('frontend/wp-json/index.html') }}" /> --}}
 <link rel="alternate" type="application/json" href="{{ asset('frontend/wp-json/wp/v2/events/187.json') }}" />
 <meta name="generator" content="WordPress 6.5.5" />
-<link rel="canonical" href="index.html" />
 <link rel='shortlink' href='{{ asset('frontend/indexc885.html?p=187') }}' />
 <link rel="alternate" type="application/json+oembed') }}"
     href="{{ asset('frontend/wp-json/oembed/1.0/embed06dd.json?url=https%3A%2F%2Fwpdemo.zcubethemes.com%2Fqeducato%2Fevents%2Fbasic-ui-ux-design-for-new-development%2F') }}" />
@@ -106,7 +105,7 @@
 
     .breadcrumb-area {
         background-color: rgba(32, 40, 46, 0.8); /* Fondo con un poco de transparencia */
-        background-image: url('{{ asset('assets/evento/30072024_afiche.webp') }}');
+        background-image: url('{{ asset('assets/evento/08082024_afiche.jpg') }}');
         background-blend-mode: overlay; /* Mezcla el color de fondo y la imagen */
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Añade sombra */
     }

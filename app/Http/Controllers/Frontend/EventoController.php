@@ -21,7 +21,7 @@ class EventoController extends Controller
     {
         $departamento = Departamento::all();
         $genero = Genero::all();
-        return view('frontend.pages.evento.index',[
+        return view('frontend.pages.evento.index_1',[
             'departamentos' => $departamento,
             'generos' => $genero
         ]);
@@ -38,11 +38,14 @@ class EventoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show()
     {
         $departamento = Departamento::all();
-        $generos = Genero::all();
-        return view('frontend.pages.evento.index');
+        $genero = Genero::all();
+        return view('frontend.pages.evento.index_1',[
+            'departamentos' => $departamento,
+            'generos' => $genero
+        ]);
     }
     # PARTICIPANTES
 
@@ -94,7 +97,67 @@ class EventoController extends Controller
             // MODALIDAD DE ASISTENCIA
             // if ($request['pm_id'] == 1) {
                 // MODALIDAD PRESENCIAL - DE ACUERDO A LA INSTITUCIÓN
-                $inscripcion->pm_id = 3;
+                $inscripcion->pm_id = $request['pm_id'];
+            // }
+            //
+
+            // dd("siiiiii");
+            $inscripcion->save();
+
+            return redirect()->route('evento.comprobanteParticipante', encrypt($inscripcion->eve_ins_id));
+        }
+        //
+
+    }
+    public function storeParticipantes(Request $request)
+    {
+        $data['inscripcion'] = DB::select('
+                SELECT *
+                FROM evento_inscripcion
+                WHERE
+                    eve_ins_carnet_identidad="' . $request['eve_ins_carnet_identidad'] . '" AND
+                    eve_id="' . $request['eve_id'] . '"
+            ');
+        if (count($data['inscripcion']) > 0) {
+            $eve_ins_id = $data['inscripcion'][0]->eve_ins_id;
+            return redirect()->route('evento.comprobanteParticipante', encrypt($eve_ins_id))->with('danger', 'Usted ya cuenta con un registro, puede volver a descargar su formulario de inscripción.');
+        } else {
+            // PARA REGISTRO LIBRE
+            $inscripcion = new EventoInscripcion();
+            // $inscripcion->ei_rda = 0;
+            $inscripcion->eve_ins_carnet_identidad = $request['eve_ins_carnet_identidad'];
+            $inscripcion->eve_ins_carnet_complemento = $request['eve_ins_carnet_complemento']??'';
+            $inscripcion->eve_ins_nombre_1 = $request['eve_ins_nombre_1'];
+            $inscripcion->eve_ins_nombre_2 = $request['eve_ins_nombre_2']??'';
+            $inscripcion->eve_ins_apellido_1 = $request['eve_ins_apellido_1']??'';
+            $inscripcion->eve_ins_apellido_2 = $request['eve_ins_apellido_2']??'';
+            // FECHA DE NACIMIENTO
+            // $fechaNacimiento = $request['anio'] . '-' . $request['mes'] . '-' . $request['dia'];
+            // $fechaNacimiento = $request['ei_fecha_nacimiento'];
+            $inscripcion->eve_ins_fecha_nacimiento = $request['eve_ins_fecha_nacimiento'];
+            $inscripcion->eve_correo = $request['eve_correo'];
+            $inscripcion->eve_celular = $request['eve_celular'];
+            $inscripcion->eve_ins_carnet_complemento = $request['eve_ins_carnet_complemento']??'';
+            $inscripcion->gen_id = decrypt($request['gen_id']);
+            $inscripcion->dep_id = decrypt($request['dep_id']);
+            // $inscripcion->eve_id = 25;
+            // NIVEL
+            // $inscripcion->en_id = decrypt($request['en_id']);
+            // $inscripcion->pm_id = decrypt($request['pm_id']);
+            // MODALIDAD DE ASISTENCIA
+            // $inscripcion->em_id = $request['em_id'];
+            $inscripcion->eve_id = $request['eve_id'];
+
+            // AUTORIZACIÓN
+            // if ($request['ei_autorizacion']) {
+            //     $inscripcion->ei_autorizacion = 1;
+            // } else {
+            //     $inscripcion->ei_autorizacion = 0;
+            // }
+            // MODALIDAD DE ASISTENCIA
+            // if ($request['pm_id'] == 1) {
+                // MODALIDAD PRESENCIAL - DE ACUERDO A LA INSTITUCIÓN
+                $inscripcion->pm_id = $request['pm_id'];
             // }
             //
 

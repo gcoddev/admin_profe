@@ -1,15 +1,15 @@
 @extends('frontend.layouts.master')
 
 @section('title')
-    Evento - Desarrollo emocional en la primera infancia
+    Taller - Prevención actuación de la violencia y resolución de conflictos en el ámbito educativo.
 @endsection
 @section('og-meta-tags')
     <meta property="og:locale" content="es_ES" />
-    <meta property="og:type" content="article" />
-    <meta property="og:title" content="Evento - Desarrollo emocional en la primera infancia" />
-    <meta property="og:description" content="Formulario de preinscripción para el evento de desarrollo emocional en la primera infancia." />
-    <meta property="og:image" content="https://profe.minedu.gob.bo/assets/evento/30072024_afiche2.jpg" />
-    <meta property="og:url" content="https://profe.minedu.gob.bo/evento/25" />
+    {{-- <meta property="og:type" content="article" /> --}}
+    <meta property="og:title" content="Taller - Prevención actuación de la violencia y resolución de conflictos en el ámbito educativo." />
+    <meta property="og:description" content="Formulario de preinscripción." />
+    <meta property="og:image" content="https://profe.minedu.gob.bo/assets/evento/08082024_banner2.jpg" />
+    {{-- <meta property="og:url" content="{{ url()->current() }}" /> --}}
     <meta property="og:image:width" content="545" />
     <meta property="og:image:height" content="493" />
     <meta property="og:image:type" content="image/jpeg" />
@@ -60,7 +60,7 @@
                     <div class="col-xl-12 col-lg-12">
                         <div class="breadcrumb-wrap text-left">
                             <div class="breadcrumb-title">
-                                <h2>Desarrollo emocional en la primera infancia</h2>
+                                <h2>Prevención, actuación de la violencia y resolución de conflictos en el ámbito educativo.</h2>
                             </div>
                         </div>
                     </div>
@@ -80,8 +80,11 @@
 
             <div class="lower-content2">
                 <div class="form-container">
-                    <h2 class="form-title">Formulario de preinscripción</h2>
-                    <form action="{{ route('evento.storeParticipante') }}" method="POST" enctype="multipart/form-data" id="inscripcionForm">
+                    {{-- <h2 class="form-title">Formulario de preinscripción</h2> --}}
+                    <div class="alert alert-warning" role="alert" style="font-size: 20px; font-weight: bold; color: #000000; background-color: #fff3cd; padding: 10px 20px; text-align: center; border: 1px solid #ffeeba; border-radius: 5px; margin-bottom: 20px;">
+                        Formulario de inscripción para directoras y directores distritales y de instituciones educativas.
+                    </div>
+                    <form action="{{ route('evento.storeParticipantes') }}" method="POST" enctype="multipart/form-data" id="inscripcionForm">
                         @csrf
                         <div class="form-group">
                             <label for="eve_ins_carnet_identidad">Número de cédula de identidad</label>
@@ -99,19 +102,19 @@
                                 onkeyup="mayusculas(this);" maxlength="38" />
                         </div>
                         <div class="form-group">
-                            <label for="eve_ins_apellido_1">Apellido1</label>
+                            <label for="eve_ins_apellido_1">Apellido paterno</label>
                             <input type="text" class="form-control" name="eve_ins_apellido_1" id="eve_ins_apellido_1"
                                 onkeyup="mayusculas(this);" maxlength="25" />
                         </div>
                         <div class="form-group">
-                            <label for="eve_ins_apellido_2">Apellido2</label>
+                            <label for="eve_ins_apellido_2">Apellido materno</label>
                             <input type="text" class="form-control" name="eve_ins_apellido_2" id="eve_ins_apellido_2"
                                 onkeyup="mayusculas(this);" maxlength="25" />
                         </div>
                         <div class="form-group">
                             <label for="eve_ins_fecha_nacimiento">Fecha de nacimiento</label>
-                            <input type="date" class="form-control" name="eve_ins_fecha_nacimiento" id="eve_ins_fecha_nacimiento" />
-                            <div id="error-message" style="color: red; display: none;">La fecha de nacimiento debe estar entre 1960 y 2010.</div>
+                            <input type="date" class="form-control" name="eve_ins_fecha_nacimiento" id="eve_ins_fecha_nacimiento" min="1950-01-01" max="2010-12-31"/>
+                            <div id="error-message" style="color: red; display: none;">La fecha de nacimiento debe estar entre 1950 y 2010.</div>
                         </div>
                         <div class="form-group">
                             <label for="gen_id">Sexo</label>
@@ -143,16 +146,21 @@
                         </div>
                         <div class="form-group">
                             <label for="pm_id">Modalidad de asistencia</label>
-                            <select class="form-control" name="pm_id" id="pm_id" required>
+                            <select class="form-control" name="pm_id" id="pm_id" required">
                                 <option value="">Seleccione</option>
                                 {{-- @if (count($participante) <= 500) --}}
                                 {{-- <option value="1">Presencial</option> --}}
                                 {{-- @endif --}}
                                 <option value="3">Virtual</option>
+                                {{-- <option value="1">Presencial</option> --}}
                             </select>
                         </div>
+                        <div style="font-size: 14px; color: #961c1c; background-color: #fff3cd; padding: 10px 20px; text-align: center; border: 1px solid #ffeeba; border-radius: 5px; margin-top: 10px;">
+                            La asistencia presencial de las/los Directores Distritales, de unidades y centros educativos será en 
+                            coordinación con la Dirección Departamental de Educación La Paz.
+                        </div>
                         <div class="form-group">
-                            <input type="hidden" name="eve_id" id="eve_id" value="1">
+                            <input type="hidden" name="eve_id" id="eve_id" value="2">
                             {{-- <input type="hidden" name="en_id" id="en_id" value="{{ encrypt(1) }}"> --}}
                             {{-- <input type="hidden" name="ei_autorizacion" id="ei_autorizacion" value="0"> --}}
                         </div>
@@ -166,6 +174,14 @@
 
 @section('scripts')
     <script>
+        // function showPresencialAlert(select) {
+        //     const alertDiv = document.getElementById('virtual-alert');
+        //     if (select.value == "3") {
+        //         alertDiv.style.display = 'block';
+        //     } else {
+        //         alertDiv.style.display = 'none';
+        //     }
+        // }
         function mayusculas(e) {
             e.value = e.value.toUpperCase();
         }
@@ -176,7 +192,7 @@
     </script>
     <script>
         document.getElementById('eve_ins_fecha_nacimiento').addEventListener('change', function() {
-            const minDate = new Date('1960-01-01');
+            const minDate = new Date('1950-01-01');
             const maxDate = new Date('2010-12-31');
             const selectedDate = new Date(this.value);
             const errorMessage = document.getElementById('error-message');

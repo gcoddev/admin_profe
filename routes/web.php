@@ -13,19 +13,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
-Auth::routes();
+// Auth::routes();
 
-// Route::get('/', 'HomeController@redirectAdmin')->name('index');
-//Route::get('/home', 'HomeController@index')->name('home');
-// Route::get('/evento', 'Frontend\EventoController@index')->name('evento.index');
-Route::get('/evento/25', 'Frontend\EventoController@index')->name('evento.show');
-Route::post('/evento/inscripcion', 'Frontend\EventoController@storeParticipante')->name('evento.storeParticipante');
+Route::get('/', 'HomeController@redirectAdmin')->name('index');
+Route::get('/home', 'HomeController@index')->name('home');
+// Route::get('/evento/25', 'Frontend\EventoController@index')->name('evento.show');
+// Route::post('/evento/inscripcion', 'Frontend\EventoController@storeParticipante')->name('evento.storeParticipante');
+Route::post('/evento/inscripcion', 'Frontend\EventoController@storeParticipante')->name('evento.storeParticipantes');
 Route::get('evento/comprobanteParticipante/{parametros}','Frontend\EventoController@comprobanteParticipante')->name('evento.comprobanteParticipante');
 Route::get('evento/comprobanteParticipantePdf/{parametros}', 'Frontend\EventoController@comprobanteParticipantePdf')->name('evento.comprobanteParticipantePdf');
+
+// Route::get('/evento/25', 'Frontend\EventoController@index')->name('evento.show');
+Route::get('/evento/26', 'Frontend\EventoController@show')->name('evento.show');
 
 /**
  * Admin routes
@@ -36,11 +39,13 @@ Route::group(['prefix' => 'admin'], function () {
     Route::resource('users', 'Backend\UsersController', ['names' => 'admin.users']);
     Route::resource('admins', 'Backend\AdminsController', ['names' => 'admin.admins']);
     Route::resource('programa', 'Backend\ProgramaController', ['names' => 'admin.programa']);
+    Route::resource('inscripcion', 'Backend\InscripcionController', ['names' => 'admin.inscripcion']);
     Route::get('inscripcionIn/{sede_id}', 'Backend\InscripcionController@index')->name('admin.inscripcion.index');
     Route::get('inscripcionI/{sede_id}', 'Backend\InscripcionController@create')->name('admin.inscripcion.create');
+    Route::get('inscripcionbuscar', 'Backend\InscripcionController@buscadorPersona')->name('admin.inscripcion.buscadorpersona');
+    Route::get('inscripcionbuscadorper', 'Backend\InscripcionController@buscadorPersona2')->name('admin.inscripcion.buscadorper');
     // Route::get('inscripcion/{sede_id}', 'Backend\InscripcionController@indexSede', ['names' => 'admin.inscripcion.indexsede']);
     Route::resource('sede', 'Backend\SedeController', ['names' => 'admin.sede']);
-
 
     // Login Routes
     Route::get('/login', 'Backend\Auth\LoginController@showLoginForm')->name('admin.login');
@@ -57,9 +62,6 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('/get-turnos', 'Backend\InscripcionController@getTurnos')->name('admin.search.turnos');
     Route::get('/formularioPdf/{pi_id}', 'Backend\InscripcionController@formularioPdf')->name('admin.inscripcion.formulariopdf');
     Route::get('/inscripcionPdf/{pi_id}', 'Backend\InscripcionController@inscripcionPdf')->name('admin.inscripcion.inscripcionpdf');
-    // Forget Password Routes
-    Route::get('/password/reset', 'Backend\Auth\ForgetPasswordController@showLinkRequestForm')->name('admin.password.request');
-    Route::post('/password/reset/submit', 'Backend\Auth\ForgetPasswordController@reset')->name('admin.password.update');
 });
 
 
@@ -90,6 +92,7 @@ Route::group(['prefix' => 'migration'], function () {
 
     // MIGRACIONES--------------------------------------------------------------------------------------------------------------------------
     Route::resource('usuarios', 'Migration\UsuariosController', ['names' => 'migration.usuarios']);
+    Route::resource('inscripciones', 'Migration\ProgramaInscripcionController', ['names' => 'migration.inscripciones']);
     Route::resource('otros', 'Migration\OtrosController', ['names' => 'migration.otros']);
     Route::resource('cargo', 'Migration\CargoController', ['names' => 'migration.cargo']);
     Route::resource('especialidad', 'Migration\EspecialidadController', ['names' => 'migration.especialidad']);

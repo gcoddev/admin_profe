@@ -71,63 +71,63 @@ class InscripcionController extends Controller
         }
         $inscripciones = $inscripciones->get();
         // Agregar verificación de restricciones
-        // foreach ($inscripciones as $inscripcion) {
-        //     $inscripcion->cumple_restricciones = true; // Inicialmente asumimos que cumple
-        //     $inscripcion->porque_no_cumple = null; // Inicialmente no hay motivo
-        //     $restriccion = ProgramaRestriccion::where('pro_id', $inscripcion->pro_id)->first();
-        //     // Verificar si la restricción existe y realizar las verificaciones
-        //     if ($restriccion) {
-        //         // Verificamos si las propiedades no son null antes de usar in_array()
-        //         if (!is_null($restriccion->gen_ids) && is_array(json_decode($restriccion->gen_ids))) {
-        //             if (!in_array($inscripcion->gen_id, json_decode($restriccion->gen_ids))) {
-        //                 $inscripcion->cumple_restricciones = false;
-        //                 $inscripcion->porque_no_cumple = $inscripcion->gen_nombre;
-        //             }
-        //         }
-        //         if (!is_null($restriccion->sub_ids) && is_array(json_decode($restriccion->sub_ids))) {
-        //             if (!in_array($inscripcion->sub_id, json_decode($restriccion->sub_ids))) {
-        //                 $inscripcion->cumple_restricciones = false;
-        //                 $inscripcion->porque_no_cumple = $inscripcion->sub_nombre;
-        //             }
-        //         }
-        //         if (!is_null($restriccion->niv_ids) && is_array(json_decode($restriccion->niv_ids))) {
-        //             if (!in_array($inscripcion->niv_id, json_decode($restriccion->niv_ids))) {
-        //                 $inscripcion->cumple_restricciones = false;
-        //                 $inscripcion->porque_no_cumple = $inscripcion->niv_nombre;
-        //             }
-        //         }
-        //         if (!is_null($restriccion->cat_ids) && is_array(json_decode($restriccion->cat_ids))) {
-        //             if (!in_array($inscripcion->cat_id, json_decode($restriccion->cat_ids))) {
-        //                 $inscripcion->cumple_restricciones = false;
-        //                 $inscripcion->porque_no_cumple = $inscripcion->cat_nombre;
-        //             }
-        //         }
-        //         if (!is_null($restriccion->esp_ids) && is_array(json_decode($restriccion->esp_ids))) {
-        //             if (!in_array($inscripcion->esp_id, json_decode($restriccion->esp_ids))) {
-        //                 $inscripcion->cumple_restricciones = false;
-        //                 $inscripcion->porque_no_cumple = $inscripcion->esp_nombre;
-        //             }
-        //         }
-        //         if (!is_null($restriccion->esp_nombres) && is_array(json_decode($restriccion->esp_nombres))) {
-        //             if (!Str::contains($inscripcion->esp_nombre, json_decode($restriccion->esp_nombres))) {
-        //                 $inscripcion->cumple_restricciones = false;
-        //                 $inscripcion->porque_no_cumple = $inscripcion->esp_nombre;
-        //             }
-        //         }
-        //         if (!is_null($restriccion->car_ids) && is_array(json_decode($restriccion->car_ids))) {
-        //             if (!in_array($inscripcion->car_id, json_decode($restriccion->car_ids))) {
-        //                 $inscripcion->cumple_restricciones = false;
-        //                 $inscripcion->porque_no_cumple = $inscripcion->car_nombre;
-        //             }
-        //         }
-        //         if (!is_null($restriccion->car_nombres) && is_array(json_decode($restriccion->car_nombres)) && $restriccion->car_nombres !==null) {
-        //             if (!Str::contains($inscripcion->car_nombre, json_decode($restriccion->car_nombres))) {
-        //                 $inscripcion->cumple_restricciones = false;
-        //                 $inscripcion->porque_no_cumple = $inscripcion->car_nombre;
-        //             }
-        //         }
-        //     }
-        // }
+        foreach ($inscripciones as $inscripcion) {
+            $inscripcion->cumple_restricciones = true; // Inicialmente asumimos que cumple
+            $inscripcion->porque_no_cumple = null; // Inicialmente no hay motivo
+            $restriccion = ProgramaRestriccion::where('pro_id', $inscripcion->pro_id)->first();
+            // Verificar si la restricción existe y realizar las verificaciones
+            if ($restriccion) {
+                // Verificamos si las propiedades no son null antes de usar in_array()
+                if (!is_null($restriccion->gen_ids) && is_array(json_decode($restriccion->gen_ids))) {
+                    if (!in_array($inscripcion->gen_id, json_decode($restriccion->gen_ids))) {
+                        $inscripcion->cumple_restricciones = false;
+                        $inscripcion->porque_no_cumple = $inscripcion->gen_nombre;
+                    }
+                }
+                if (!is_null($restriccion->sub_ids) && is_array(json_decode($restriccion->sub_ids))) {
+                    if (!in_array($inscripcion->sub_id, json_decode($restriccion->sub_ids))) {
+                        $inscripcion->cumple_restricciones = false;
+                        $inscripcion->porque_no_cumple = $inscripcion->sub_nombre;
+                    }
+                }
+                if (!is_null($restriccion->niv_ids) && is_array(json_decode($restriccion->niv_ids))) {
+                    if (!in_array($inscripcion->niv_id, json_decode($restriccion->niv_ids))) {
+                        $inscripcion->cumple_restricciones = false;
+                        $inscripcion->porque_no_cumple = $inscripcion->niv_nombre;
+                    }
+                }
+                if (!is_null($restriccion->cat_ids) && is_array(json_decode($restriccion->cat_ids))) {
+                    if (!in_array($inscripcion->cat_id, json_decode($restriccion->cat_ids))) {
+                        $inscripcion->cumple_restricciones = false;
+                        $inscripcion->porque_no_cumple = $inscripcion->cat_nombre;
+                    }
+                }
+                if (!is_null($restriccion->esp_ids) && is_array(json_decode($restriccion->esp_ids))) {
+                    if (!in_array($inscripcion->esp_id, json_decode($restriccion->esp_ids))) {
+                        $inscripcion->cumple_restricciones = false;
+                        $inscripcion->porque_no_cumple = $inscripcion->esp_nombre;
+                    }
+                }
+                if (!is_null($restriccion->esp_nombres) && is_array(json_decode($restriccion->esp_nombres))) {
+                    if (!Str::contains($inscripcion->esp_nombre, json_decode($restriccion->esp_nombres))) {
+                        $inscripcion->cumple_restricciones = false;
+                        $inscripcion->porque_no_cumple = $inscripcion->esp_nombre;
+                    }
+                }
+                if (!is_null($restriccion->car_ids) && is_array(json_decode($restriccion->car_ids))) {
+                    if (!in_array($inscripcion->car_id, json_decode($restriccion->car_ids))) {
+                        $inscripcion->cumple_restricciones = false;
+                        $inscripcion->porque_no_cumple = $inscripcion->car_nombre;
+                    }
+                }
+                if (!is_null($restriccion->car_nombres) && is_array(json_decode($restriccion->car_nombres)) && $restriccion->car_nombres !==null) {
+                    if (!Str::contains($inscripcion->car_nombre, json_decode($restriccion->car_nombres))) {
+                        $inscripcion->cumple_restricciones = false;
+                        $inscripcion->porque_no_cumple = $inscripcion->car_nombre;
+                    }
+                }
+            }
+        }
         // Agrupar las inscripciones por pro_id
         $baucheres= ProgramaBaucher::all();
         // Contar los baucheres por sede usando el sede_id
@@ -559,14 +559,19 @@ class InscripcionController extends Controller
         
         // Encuentra la inscripción
         $baucher = new ProgramaBaucher();
-
+        $persona = DB::table('programa_inscripcion')
+            ->join('map_persona', 'programa_inscripcion.per_id', '=', 'map_persona.per_id')
+            ->where('programa_inscripcion.pi_id', $id) // Filtrar por pi_id
+            ->select('map_persona.per_rda')
+            ->first();
          // Manejo de la imagen
         if ($request->hasFile('pro_bau_imagen')) {
             $image = $request->file('pro_bau_imagen');
             $nro_deposito = $request->input('pro_bau_nro_deposito');
             $extension = $image->getClientOriginalExtension();
-            if ($pro_bau_tipo_pago == "Descuento por planilla") {
-                $name = time() . '_' . md5($nro_deposito) . '.' . $extension; // Nombre encriptado
+            $timestamp = date('Ymd_His'); // Formato de fecha y hora
+            if ($pro_bau_tipo_pago == "Descuento por Planilla") {
+                $name = $persona->per_rda . '_' . $timestamp . '.' . $extension; // Nombre encriptado
             } else {
                 $name = $nro_deposito . '.' . $extension;
             }
@@ -623,7 +628,12 @@ class InscripcionController extends Controller
         $baucher->pro_bau_monto = $request->input('pro_bau_monto');
         $baucher->pro_bau_fecha = $request->input('pro_bau_fecha');
         $baucher->pro_bau_tipo_pago = $request->input('pro_bau_tipo_pago');
-
+        $pro_bau_tipo_pago = $request->input('pro_bau_tipo_pago');
+        $persona = DB::table('programa_inscripcion')
+            ->join('map_persona', 'programa_inscripcion.per_id', '=', 'map_persona.per_id')
+            ->where('programa_inscripcion.pi_id', $pi_id) // Filtrar por pi_id
+            ->select('map_persona.per_rda')
+            ->first();
        // Manejar la subida de imagen si se ha proporcionado una nueva
         if ($request->hasFile('pro_bau_imagen')) {
             // Eliminar la imagen anterior si existe
@@ -635,7 +645,12 @@ class InscripcionController extends Controller
             $image = $request->file('pro_bau_imagen');
             $nro_deposito = $request->input('pro_bau_nro_deposito');
             $extension = $image->getClientOriginalExtension();
-            $name = $nro_deposito . '.' . $extension;
+            $timestamp = date('Ymd_His'); // Formato de fecha y hora
+            if ($pro_bau_tipo_pago == "Descuento por Planilla") {
+                $name = $persona->per_rda . '_' . $timestamp . '.' . $extension; // Nombre encriptado
+            } else {
+                $name = $nro_deposito . '.' . $extension;
+            }
 
             $path = $request->file('pro_bau_imagen')->storeAs('public/bauchers', $name);
 

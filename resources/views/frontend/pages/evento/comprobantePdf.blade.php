@@ -97,7 +97,7 @@
                         Presencial (Ministerio de Educación - Salón Avelino
                         Siñani)
                     @else --}}
-                        VIRTUAL
+                        {{ $participante[0]->pm_nombre }}
                     {{-- @endif --}}
                 </td>
             </tr>

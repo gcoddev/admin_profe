@@ -95,7 +95,14 @@
                                         @foreach ($inscripciones->groupBy('pro_id') as $pro_id => $inscripcionesGrouped)
                                             <div class="tab-pane {{ $loop->first ? 'active' : '' }}"
                                                 id="tab_{{ $pro_id }}" role="tabpanel">
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <h5 class="mb-0">{{ $inscripcionesGrouped->first()->pro_nombre }}</h5>
+                                                    <a href="" class="btn btn-outline-danger waves-effect waves-light">
+                                                        <i class="icofont icofont-file-pdf"></i> DESCARGAR LISTA
+                                                    </a>
+                                                </div>
                                                 <div class="dt-responsive table-responsive">
+                                                    
                                                     <table id="dataTable{{ $loop->index }}"
                                                         class="table table-striped table-bordered nowrap">
                                                         <thead>
