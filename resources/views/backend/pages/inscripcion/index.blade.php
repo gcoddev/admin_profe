@@ -66,9 +66,8 @@
                                     <div class="sub-title">{{ $inscripciones->first()->dep_nombre ?? '' }} -
                                         {{ $inscripciones->first()->sede_nombre ?? 'Nombre de Sede' }}
                                     </div>
-                                            <h6>Total de Baucheres Registrados</h6>
                                             @if(isset($totalBaucheresPorSede))
-                                                <p><strong>Total Baucheres:</strong> {{ $totalBaucheresPorSede->total_baucheres }}</p>
+                                                <p><strong>Total Baucheres Registrados:</strong> {{ $totalBaucheresPorSede->total_baucheres }}</p>
                                             @else
                                                 <p>No hay baucheres registrados para esta sede.</p>
                                             @endif
@@ -97,9 +96,14 @@
                                                 id="tab_{{ $pro_id }}" role="tabpanel">
                                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                                     <h5 class="mb-0">{{ $inscripcionesGrouped->first()->pro_nombre }}</h5>
-                                                    <a href="" class="btn btn-outline-danger waves-effect waves-light">
-                                                        <i class="icofont icofont-file-pdf"></i> DESCARGAR LISTA
-                                                    </a>
+                                                    <div>
+                                                        <a target="_blank" href="{{ route('admin.inscripcion.reporteinscritopdf', ['sede_id' => $sede_id, 'pro_id' => encrypt($inscripcionesGrouped->first()->pro_id)]) }}" class="btn btn-outline-danger waves-effect waves-light">
+                                                            <i class="icofont icofont-file-pdf"></i> Reporte Pagos
+                                                        </a>
+                                                        {{-- <a target="_blank" href="{{ route('admin.inscripcion.reporteinscritopdf', ['sede_id' => $sede_id, 'pro_id' => encrypt($inscripcionesGrouped->first()->pro_id)]) }}" class="btn btn-outline-primary waves-effect waves-light">
+                                                            <i class="icofont icofont-file-pdf"></i> Lista
+                                                        </a> --}}
+                                                    </div>
                                                 </div>
                                                 <div class="dt-responsive table-responsive">
                                                     
@@ -110,7 +114,7 @@
                                                                 <th>Nro</th>
                                                                 <th>Nombre</th>
                                                                 <th>Turno</th>
-                                                                <th>Baucher</th>
+                                                                <th>Total Pagado</th>
                                                                 <th>Estado</th>
                                                                 <th>Fecha Actualizado</th>
                                                                 <th>Acciones</th>
@@ -138,9 +142,29 @@
                                                                                 target="_blank">{{ $inscripcion->per_celular }}</a><br>
                                                                         @endif
                                                                     </td>
-                                                                    <td>{{ $inscripcion->pro_tur_nombre }}</td>
+                                                                    <td>{{ $inscripcion->pro_tur_nombre }}  </td>
                                                                     <td>
-                                                                    {{-- @php
+                                                                        <div>
+                                                                            <span style="font-weight: bold;">Total Pagado:</span> {{ $inscripcion->total_pagado }} Bs.
+                                                                        </div>
+                                                                        <div>
+                                                                            <span style="font-weight: bold;">Restante:</span> {{ $inscripcion->restante }} Bs.
+                                                                        </div>
+                                                                        <div style="font-weight: bold; color: {{ $inscripcion->estado_pago == 'Completado' ? 'green' : ($inscripcion->estado_pago == 'Incompleto' ? 'red' : 'gray') }};">
+                                                                            <span>
+                                                                                @if($inscripcion->estado_pago == 'Completado')
+                                                                                    <i class="fa fa-check-circle"></i>
+                                                                                @elseif($inscripcion->estado_pago == 'Incompleto')
+                                                                                    <i class="fa fa-times-circle"></i>
+                                                                                @else
+                                                                                    <i class="fa fa-exclamation-circle"></i>
+                                                                                @endif
+                                                                            </span>
+                                                                            {{ $inscripcion->estado_pago }}
+                                                                        </div>
+                                                                    </td>
+                                                                    {{-- <td>
+                                                                    @php
                                                                         $totalMonto = 0;
                                                                     @endphp
                                                                     @foreach ($baucheres as $baucher)
@@ -159,15 +183,15 @@
                                                                                 $totalMonto += $baucher->pro_bau_monto;
                                                                             @endphp
                                                                         @endif
-                                                                    @endforeach --}}
-                                                                    {{-- <div class="mt-2 font-weight-bold">
+                                                                    @endforeach
+                                                                    <div class="mt-2 font-weight-bold">
                                                                         @if ($totalMonto >= $inscripcion->pro_costo)
                                                                             <span class="text-success">Total completado: {{ $totalMonto }} Bs.</span>
                                                                         @else
                                                                             <span class="text-danger">Monto faltante: {{ $inscripcion->pro_costo - $totalMonto }} Bs.</span>
                                                                         @endif
-                                                                    </div> --}}
-                                                                    </td>
+                                                                    </div>
+                                                                    </td> --}}
                                                                     <td>
                                                                         @if ($inscripcion->pie_nombre == 'INSCRITO')
                                                                             <span

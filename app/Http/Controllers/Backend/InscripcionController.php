@@ -45,27 +45,136 @@ class InscripcionController extends Controller
 
         $sede_id = $request->sede_id;
         $inscripciones = DB::table('programa_inscripcion')
-        ->join('map_persona', 'programa_inscripcion.per_id', '=', 'map_persona.per_id')
-        ->join('map_especialidad', 'map_persona.esp_id', '=', 'map_especialidad.esp_id')
-        ->join('map_cargo', 'map_persona.car_id', '=', 'map_cargo.car_id')
-        ->join('map_nivel', 'map_persona.niv_id', '=', 'map_nivel.niv_id')
-        ->join('map_categoria', 'map_persona.cat_id', '=', 'map_categoria.cat_id')
-        ->join('map_subsistema', 'map_persona.sub_id', '=', 'map_subsistema.sub_id')
-        ->join('genero', 'map_persona.gen_id', '=', 'genero.gen_id')
-        ->join('programa', 'programa_inscripcion.pro_id', '=', 'programa.pro_id')
-        ->join('programa_turno', 'programa_inscripcion.pro_tur_id', '=', 'programa_turno.pro_tur_id')
-        ->join('sede', 'programa_inscripcion.sede_id', '=', 'sede.sede_id')
-        ->join('departamento', 'sede.dep_id', '=', 'departamento.dep_id')
-        ->join('programa_inscripcion_estado', 'programa_inscripcion.pie_id', '=', 'programa_inscripcion_estado.pie_id')
-        ->where('sede.sede_id', decrypt($sede_id))
-        ->select('programa_inscripcion.*', 'map_persona.*', 'map_especialidad.esp_nombre', 'map_cargo.car_nombre',
-                    'programa.pro_nombre', 'programa.pro_nombre_abre', 'programa.pro_costo', 'map_subsistema.sub_nombre', 'map_nivel.niv_nombre',
-                    'map_categoria.cat_nombre', 'genero.gen_nombre',
-                    'programa_turno.pro_tur_nombre', 'sede.sede_nombre','sede.sede_nombre_abre', 'departamento.dep_nombre', 'programa_inscripcion_estado.pie_nombre');
+            ->join('map_persona', 'programa_inscripcion.per_id', '=', 'map_persona.per_id')
+            ->join('map_especialidad', 'map_persona.esp_id', '=', 'map_especialidad.esp_id')
+            ->join('map_cargo', 'map_persona.car_id', '=', 'map_cargo.car_id')
+            ->join('map_nivel', 'map_persona.niv_id', '=', 'map_nivel.niv_id')
+            ->leftJoin('programa_baucher', 'programa_baucher.pi_id', '=', 'programa_inscripcion.pi_id')
+            ->join('map_categoria', 'map_persona.cat_id', '=', 'map_categoria.cat_id')
+            ->join('map_subsistema', 'map_persona.sub_id', '=', 'map_subsistema.sub_id')
+            ->join('genero', 'map_persona.gen_id', '=', 'genero.gen_id')
+            ->join('programa', 'programa_inscripcion.pro_id', '=', 'programa.pro_id')
+            ->join('programa_turno', 'programa_inscripcion.pro_tur_id', '=', 'programa_turno.pro_tur_id')
+            ->join('sede', 'programa_inscripcion.sede_id', '=', 'sede.sede_id')
+            ->join('departamento', 'sede.dep_id', '=', 'departamento.dep_id')
+            ->join('programa_inscripcion_estado', 'programa_inscripcion.pie_id', '=', 'programa_inscripcion_estado.pie_id')
+            ->where('sede.sede_id', decrypt($sede_id))
+            ->select(
+                'programa_inscripcion.pi_id', 
+                'programa_inscripcion.pro_id', 
+                'programa_inscripcion.updated_at', 
+                'map_persona.per_id', 
+                'map_persona.gen_id', 
+                'map_persona.esp_id', 
+                'map_persona.cat_id', 
+                'map_persona.car_id', 
+                'map_persona.sub_id', 
+                'map_persona.niv_id',  
+                'map_persona.per_nombre1', 
+                'map_persona.per_nombre2', 
+                'map_persona.per_apellido1', 
+                'map_persona.per_apellido2', 
+                'map_persona.per_rda', 
+                'map_persona.per_ci', 
+                'map_persona.per_fecha_nacimiento', 
+                'map_persona.per_celular', 
+                'map_persona.per_correo', 
+                'map_persona.per_en_funcion', 
+                'map_especialidad.esp_nombre', 
+                'map_cargo.car_nombre',
+                'programa.pro_nombre', 
+                'programa.pro_nombre_abre', 
+                'programa.pro_costo', 
+                'map_subsistema.sub_nombre', 
+                'map_nivel.niv_nombre',
+                'map_categoria.cat_nombre', 
+                'genero.gen_nombre',
+                'programa_turno.pro_tur_nombre', 
+                'sede.sede_nombre',
+                'sede.sede_nombre_abre', 
+                'departamento.dep_nombre', 
+                'programa_inscripcion_estado.pie_nombre',
+                DB::raw('COALESCE(SUM(programa_baucher.pro_bau_monto), 0) AS total_pagado'),
+                DB::raw('(programa.pro_costo - COALESCE(SUM(programa_baucher.pro_bau_monto), 0)) AS restante'),
+                DB::raw('CASE
+                            WHEN COALESCE(SUM(programa_baucher.pro_bau_monto), 0) >= programa.pro_costo THEN "Completado"
+                            WHEN COALESCE(SUM(programa_baucher.pro_bau_monto), 0) < programa.pro_costo THEN "Incompleto"
+                            ELSE "Desconocido"
+                        END AS estado_pago')
+            )
+            ->groupBy(
+                'programa_inscripcion.pi_id', 
+                'programa_inscripcion.pro_id', 
+                'programa_inscripcion.updated_at', 
+                'map_persona.per_id', 
+                'map_persona.gen_id', 
+                'map_persona.esp_id', 
+                'map_persona.cat_id', 
+                'map_persona.car_id', 
+                'map_persona.sub_id', 
+                'map_persona.niv_id', 
+                'map_persona.per_nombre1', 
+                'map_persona.per_nombre2', 
+                'map_persona.per_apellido1', 
+                'map_persona.per_apellido2', 
+                'map_persona.per_rda', 
+                'map_persona.per_ci', 
+                'map_persona.per_fecha_nacimiento', 
+                'map_persona.per_celular', 
+                'map_persona.per_correo', 
+                'map_persona.per_en_funcion', 
+                'map_especialidad.esp_nombre', 
+                'map_cargo.car_nombre',
+                'programa.pro_nombre', 
+                'programa.pro_nombre_abre', 
+                'programa.pro_costo', 
+                'map_subsistema.sub_nombre', 
+                'map_nivel.niv_nombre',
+                'map_categoria.cat_nombre',
+                'genero.gen_nombre',
+                'programa_turno.pro_tur_nombre', 
+                'sede.sede_nombre',
+                'sede.sede_nombre_abre', 
+                'departamento.dep_nombre', 
+                'programa_inscripcion_estado.pie_nombre'
+            );
+        // $inscripciones = DB::table('programa_inscripcion')
+            // ->join('map_persona', 'programa_inscripcion.per_id', '=', 'map_persona.per_id')
+            // ->join('map_especialidad', 'map_persona.esp_id', '=', 'map_especialidad.esp_id')
+            // ->join('map_cargo', 'map_persona.car_id', '=', 'map_cargo.car_id')
+            // ->join('map_nivel', 'map_persona.niv_id', '=', 'map_nivel.niv_id')
+            // ->join('programa_baucher', 'programa_baucher.pi_id', '=', 'programa_inscripcion.pi_id')
+            // ->join('map_categoria', 'map_persona.cat_id', '=', 'map_categoria.cat_id')
+            // ->join('map_subsistema', 'map_persona.sub_id', '=', 'map_subsistema.sub_id')
+            // ->join('genero', 'map_persona.gen_id', '=', 'genero.gen_id')
+            // ->join('programa', 'programa_inscripcion.pro_id', '=', 'programa.pro_id')
+            // ->join('programa_turno', 'programa_inscripcion.pro_tur_id', '=', 'programa_turno.pro_tur_id')
+            // ->join('sede', 'programa_inscripcion.sede_id', '=', 'sede.sede_id')
+            // ->join('departamento', 'sede.dep_id', '=', 'departamento.dep_id')
+            // ->join('programa_inscripcion_estado', 'programa_inscripcion.pie_id', '=', 'programa_inscripcion_estado.pie_id')
+            // ->where('sede.sede_id', decrypt($sede_id))
+            // ->select(
+            //         'programa_inscripcion.*', 
+            //         'map_persona.*', 
+            //         'map_especialidad.esp_nombre', 
+            //         'map_cargo.car_nombre',
+            //         'programa.pro_nombre', 
+            //         'programa.pro_nombre_abre', 
+            //         'programa.pro_costo', 
+            //         'map_subsistema.sub_nombre', 
+            //         'map_nivel.niv_nombre',
+            //         'map_categoria.cat_nombre', 
+            //         'genero.gen_nombre',
+            //         'programa_turno.pro_tur_nombre', 
+            //         'sede.sede_nombre',
+            //         'sede.sede_nombre_abre', 
+            //         'departamento.dep_nombre', 
+            //         'programa_inscripcion_estado.pie_nombre'
+        // );
         
         if (!is_null($this->user->pro_ids)) {
             $proIds = json_decode($this->user->pro_ids);
-            if (!empty($proIds)) { // Verifica si $sedesIds no está vacío
+            if (!empty($proIds)) { // Verifica si $proIds no está vacío
                 $inscripciones->whereIn('programa.pro_id', $proIds);
             }
         }
@@ -129,7 +238,7 @@ class InscripcionController extends Controller
             }
         }
         // Agrupar las inscripciones por pro_id
-        $baucheres= ProgramaBaucher::all();
+        // $baucheres= ProgramaBaucher::all();
         // Contar los baucheres por sede usando el sede_id
         $totalBaucheresPorSede = DB::table('programa_baucher')
             ->join('programa_inscripcion', 'programa_baucher.pi_id', '=', 'programa_inscripcion.pi_id')
@@ -139,7 +248,7 @@ class InscripcionController extends Controller
             ->groupBy('sede.sede_nombre')
             ->first();
         //$mapPersona = MapPersona::paginate(100);
-        return view('backend.pages.inscripcion.index', compact(['inscripciones','baucheres','sede_id','totalBaucheresPorSede']));
+        return view('backend.pages.inscripcion.index', compact(['inscripciones','sede_id','totalBaucheresPorSede']));
     }
     public function buscadorPersona(Request $request)
     {
@@ -797,10 +906,10 @@ class InscripcionController extends Controller
                     'admins.cargo',
                     'admins.sede_ids'
                 )
-                        ->join('model_has_roles', 'admins.id', 'model_has_roles.model_id')
-                        ->whereJsonContains('admins.sede_ids', $sedeId)
-                        ->where('model_has_roles.role_id', '=', 2)
-                        ->first();
+                    ->join('model_has_roles', 'admins.id', 'model_has_roles.model_id')
+                    ->whereJsonContains('admins.sede_ids', $sedeId)
+                    ->where('model_has_roles.role_id', '=', 2)
+                    ->first();
         if ($responsable) {
             // Acceder a las propiedades solo si $responsable no es null
             $nombre = $responsable->nombre;
@@ -854,5 +963,189 @@ class InscripcionController extends Controller
         //
         return $pdf->download('formularioInscripcion' . $programaInscripcion->per_rda . '.pdf');
         // return $pdf->stream('formularioPreinscripcion'.$per_rda.'.pdf');
+    }
+    public function reporteInscritoPdf($sede_id, $pro_id)
+    {
+        
+        // Desencriptar los IDs
+        $sede_id = decrypt($sede_id);
+        $pro_id = decrypt($pro_id);
+
+        // dd($sede_id, $pro_id); // Verifica los valores desencriptados
+        $inscripciones = DB::table('programa_inscripcion')
+            ->join('map_persona', 'programa_inscripcion.per_id', '=', 'map_persona.per_id')
+            ->join('map_especialidad', 'map_persona.esp_id', '=', 'map_especialidad.esp_id')
+            ->join('map_cargo', 'map_persona.car_id', '=', 'map_cargo.car_id')
+            ->join('map_nivel', 'map_persona.niv_id', '=', 'map_nivel.niv_id')
+            ->leftJoin('programa_baucher', 'programa_baucher.pi_id', '=', 'programa_inscripcion.pi_id')
+            ->join('map_categoria', 'map_persona.cat_id', '=', 'map_categoria.cat_id')
+            ->join('map_subsistema', 'map_persona.sub_id', '=', 'map_subsistema.sub_id')
+            ->join('genero', 'map_persona.gen_id', '=', 'genero.gen_id')
+            ->join('programa', 'programa_inscripcion.pro_id', '=', 'programa.pro_id')
+            ->join('programa_turno', 'programa_inscripcion.pro_tur_id', '=', 'programa_turno.pro_tur_id')
+            ->join('sede', 'programa_inscripcion.sede_id', '=', 'sede.sede_id')
+            ->join('departamento', 'sede.dep_id', '=', 'departamento.dep_id')
+            ->join('programa_inscripcion_estado', 'programa_inscripcion.pie_id', '=', 'programa_inscripcion_estado.pie_id')
+            ->where('sede.sede_id', $sede_id)
+            ->where('programa_inscripcion.pro_id', $pro_id)  
+            ->select(
+                'programa_inscripcion.pi_id', 
+                'programa_inscripcion.pro_id', 
+                'programa_inscripcion.updated_at', 
+                'map_persona.per_id', 
+                'map_persona.gen_id', 
+                'map_persona.esp_id', 
+                'map_persona.cat_id', 
+                'map_persona.car_id', 
+                'map_persona.sub_id', 
+                'map_persona.niv_id',  
+                'map_persona.per_nombre1', 
+                'map_persona.per_nombre2', 
+                'map_persona.per_apellido1', 
+                'map_persona.per_apellido2', 
+                'map_persona.per_rda', 
+                'map_persona.per_ci', 
+                'map_persona.per_complemento', 
+                'map_persona.per_fecha_nacimiento', 
+                'map_persona.per_celular', 
+                'map_persona.per_correo', 
+                'map_persona.per_en_funcion', 
+                'map_especialidad.esp_nombre', 
+                'map_cargo.car_nombre',
+                'programa.pro_nombre', 
+                'programa.pro_nombre_abre', 
+                'programa.pro_costo', 
+                'map_subsistema.sub_nombre', 
+                'map_nivel.niv_nombre',
+                'map_categoria.cat_nombre', 
+                'genero.gen_nombre',
+                'programa_turno.pro_tur_nombre', 
+                'sede.sede_nombre',
+                'sede.sede_nombre_abre', 
+                'departamento.dep_nombre', 
+                'programa_inscripcion_estado.pie_nombre',
+                DB::raw('COALESCE(SUM(programa_baucher.pro_bau_monto), 0) AS total_pagado'),
+                DB::raw('(programa.pro_costo - COALESCE(SUM(programa_baucher.pro_bau_monto), 0)) AS restante'),
+                DB::raw('CASE
+                            WHEN COALESCE(SUM(programa_baucher.pro_bau_monto), 0) >= programa.pro_costo THEN "Completado"
+                            WHEN COALESCE(SUM(programa_baucher.pro_bau_monto), 0) < programa.pro_costo THEN "Incompleto"
+                            ELSE "Desconocido"
+                        END AS estado_pago')
+            )
+            ->groupBy(
+                'programa_inscripcion.pi_id', 
+                'programa_inscripcion.pro_id', 
+                'programa_inscripcion.updated_at', 
+                'map_persona.per_id', 
+                'map_persona.gen_id', 
+                'map_persona.esp_id', 
+                'map_persona.cat_id', 
+                'map_persona.car_id', 
+                'map_persona.sub_id', 
+                'map_persona.niv_id', 
+                'map_persona.per_nombre1', 
+                'map_persona.per_nombre2', 
+                'map_persona.per_apellido1', 
+                'map_persona.per_apellido2', 
+                'map_persona.per_rda', 
+                'map_persona.per_ci', 
+                'map_persona.per_complemento', 
+                'map_persona.per_fecha_nacimiento', 
+                'map_persona.per_celular', 
+                'map_persona.per_correo', 
+                'map_persona.per_en_funcion', 
+                'map_especialidad.esp_nombre', 
+                'map_cargo.car_nombre',
+                'programa.pro_nombre', 
+                'programa.pro_nombre_abre', 
+                'programa.pro_costo', 
+                'map_subsistema.sub_nombre', 
+                'map_nivel.niv_nombre',
+                'map_categoria.cat_nombre',
+                'genero.gen_nombre',
+                'programa_turno.pro_tur_nombre', 
+                'sede.sede_nombre',
+                'sede.sede_nombre_abre', 
+                'departamento.dep_nombre', 
+                'programa_inscripcion_estado.pie_nombre'
+            )->get();
+        // Obtener responsable
+        $sede_id = (string) $sede_id;
+        $pro_id = (string) $pro_id;
+        $responsable = DB::table('admins')
+            ->select(
+                'admins.nombre',
+                'admins.apellidos',
+                'admins.cargo',
+                'admins.sede_ids',
+                'roles.name'
+            )
+            ->join('model_has_roles', 'admins.id', 'model_has_roles.model_id')
+            ->join('roles', 'roles.id', 'model_has_roles.role_id')
+            ->whereJsonContains('admins.sede_ids', $sede_id)
+            ->where('model_has_roles.role_id', '=', 2)
+            ->first();
+
+        // Obtener facilitador
+        $facilitador = DB::table('admins')
+            ->select(
+                'admins.nombre',
+                'admins.apellidos',
+                'admins.cargo',
+                'admins.sede_ids',
+                'roles.name'
+            )
+            ->join('model_has_roles', 'admins.id', 'model_has_roles.model_id')
+            ->join('roles', 'roles.id', 'model_has_roles.role_id')
+            ->whereJsonContains('admins.sede_ids', $sede_id)
+            ->whereJsonContains('admins.pro_ids', $pro_id)
+            ->where('model_has_roles.role_id', '=', 3)
+            ->first();
+        // dd($facilitador);
+        // Manejar la información del responsable
+        if ($responsable) {
+            $responsable_nombre = $responsable->nombre;
+            $responsable_apellidos = $responsable->apellidos;
+            $responsable_cargo = $responsable->name;
+        } else {
+            $responsable_nombre = 'No encontrado';
+            $responsable_apellidos = 'No encontrado';
+            $responsable_cargo = 'No encontrado';
+        }
+
+        // Manejar la información del facilitador
+        if ($facilitador) {
+            $facilitador_nombre = $facilitador->nombre;
+            $facilitador_apellidos = $facilitador->apellidos;
+            $facilitador_cargo = $facilitador->name;
+        } else {
+            $facilitador_nombre = 'No encontrado';
+            $facilitador_apellidos = 'No encontrado';
+            $facilitador_cargo = 'No encontrado';
+        }
+         
+        //
+        $imagen1 = public_path() . "/img/logos/logominedu.jpg";
+        $logo1 = base64_encode(file_get_contents($imagen1));
+
+        $imagen2 = public_path() . "/img/logos/logoprofe.jpg";
+        $logo2 = base64_encode(file_get_contents($imagen2));
+
+        $imagen3 = public_path() . "/img/iconos/alerta.png";
+        $logo3 = base64_encode(file_get_contents($imagen3));
+
+        $imagen4 = public_path() . "/img/logos/fondo.jpg";
+        $fondo = base64_encode(file_get_contents($imagen4));
+
+
+        $pdf = PDF::loadView('backend.pages.inscripcion.partials.reporteInscritosPdf', compact('inscripciones', 'responsable_nombre', 'responsable_apellidos', 'responsable_cargo',
+        'facilitador_nombre', 'facilitador_apellidos', 'facilitador_cargo','logo1', 'logo2', 'logo3', 'fondo'));
+        // VERTICAL
+        $pdf->setPaper('Letter', 'portrait');
+        // HORIZONTAL
+        // $pdf->setPaper('Letter', 'landscape');
+        //
+        return $pdf->stream('Reporte' . $inscripciones[0]->pro_nombre_abre . '.pdf');
+        // return $pdf->download('mi-archivo.pdf');
     }
 }
