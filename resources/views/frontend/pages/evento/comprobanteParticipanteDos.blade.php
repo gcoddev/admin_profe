@@ -15,7 +15,7 @@
 @section('frontend-content')
     <section class="container mt-4">
         <div class="text-center">
-            <img src="{{ asset('assets/evento/12082024_banner.jpg')}}" class="img-fluid rounded-lg" width="100%">
+            <img src="{{ asset('assets/evento/30072024_afiche.webp')}}" class="img-fluid rounded-lg" width="100%">
         </div>
 
         <div class="mt-4 text-center">

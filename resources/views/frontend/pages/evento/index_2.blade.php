@@ -1,17 +1,15 @@
 @extends('frontend.layouts.master')
 
 @section('title')
-    Taller - Prevención actuación de la violencia y resolución de conflictos en el ámbito educativo.
+    Prevención frente a riesgos de sismos y terremotos en instituciones educativas del SEP.
 @endsection
 @section('og-meta-tags')
     <meta property="og:locale" content="es_ES" />
     {{-- <meta property="og:type" content="article" /> --}}
-    <meta property="og:title" content="Taller - Prevención actuación de la violencia y resolución de conflictos en el ámbito educativo." />
+    <meta property="og:title" content="Prevención frente a riesgos de sismos y terremotos en instituciones educativas del SEP." />
     <meta property="og:description" content="Formulario de preinscripción." />
-    <meta property="og:image" content="https://profe.minedu.gob.bo/assets/evento/08082024_banner2.jpg" />
+    <meta property="og:image" content="https://profe.minedu.gob.bo/assets/evento/12082024_afiche2.jpg" />
     {{-- <meta property="og:url" content="{{ url()->current() }}" /> --}}
-    <meta property="og:image:width" content="545" />
-    <meta property="og:image:height" content="493" />
     <meta property="og:image:type" content="image/jpeg" />
 @endsection
 @section('styles')
@@ -28,7 +26,7 @@
     
         .breadcrumb-area {
             background-color: rgba(32, 40, 46, 0.8); /* Fondo con un poco de transparencia */
-            background-image: url('{{ asset('assets/evento/08082024_afiche.jpg') }}');
+            background-image: url('{{ asset('assets/evento/12082024_banner.jpg') }}');
             background-blend-mode: overlay; /* Mezcla el color de fondo y la imagen */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Añade sombra */
         }
@@ -262,7 +260,7 @@
                     <div class="col-xl-12 col-lg-12">
                         <div class="breadcrumb-wrap text-left">
                             <div class="breadcrumb-title">
-                                <h2>Prevención, actuación de la violencia y resolución de conflictos en el ámbito educativo.</h2>
+                                <h2>Prevención frente a riesgos de sismos y terremotos en instituciones educativas del SEP.</h2>
                             </div>
                         </div>
                     </div>
@@ -282,10 +280,8 @@
 
             <div class="lower-content2">
                 <div class="form-container">
-                    {{-- <h2 class="form-title">Formulario de preinscripción</h2> --}}
-                    <div class="alert alert-warning" role="alert" style="font-size: 20px; font-weight: bold; color: #000000; background-color: #fff3cd; padding: 10px 20px; text-align: center; border: 1px solid #ffeeba; border-radius: 5px; margin-bottom: 20px;">
-                        Formulario de inscripción para directoras y directores distritales y de instituciones educativas.
-                    </div>
+                    <h2 class="form-title">Formulario de preinscripción</h2>
+                    
                     <form action="{{ route('evento.storeParticipantes') }}" method="POST" enctype="multipart/form-data" id="inscripcionForm">
                         @csrf
                         <div class="form-group">
@@ -357,12 +353,8 @@
                                 {{-- <option value="1">Presencial</option> --}}
                             </select>
                         </div>
-                        <div style="font-size: 14px; color: #961c1c; background-color: #fff3cd; padding: 10px 20px; text-align: center; border: 1px solid #ffeeba; border-radius: 5px; margin-top: 10px;">
-                            La asistencia presencial de las/los Directores Distritales, de unidades y centros educativos será en 
-                            coordinación con la Dirección Departamental de Educación La Paz.
-                        </div>
                         <div class="form-group">
-                            <input type="hidden" name="eve_id" id="eve_id" value="2">
+                            <input type="hidden" name="eve_id" id="eve_id" value="3">
                             {{-- <input type="hidden" name="en_id" id="en_id" value="{{ encrypt(1) }}"> --}}
                             {{-- <input type="hidden" name="ei_autorizacion" id="ei_autorizacion" value="0"> --}}
                         </div>

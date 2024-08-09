@@ -13,13 +13,17 @@ return new class extends Migration
     {
         Schema::create('programa_calificacion', function (Blueprint $table) {
             $table->bigIncrements('pc_id');
-            $table->json('ptc_ids');
             $table->enum('pc_estado', ['activo', 'inactivo','eliminado'])->default('activo');
             $table->foreignId('pro_tip_id')
                 ->constrained()
                 ->onDelete('cascade')
                 ->references('pro_tip_id')
                 ->on('programa_tipo');
+            $table->foreignId('ptc_id')
+                ->constrained()
+                ->onDelete('cascade')
+                ->references('ptc_id')
+                ->on('programa_tipo_calificacion');
             $table->timestamps();
         });
     }

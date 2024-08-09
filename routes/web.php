@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Backend\InscripcionController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -28,7 +28,8 @@ Route::get('evento/comprobanteParticipante/{parametros}','Frontend\EventoControl
 Route::get('evento/comprobanteParticipantePdf/{parametros}', 'Frontend\EventoController@comprobanteParticipantePdf')->name('evento.comprobanteParticipantePdf');
 
 // Route::get('/evento/25', 'Frontend\EventoController@index')->name('evento.show');
-Route::get('/evento/26', 'Frontend\EventoController@show')->name('evento.show');
+// Route::get('/evento/26', 'Frontend\EventoController@show')->name('evento.show');
+Route::get('/evento/27', 'Frontend\EventoController@showDos')->name('evento.showdos');
 
 /**
  * Admin routes
@@ -39,7 +40,14 @@ Route::group(['prefix' => 'admin'], function () {
     Route::resource('users', 'Backend\UsersController', ['names' => 'admin.users']);
     Route::resource('admins', 'Backend\AdminsController', ['names' => 'admin.admins']);
     Route::resource('programa', 'Backend\ProgramaController', ['names' => 'admin.programa']);
+    Route::resource('calificacion', 'Backend\CalificacionController', ['names' => 'admin.calificacion']);
     Route::resource('inscripcion', 'Backend\InscripcionController', ['names' => 'admin.inscripcion']);
+    Route::get('calificacionIn/{sede_id}', 'Backend\CalificacionController@index')->name('admin.calificacion.index');
+    Route::post('calificacion/{pi_id}/{pm_id}/{pc_id}', 'Backend\CalificacionController@storeCalificacion')->name('admin.calificacion.storecalificacion');
+   
+    //Route::post('inscripcion', [InscripcionController::class, 'store'])->name('admin.inscripcion.store');
+    //Route::get('inscripcion/{id}/edit', [InscripcionController::class, 'edit'])->name('admin.inscripcion.edit');
+    //Route::put('inscripcion/{id}', [InscripcionController::class, 'update'])->name('admin.inscripcion.update');
     Route::get('inscripcion-reporte/{sede_id}/{pro_id}', 'Backend\InscripcionController@reporteInscritoPdf')->name('admin.inscripcion.reporteinscritopdf');
     Route::get('inscripcionIn/{sede_id}', 'Backend\InscripcionController@index')->name('admin.inscripcion.index');
     Route::get('inscripcionI/{sede_id}', 'Backend\InscripcionController@create')->name('admin.inscripcion.create');

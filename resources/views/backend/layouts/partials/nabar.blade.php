@@ -229,6 +229,36 @@
                     </ul>
                 </li>
             @endif
+            @if ($usr->can('calificacion.view'))
+                <li class="pcoded-hasmenu">
+                    <a href="javascript:void(0)">
+                        <span class="pcoded-micon"><i class="feather icon-sidebar"></i></span>
+                        <span class="pcoded-mtext">Calificaciones</span>
+                    </a>
+                    <ul class="pcoded-submenu">
+                        @foreach($sedes as $sede)
+                            @if (!is_null($usr->sede_ids) && !empty(json_decode($usr->sede_ids)))
+                                @if (in_array($sede->sede_id, json_decode($usr->sede_ids)))
+                                    <li>
+                                        <a href="{{ route('admin.calificacion.index', ['sede_id' => encrypt($sede->sede_id)]) }}">
+                                            <span class="pcoded-micon"><i class="feather icon-menu"></i></span>
+                                            <span class="pcoded-mtext">{{ $sede->sede_nombre }}</span>
+                                        </a>
+                                    </li>
+                                @endif
+                            @else
+                                <li>
+                                    <a href="{{ route('admin.calificacion.index', ['sede_id' => encrypt($sede->sede_id)]) }}">
+                                        <span class="pcoded-micon"><i class="feather icon-menu"></i></span>
+                                        <span class="pcoded-mtext">{{ $sede->sede_nombre }}</span>
+                                    </a>
+                                </li>
+                            @endif
+                        @endforeach
+                    </ul>
+                    
+                </li>
+            @endif
 
             {{-- <li class="pcoded-hasmenu">
                 <a href="javascript:void(0)">

@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('calificacion_participante', function (Blueprint $table) {
             $table->bigIncrements('cp_id');
-            $table->string('cp_descripcion');
-            $table->json('cp_puntaje');
+            $table->integer('cp_puntaje');
             $table->foreignId('pi_id')
                 ->constrained()
                 ->onDelete('cascade')
@@ -25,8 +24,12 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->references('pm_id')
                 ->on('programa_modulo');
+            $table->foreignId('pc_id')
+                ->constrained()
+                ->onDelete('cascade')
+                ->references('pc_id')
+                ->on('programa_calificacion');
             $table->enum('cp_estado', ['activo', 'inactivo', 'eliminado'])->default('activo');
-            $table->enum('cp_calificacion', ['reprobado', 'aprobado', 'sin calificar'])->default('sin calificar');
             $table->timestamps();
         });
     }

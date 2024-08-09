@@ -47,6 +47,15 @@ class EventoController extends Controller
             'generos' => $genero
         ]);
     }
+    public function showDos()
+    {
+        $departamento = Departamento::all();
+        $genero = Genero::all();
+        return view('frontend.pages.evento.index_2',[
+            'departamentos' => $departamento,
+            'generos' => $genero
+        ]);
+    }
     # PARTICIPANTES
 
     public function storeParticipante(Request $request)
