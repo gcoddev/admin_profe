@@ -66,8 +66,14 @@
                                     <div class="sub-title">{{ $inscripciones->first()->dep_nombre ?? '' }} -
                                         {{ $inscripciones->first()->sede_nombre ?? 'Nombre de Sede' }}
                                     </div>
+<<<<<<< HEAD
                                             @if(isset($totalBaucheresPorSede))
                                                 <p><strong>Total Baucheres Registrados:</strong> {{ $totalBaucheresPorSede->total_baucheres }}</p>
+=======
+                                            <h6>Total de Baucheres Registrados</h6>
+                                            @if(isset($totalBaucheresPorSede))
+                                                <p><strong>Total Baucheres:</strong> {{ $totalBaucheresPorSede->total_baucheres }}</p>
+>>>>>>> 278a853 (first commit)
                                             @else
                                                 <p>No hay baucheres registrados para esta sede.</p>
                                             @endif
@@ -96,6 +102,7 @@
                                                 id="tab_{{ $pro_id }}" role="tabpanel">
                                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                                     <h5 class="mb-0">{{ $inscripcionesGrouped->first()->pro_nombre }}</h5>
+<<<<<<< HEAD
                                                     <div>
                                                         <a target="_blank" href="{{ route('admin.inscripcion.reporteinscritopdf', ['sede_id' => $sede_id, 'pro_id' => encrypt($inscripcionesGrouped->first()->pro_id)]) }}" class="btn btn-outline-danger waves-effect waves-light">
                                                             <i class="icofont icofont-file-pdf"></i> Reporte Pagos
@@ -104,6 +111,11 @@
                                                             <i class="icofont icofont-file-pdf"></i> Lista
                                                         </a> --}}
                                                     </div>
+=======
+                                                    <a href="" class="btn btn-outline-danger waves-effect waves-light">
+                                                        <i class="icofont icofont-file-pdf"></i> DESCARGAR LISTA
+                                                    </a>
+>>>>>>> 278a853 (first commit)
                                                 </div>
                                                 <div class="dt-responsive table-responsive">
                                                     
@@ -114,7 +126,11 @@
                                                                 <th>Nro</th>
                                                                 <th>Nombre</th>
                                                                 <th>Turno</th>
+<<<<<<< HEAD
                                                                 <th>Total Pagado</th>
+=======
+                                                                <th>Baucher</th>
+>>>>>>> 278a853 (first commit)
                                                                 <th>Estado</th>
                                                                 <th>Fecha Actualizado</th>
                                                                 <th>Acciones</th>
@@ -142,6 +158,7 @@
                                                                                 target="_blank">{{ $inscripcion->per_celular }}</a><br>
                                                                         @endif
                                                                     </td>
+<<<<<<< HEAD
                                                                     <td>{{ $inscripcion->pro_tur_nombre }}  </td>
                                                                     <td>
                                                                         <div>
@@ -165,6 +182,11 @@
                                                                     </td>
                                                                     {{-- <td>
                                                                     @php
+=======
+                                                                    <td>{{ $inscripcion->pro_tur_nombre }}</td>
+                                                                    <td>
+                                                                    {{-- @php
+>>>>>>> 278a853 (first commit)
                                                                         $totalMonto = 0;
                                                                     @endphp
                                                                     @foreach ($baucheres as $baucher)
@@ -183,15 +205,25 @@
                                                                                 $totalMonto += $baucher->pro_bau_monto;
                                                                             @endphp
                                                                         @endif
+<<<<<<< HEAD
                                                                     @endforeach
                                                                     <div class="mt-2 font-weight-bold">
+=======
+                                                                    @endforeach --}}
+                                                                    {{-- <div class="mt-2 font-weight-bold">
+>>>>>>> 278a853 (first commit)
                                                                         @if ($totalMonto >= $inscripcion->pro_costo)
                                                                             <span class="text-success">Total completado: {{ $totalMonto }} Bs.</span>
                                                                         @else
                                                                             <span class="text-danger">Monto faltante: {{ $inscripcion->pro_costo - $totalMonto }} Bs.</span>
                                                                         @endif
+<<<<<<< HEAD
                                                                     </div>
                                                                     </td> --}}
+=======
+                                                                    </div> --}}
+                                                                    </td>
+>>>>>>> 278a853 (first commit)
                                                                     <td>
                                                                         @if ($inscripcion->pie_nombre == 'INSCRITO')
                                                                             <span

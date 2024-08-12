@@ -164,12 +164,17 @@ class RolePermissionSeeder extends Seeder
                     'inscripcion.view',
                     'inscripcion.edit',
                     'inscripcion.delete',
+<<<<<<< HEAD
                     'inscripcion.pdfinscripcion',
                     'inscripcion.pdfpago',
                     'inscripcion.bauchereliminar',
                     'inscripcion.bauchereditar',
                     'inscripcion.reportepagos',
                     'inscripcion.pdflista',
+=======
+                    'inscripcion.modulo',
+                    'inscripcion.pdf',
+>>>>>>> 278a853 (first commit)
                     'inscripcion.estado',
                 ]
             ],
