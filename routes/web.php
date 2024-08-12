@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
+ */
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -19,16 +19,31 @@ use Illuminate\Support\Facades\Route;
 
 // Auth::routes();
 
-Route::get('/', 'HomeController@redirectAdmin')->name('index');
-Route::get('/home', 'HomeController@index')->name('home');
+// Route::get('/', 'HomeController@redirectAdmin')->name('index');
+// Route::get('/home', 'HomeController@index')->name('home');
+
 // Route::get('/evento/25', 'Frontend\EventoController@index')->name('evento.show');
 // Route::post('/evento/inscripcion', 'Frontend\EventoController@storeParticipante')->name('evento.storeParticipante');
+
 Route::post('/evento/inscripcion', 'Frontend\EventoController@storeParticipante')->name('evento.storeParticipantes');
-Route::get('evento/comprobanteParticipante/{parametros}','Frontend\EventoController@comprobanteParticipante')->name('evento.comprobanteParticipante');
+Route::get('evento/comprobanteParticipante/{parametros}', 'Frontend\EventoController@comprobanteParticipante')->name('evento.comprobanteParticipante');
 Route::get('evento/comprobanteParticipantePdf/{parametros}', 'Frontend\EventoController@comprobanteParticipantePdf')->name('evento.comprobanteParticipantePdf');
 
 // Route::get('/evento/25', 'Frontend\EventoController@index')->name('evento.show');
 Route::get('/evento/26', 'Frontend\EventoController@show')->name('evento.show');
+
+Route::get('/', 'HomeController@index')->name('home');
+
+Route::controller('Frontend\ProgramaController')->group(function () {
+    Route::get('/programa', 'index')->name('programas');
+    Route::get('/programa/{pro_id}', 'programa')->name('programa');
+});
+
+Route::group(['prefix' => 'evento', 'controller' => 'Frontend\EventoController'], function () {
+    Route::get('/', 'eventos')->name('eventos');
+    Route::get('/detalle/{eve_id}', 'detalle')->name('eventoDetalle');
+    Route::get('/{eve_id}', 'evento')->name('evento');
+});
 
 /**
  * Admin routes
@@ -64,7 +79,6 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('/inscripcionPdf/{pi_id}', 'Backend\InscripcionController@inscripcionPdf')->name('admin.inscripcion.inscripcionpdf');
 });
 
-
 Route::group(['prefix' => 'configuracion'], function () {
     Route::resource('programa', 'Configuracion\ProgramaController', ['names' => 'configuracion.programa']);
     Route::resource('restriccion', 'Configuracion\RestriccionController', ['names' => 'configuracion.restriccion']);
@@ -80,9 +94,7 @@ Route::group(['prefix' => 'configuracion'], function () {
 
     Route::resource('sede', 'Configuracion\SedeController', ['names' => 'configuracion.sede']);
 
-
 });
-
 
 Route::group(['prefix' => 'migration'], function () {
     Route::post('areatrabajo', 'Migration\OtrosController@areaTrabajo')->name('migration.otros.areatrabajo');

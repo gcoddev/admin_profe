@@ -34,7 +34,7 @@
                                 <div class="call-box">
                                     <div class="icon">
                                         <img src="{{ asset('frontend/wp-content/themes/qeducato/inc/assets/images/mailing.png') }}"
-                                            alt="https://wpdemo.zcubethemes.com/qeducato/wp-content/themes/qeducato/inc/assets/images/mailing.png" />
+                                            alt="mailing" />
                                     </div>
                                     <div class="text">
                                         <span>Correo</span>
@@ -57,10 +57,10 @@
                     <div class="logo">
                         <!-- LOGO IMAGE -->
                         <!-- For Retina Ready displays take a image with double the amount of pixels that your image will be displayed (e.g 268 x 60 pixels) -->
-                        <a href="#" class="navbar-brand logo-black">
+                        <a href="{{ route('home') }}" class="navbar-brand logo-black">
                             <!-- Logo Standard -->
-                            <img src="{{ asset('assets/profe/logoprofe.jpg')}}" alt="PROFE"
-                                title="" width="70%" />
+                            <img src="{{ asset('assets/profe/logoprofe.jpg') }}" alt="PROFE" title=""
+                                width="70%" />
                         </a>
                     </div>
                 </div>
@@ -68,11 +68,11 @@
                     <div class="main-menu text-right text-xl-right">
                         <nav id="mobile-menu">
                             <div id="cssmenu" class="menu-main-menu-container">
-                                <ul id="menu-main-menu" class="menu">
+                                <ul id="menu-main-menu" class="menu d-flex">
                                     <li id="menu-item-113"
                                         class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home current-menu-item page_item page-item-9 current_page_item current-menu-ancestor current-menu-parent current_page_parent current_page_ancestor menu-item-has-children menu-item-113">
-                                        {{-- <a href="index.html" aria-current="page">Home</a>
-                                        <ul class="sub-menu">
+                                        <a href="{{ route('home') }}" aria-current="page">Inicio</a>
+                                        {{-- <ul class="sub-menu">
                                             <li id="menu-item-112"
                                                 class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home current-menu-item page_item page-item-9 current_page_item menu-item-112">
                                                 <a href="index.html" aria-current="page">Home Page 01</a>
@@ -87,14 +87,14 @@
                                             </li>
                                         </ul> --}}
                                     </li>
-                                    <li id="menu-item-116"
-                                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-116">
-                                        {{-- <a href="about-us/index.html">About Us</a> --}}
+                                    <li id="menu-item-114"
+                                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-114">
+                                        <a href="about-us/index.html">Sobre nosotros</a>
                                     </li>
-                                    <li id="menu-item-117"
-                                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-117">
-                                        {{-- <a href="our-courses/index.html">Courses</a>
-                                        <ul class="sub-menu">
+                                    <li id="menu-item-115"
+                                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-115">
+                                        <a href="{{ route('programas') }}">Programas</a>
+                                        {{-- <ul class="sub-menu">
                                             <li id="menu-item-2866"
                                                 class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2866">
                                                 <a href="our-courses/index.html">Our Courses</a>
@@ -105,10 +105,10 @@
                                             </li>
                                         </ul> --}}
                                     </li>
-                                    <li id="menu-item-118"
-                                        class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-118">
-                                        {{-- <a href="#">Pages</a>
-                                        <ul class="sub-menu">
+                                    <li id="menu-item-116"
+                                        class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-116">
+                                        <a href="#">Comunicados</a>
+                                        {{-- <ul class="sub-menu">
                                             <li id="menu-item-123"
                                                 class="menu-item menu-item-type-post_type menu-item-object-page menu-item-123">
                                                 <a href="our-event/index.html">Event</a>
@@ -131,12 +131,16 @@
                                             </li>
                                         </ul> --}}
                                     </li>
-                                    <li id="menu-item-124"
-                                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-124">
-                                        {{-- <a href="blog/index.html">Eventos</a> --}}
+                                    <li id="menu-item-117"
+                                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-117">
+                                        <a href="blog/index.html">Blogs</a>
                                     </li>
-                                    <li id="menu-item-125"
-                                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-125">
+                                    <li id="menu-item-118"
+                                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-118">
+                                        <a href="{{ route('eventos') }}">Eventos</a>
+                                    </li>
+                                    <li id="menu-item-119"
+                                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-119">
                                         {{-- <a href="contact/index.html">Contact</a> --}}
                                     </li>
                                 </ul>
@@ -150,7 +154,7 @@
 
                             <li>
                                 <div class="second-header-btn">
-                                    <a href="#" class="btn">EVENTO</a>
+                                    <a href="{{ route('admin.login') }}" class="btn">ACCEDER</a>
                                 </div>
                             </li>
                         </ul>

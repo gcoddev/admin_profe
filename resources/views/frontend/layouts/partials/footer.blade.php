@@ -1,5 +1,5 @@
 <!-- footer area start-->
-{{-- <footer class="footer-bg footer-p pt-90">
+<footer class="footer-bg footer-p pt-90">
     <div class="footer-top pb-70 p-relative">
         <!-- Lines -->
         <div class="content-lines-wrapper2">
@@ -39,19 +39,22 @@
                                 <ul id="menu-our-links-1" class="menu">
                                     <li
                                         class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home current-menu-item page_item page-item-9 current_page_item menu-item-2837">
-                                        <a href="index.html" aria-current="page">Home</a>
+                                        <a href="{{ route('home') }}" aria-current="page">Inicio</a>
                                     </li>
                                     <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2839">
-                                        <a href="about-us/index.html">About Us</a>
+                                        <a href="about-us/index.html">Sobre nosotros</a>
                                     </li>
                                     <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2841">
-                                        <a href="our-courses/index.html">Courses</a>
+                                        <a href="our-courses/index.html">Programas</a>
+                                    </li>
+                                    <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2841">
+                                        <a href="our-courses/index.html">Comunicados</a>
                                     </li>
                                     <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2838">
-                                        <a href="blog/index.html">Blog</a>
+                                        <a href="blog/index.html">Blogs</a>
                                     </li>
                                     <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2840">
-                                        <a href="contact/index.html">Contact</a>
+                                        <a href="contact/index.html">Eventos</a>
                                     </li>
                                 </ul>
                             </div>
@@ -65,28 +68,36 @@
                             <div class="textwidget custom-html-widget">
                                 <div class="recent-blog-footer">
                                     <ul>
-                                        <li>
-                                            <div class="thum">
-                                                <a href="indexbc60.html?p=2513"><img
-                                                        src="wp-content/uploads/2023/03/s-blogimg-01.png"
-                                                        alt="img" /></a>
-                                            </div>
+                                        {{-- @if (count($blogs) > 0)
+                                            @php
+                                                $i = 0;
+                                            @endphp
+                                            @foreach ($blogs as $blog)
+                                                @if ($i < 2)
+                                                    <li>
+                                                        <div class="thum">
+                                                            <a href="indexbc60.html?p=2513">
+                                                                <img src="{{ asset('frontend/wp-content/uploads/2023/03/s-blogimg-01.png') }}"
+                                                                    alt="img" />
+                                                            </a>
+                                                        </div>
+                                                        <div class="text">
+                                                            <a href="indexbc60.html?p=2513">Nothing impossble to need
+                                                                hard
+                                                                work</a>
+                                                            <span>7 March, 2023</span>
+                                                        </div>
+                                                    </li>
+                                                @endif
+                                                @php
+                                                    $i++;
+                                                @endphp
+                                            @endforeach
+                                        @else
                                             <div class="text">
-                                                <a href="indexbc60.html?p=2513">Nothing impossble to need hard work</a>
-                                                <span>7 March, 2023</span>
+                                                Aun no hay publicaciones
                                             </div>
-                                        </li>
-                                        <li>
-                                            <div class="thum">
-                                                <a href="indexbc60.html?p=2513"><img
-                                                        src="wp-content/uploads/2023/03/s-blogimg-02.png"
-                                                        alt="img" /></a>
-                                            </div>
-                                            <div class="text">
-                                                <a href="indexbc60.html?p=2513">Nothing impossble to need hard work</a>
-                                                <span>7 March, 2023</span>
-                                            </div>
-                                        </li>
+                                        @endif --}}
                                     </ul>
                                 </div>
                             </div>
@@ -133,7 +144,7 @@
                 <div class="col-lg-4">
                     <div class="copy-text">
                         <a href="index.html">
-                            <img src="wp-content/uploads/2023/03/f_logo.png" alt="Qeducato" title="" /></a>
+                            <img src="{{ asset('assets/profe/logoprofe.jpg') }}" alt="Qeducato" title="" /></a>
                     </div>
                 </div>
                 <div class="col-lg-4 text-center"></div>
@@ -143,5 +154,5 @@
             </div>
         </div>
     </div>
-</footer> --}}
+</footer>
 <!-- footer area end-->

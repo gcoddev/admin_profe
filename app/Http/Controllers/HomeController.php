@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Blog;
+use App\Models\Evento;
+use App\Models\Programa;
 
 class HomeController extends Controller
 {
@@ -13,7 +15,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        // $this->middleware('auth');
     }
 
     public function redirectAdmin()
@@ -28,6 +30,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $programas = Programa::where('pro_estado', 'activo')->orderBy('pro_id', 'DESC')->get();
+        $eventos = Evento::where('eve_estado', 'activo')->orderBy('eve_id', 'DESC')->get();
+        $blogs = Blog::where('blog_estado', 'activo')->orderBy('blog_id', 'DESC')->get();
+
+        return view('frontend.pages.inicio.index', compact('programas', 'eventos', 'blogs'));
     }
 }

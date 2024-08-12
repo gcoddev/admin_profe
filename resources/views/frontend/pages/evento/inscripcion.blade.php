@@ -1,7 +1,7 @@
 @extends('frontend.layouts.master')
 
 @section('title')
-    Taller - Prevención actuación de la violencia y resolución de conflictos en el ámbito educativo.
+    {{ $evento->eve_nombre }}
 @endsection
 @section('og-meta-tags')
     <meta property="og:locale" content="es_ES" />
@@ -61,8 +61,7 @@
                     <div class="col-xl-12 col-lg-12">
                         <div class="breadcrumb-wrap text-left">
                             <div class="breadcrumb-title">
-                                <h2>Prevención, actuación de la violencia y resolución de conflictos en el ámbito educativo.
-                                </h2>
+                                <h2>{{ $evento->eve_nombre }}</h2>
                             </div>
                         </div>
                     </div>
@@ -155,11 +154,13 @@
                             <label for="pm_id">Modalidad de asistencia</label>
                             <select class="form-control" name="pm_id" id="pm_id" required">
                                 <option value="">Seleccione</option>
-                                {{-- @if (count($participante) <= 500) --}}
-                                {{-- <option value="1">Presencial</option> --}}
-                                {{-- @endif --}}
-                                <option value="3">Virtual</option>
-                                {{-- <option value="1">Presencial</option> --}}
+                                @foreach ($modalidades as $pm)
+                                    {{-- @if (count($participante) <= 500) --}}
+                                    {{-- <option value="1">Presencial</option> --}}
+                                    {{-- @endif --}}
+                                    <option value="{{ $pm->pm_id }}">{{ $pm->pm_nombre }}</option>
+                                    {{-- <option value="1">Presencial</option> --}}
+                                @endforeach
                             </select>
                         </div>
                         <div

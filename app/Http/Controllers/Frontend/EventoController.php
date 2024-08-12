@@ -3,15 +3,19 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Blog;
 use App\Models\Departamento;
-use App\Models\Genero;
+use App\Models\Evento;
 use App\Models\EventoInscripcion;
-use Illuminate\Support\Facades\DB;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use App\Models\Genero;
+use App\Models\ProgramaModalidad;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+
 class EventoController extends Controller
 {
     /**
@@ -21,10 +25,27 @@ class EventoController extends Controller
     {
         $departamento = Departamento::all();
         $genero = Genero::all();
-        return view('frontend.pages.evento.index_1',[
+        return view('frontend.pages.evento.index_1', [
             'departamentos' => $departamento,
-            'generos' => $genero
+            'generos' => $genero,
         ]);
+    }
+
+    // Eventos
+    public function eventos()
+    {
+        $eventos = Evento::where('eve_estado', 'activo')->orderBy('eve_id', 'DESC')->get();
+        $blogs = Blog::where('blog_estado', 'activo')->orderBy('blog_id', 'DESC')->get();
+
+        return view('frontend.pages.evento.eventos', compact('eventos', 'blogs'));
+    }
+
+    public function detalle($eve_id)
+    {
+        $evento = Evento::where('eve_estado', 'activo')->where('eve_id', $eve_id)->first();
+        $blogs = Blog::where('blog_estado', 'activo')->orderBy('blog_id', 'DESC')->get();
+
+        return view('frontend.pages.evento.detalle', compact('evento', 'blogs'));
     }
 
     /**
@@ -42,10 +63,20 @@ class EventoController extends Controller
     {
         $departamento = Departamento::all();
         $genero = Genero::all();
-        return view('frontend.pages.evento.index_1',[
+        return view('frontend.pages.evento.index_1', [
             'departamentos' => $departamento,
-            'generos' => $genero
+            'generos' => $genero,
         ]);
+    }
+
+    public function evento($eve_id)
+    {
+        $departamentos = Departamento::where('dep_estado', 'activo')->get();
+        $generos = Genero::where('gen_estado', 'activo')->get();
+        $modalidades = ProgramaModalidad::where('pm_estado', 'activo')->get();
+
+        $evento = Evento::where('eve_estado', 'activo')->where('eve_id', $eve_id)->first();
+        return view('frontend.pages.evento.inscripcion', compact('departamentos', 'generos', 'modalidades', 'evento'));
     }
     # PARTICIPANTES
 
@@ -68,7 +99,7 @@ class EventoController extends Controller
             $inscripcion->eve_ins_carnet_identidad = $request['eve_ins_carnet_identidad'];
             $inscripcion->eve_ins_carnet_complemento = $request['eve_ins_carnet_complemento'];
             $inscripcion->eve_ins_nombre_1 = $request['eve_ins_nombre_1'];
-            $inscripcion->eve_ins_nombre_2 = $request['eve_ins_nombre_2']??'';
+            $inscripcion->eve_ins_nombre_2 = $request['eve_ins_nombre_2'] ?? '';
             $inscripcion->eve_ins_apellido_1 = $request['eve_ins_apellido_1'];
             $inscripcion->eve_ins_apellido_2 = $request['eve_ins_apellido_2'];
             // FECHA DE NACIMIENTO
@@ -77,7 +108,7 @@ class EventoController extends Controller
             $inscripcion->eve_ins_fecha_nacimiento = $request['eve_ins_fecha_nacimiento'];
             $inscripcion->eve_correo = $request['eve_correo'];
             $inscripcion->eve_celular = $request['eve_celular'];
-            $inscripcion->eve_ins_carnet_complemento = $request['eve_ins_carnet_complemento']??'';
+            $inscripcion->eve_ins_carnet_complemento = $request['eve_ins_carnet_complemento'] ?? '';
             $inscripcion->gen_id = decrypt($request['gen_id']);
             $inscripcion->dep_id = decrypt($request['dep_id']);
             // $inscripcion->eve_id = 25;
@@ -96,8 +127,8 @@ class EventoController extends Controller
             // }
             // MODALIDAD DE ASISTENCIA
             // if ($request['pm_id'] == 1) {
-                // MODALIDAD PRESENCIAL - DE ACUERDO A LA INSTITUCIÓN
-                $inscripcion->pm_id = $request['pm_id'];
+            // MODALIDAD PRESENCIAL - DE ACUERDO A LA INSTITUCIÓN
+            $inscripcion->pm_id = $request['pm_id'];
             // }
             //
 
@@ -126,18 +157,18 @@ class EventoController extends Controller
             $inscripcion = new EventoInscripcion();
             // $inscripcion->ei_rda = 0;
             $inscripcion->eve_ins_carnet_identidad = $request['eve_ins_carnet_identidad'];
-            $inscripcion->eve_ins_carnet_complemento = $request['eve_ins_carnet_complemento']??'';
+            $inscripcion->eve_ins_carnet_complemento = $request['eve_ins_carnet_complemento'] ?? '';
             $inscripcion->eve_ins_nombre_1 = $request['eve_ins_nombre_1'];
-            $inscripcion->eve_ins_nombre_2 = $request['eve_ins_nombre_2']??'';
-            $inscripcion->eve_ins_apellido_1 = $request['eve_ins_apellido_1']??'';
-            $inscripcion->eve_ins_apellido_2 = $request['eve_ins_apellido_2']??'';
+            $inscripcion->eve_ins_nombre_2 = $request['eve_ins_nombre_2'] ?? '';
+            $inscripcion->eve_ins_apellido_1 = $request['eve_ins_apellido_1'] ?? '';
+            $inscripcion->eve_ins_apellido_2 = $request['eve_ins_apellido_2'] ?? '';
             // FECHA DE NACIMIENTO
             // $fechaNacimiento = $request['anio'] . '-' . $request['mes'] . '-' . $request['dia'];
             // $fechaNacimiento = $request['ei_fecha_nacimiento'];
             $inscripcion->eve_ins_fecha_nacimiento = $request['eve_ins_fecha_nacimiento'];
             $inscripcion->eve_correo = $request['eve_correo'];
             $inscripcion->eve_celular = $request['eve_celular'];
-            $inscripcion->eve_ins_carnet_complemento = $request['eve_ins_carnet_complemento']??'';
+            $inscripcion->eve_ins_carnet_complemento = $request['eve_ins_carnet_complemento'] ?? '';
             $inscripcion->gen_id = decrypt($request['gen_id']);
             $inscripcion->dep_id = decrypt($request['dep_id']);
             // $inscripcion->eve_id = 25;
@@ -156,8 +187,8 @@ class EventoController extends Controller
             // }
             // MODALIDAD DE ASISTENCIA
             // if ($request['pm_id'] == 1) {
-                // MODALIDAD PRESENCIAL - DE ACUERDO A LA INSTITUCIÓN
-                $inscripcion->pm_id = $request['pm_id'];
+            // MODALIDAD PRESENCIAL - DE ACUERDO A LA INSTITUCIÓN
+            $inscripcion->pm_id = $request['pm_id'];
             // }
             //
 
