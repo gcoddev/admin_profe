@@ -14,10 +14,16 @@ class ProgramaCalificacion extends Model
     protected $primaryKey = 'pc_id';
 
     protected $fillable = [
+<<<<<<< HEAD
         'pc_id',
         'pc_estado',
         'pro_tip_id',
         'ptc_id',
+=======
+        'ptc_ids',
+        'pc_estado',
+        'pro_tip_id',
+>>>>>>> 278a853 (first commit)
     ];
 
     // Relación con el modelo ProgramaTipo
@@ -25,8 +31,14 @@ class ProgramaCalificacion extends Model
     {
         return $this->belongsTo(ProgramaTipo::class, 'pro_tip_id');
     }
+<<<<<<< HEAD
     public function programaTipoCalificacion()
     {
         return $this->belongsTo(ProgramaTipoCalificacion::class, 'ptc_id');
     }
+=======
+
+
+
+>>>>>>> 278a853 (first commit)
 }

@@ -45,6 +45,7 @@ class InscripcionController extends Controller
 
         $sede_id = $request->sede_id;
         $inscripciones = DB::table('programa_inscripcion')
+<<<<<<< HEAD
             ->join('map_persona', 'programa_inscripcion.per_id', '=', 'map_persona.per_id')
             ->join('map_especialidad', 'map_persona.esp_id', '=', 'map_especialidad.esp_id')
             ->join('map_cargo', 'map_persona.car_id', '=', 'map_cargo.car_id')
@@ -175,6 +176,29 @@ class InscripcionController extends Controller
         if (!is_null($this->user->pro_ids)) {
             $proIds = json_decode($this->user->pro_ids);
             if (!empty($proIds)) { // Verifica si $proIds no está vacío
+=======
+        ->join('map_persona', 'programa_inscripcion.per_id', '=', 'map_persona.per_id')
+        ->join('map_especialidad', 'map_persona.esp_id', '=', 'map_especialidad.esp_id')
+        ->join('map_cargo', 'map_persona.car_id', '=', 'map_cargo.car_id')
+        ->join('map_nivel', 'map_persona.niv_id', '=', 'map_nivel.niv_id')
+        ->join('map_categoria', 'map_persona.cat_id', '=', 'map_categoria.cat_id')
+        ->join('map_subsistema', 'map_persona.sub_id', '=', 'map_subsistema.sub_id')
+        ->join('genero', 'map_persona.gen_id', '=', 'genero.gen_id')
+        ->join('programa', 'programa_inscripcion.pro_id', '=', 'programa.pro_id')
+        ->join('programa_turno', 'programa_inscripcion.pro_tur_id', '=', 'programa_turno.pro_tur_id')
+        ->join('sede', 'programa_inscripcion.sede_id', '=', 'sede.sede_id')
+        ->join('departamento', 'sede.dep_id', '=', 'departamento.dep_id')
+        ->join('programa_inscripcion_estado', 'programa_inscripcion.pie_id', '=', 'programa_inscripcion_estado.pie_id')
+        ->where('sede.sede_id', decrypt($sede_id))
+        ->select('programa_inscripcion.*', 'map_persona.*', 'map_especialidad.esp_nombre', 'map_cargo.car_nombre',
+                    'programa.pro_nombre', 'programa.pro_nombre_abre', 'programa.pro_costo', 'map_subsistema.sub_nombre', 'map_nivel.niv_nombre',
+                    'map_categoria.cat_nombre', 'genero.gen_nombre',
+                    'programa_turno.pro_tur_nombre', 'sede.sede_nombre','sede.sede_nombre_abre', 'departamento.dep_nombre', 'programa_inscripcion_estado.pie_nombre');
+        
+        if (!is_null($this->user->pro_ids)) {
+            $proIds = json_decode($this->user->pro_ids);
+            if (!empty($proIds)) { // Verifica si $sedesIds no está vacío
+>>>>>>> 278a853 (first commit)
                 $inscripciones->whereIn('programa.pro_id', $proIds);
             }
         }
@@ -238,7 +262,11 @@ class InscripcionController extends Controller
             }
         }
         // Agrupar las inscripciones por pro_id
+<<<<<<< HEAD
         // $baucheres= ProgramaBaucher::all();
+=======
+        $baucheres= ProgramaBaucher::all();
+>>>>>>> 278a853 (first commit)
         // Contar los baucheres por sede usando el sede_id
         $totalBaucheresPorSede = DB::table('programa_baucher')
             ->join('programa_inscripcion', 'programa_baucher.pi_id', '=', 'programa_inscripcion.pi_id')
@@ -248,7 +276,11 @@ class InscripcionController extends Controller
             ->groupBy('sede.sede_nombre')
             ->first();
         //$mapPersona = MapPersona::paginate(100);
+<<<<<<< HEAD
         return view('backend.pages.inscripcion.index', compact(['inscripciones','sede_id','totalBaucheresPorSede']));
+=======
+        return view('backend.pages.inscripcion.index', compact(['inscripciones','baucheres','sede_id','totalBaucheresPorSede']));
+>>>>>>> 278a853 (first commit)
     }
     public function buscadorPersona(Request $request)
     {
@@ -906,10 +938,17 @@ class InscripcionController extends Controller
                     'admins.cargo',
                     'admins.sede_ids'
                 )
+<<<<<<< HEAD
                     ->join('model_has_roles', 'admins.id', 'model_has_roles.model_id')
                     ->whereJsonContains('admins.sede_ids', $sedeId)
                     ->where('model_has_roles.role_id', '=', 2)
                     ->first();
+=======
+                        ->join('model_has_roles', 'admins.id', 'model_has_roles.model_id')
+                        ->whereJsonContains('admins.sede_ids', $sedeId)
+                        ->where('model_has_roles.role_id', '=', 2)
+                        ->first();
+>>>>>>> 278a853 (first commit)
         if ($responsable) {
             // Acceder a las propiedades solo si $responsable no es null
             $nombre = $responsable->nombre;
@@ -964,6 +1003,7 @@ class InscripcionController extends Controller
         return $pdf->download('formularioInscripcion' . $programaInscripcion->per_rda . '.pdf');
         // return $pdf->stream('formularioPreinscripcion'.$per_rda.'.pdf');
     }
+<<<<<<< HEAD
     public function reporteInscritoPdf($sede_id, $pro_id)
     {
         
@@ -1148,4 +1188,6 @@ class InscripcionController extends Controller
         return $pdf->stream('Reporte' . $inscripciones[0]->pro_nombre_abre . '.pdf');
         // return $pdf->download('mi-archivo.pdf');
     }
+=======
+>>>>>>> 278a853 (first commit)
 }

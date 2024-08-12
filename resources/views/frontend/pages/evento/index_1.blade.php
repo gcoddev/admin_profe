@@ -16,6 +16,7 @@
 @endsection
 @section('styles')
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<<<<<<< HEAD
     <style id="qeducato_data-dynamic-css" title="dynamic-css" class="redux-options-output">
         body,
         .widget_categories a {
@@ -218,6 +219,8 @@
             color: #232323;
         }
     </style>
+=======
+>>>>>>> 278a853 (first commit)
     <style>
         .form-container {
             background-color: #fff;

@@ -13,6 +13,10 @@ class CalificacionParticipante extends Model
     protected $primaryKey = 'cp_id';
 
     protected $fillable = [
+<<<<<<< HEAD
+=======
+        'cp_descripcion',
+>>>>>>> 278a853 (first commit)
         'cp_puntaje',
         'pi_id',
         'pm_id',

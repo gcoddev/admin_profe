@@ -229,6 +229,7 @@
                     </ul>
                 </li>
             @endif
+<<<<<<< HEAD
             @if ($usr->can('calificacion.view'))
                 <li class="pcoded-hasmenu">
                     <a href="javascript:void(0)">
@@ -259,6 +260,8 @@
                     
                 </li>
             @endif
+=======
+>>>>>>> 278a853 (first commit)
 
             {{-- <li class="pcoded-hasmenu">
                 <a href="javascript:void(0)">
