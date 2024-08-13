@@ -17,7 +17,7 @@ class ProgramaController extends Controller
         return view('frontend.pages.programa.index', compact('programas', 'blogs'));
     }
 
-    public function programa($pro_id)
+    public function show($pro_id)
     {
         $programa = Programa::where('pro_estado', 'activo')->where('pro_id', $pro_id)->first();
         $blogs = Blog::where('blog_estado', 'activo')->orderBy('blog_id', 'DESC')->get();

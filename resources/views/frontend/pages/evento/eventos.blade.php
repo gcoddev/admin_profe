@@ -66,7 +66,7 @@
                                                                     <a href="{{ route('eventoDetalle', $eve->eve_id) }}">
                                                                         <img fetchpriority="high" decoding="async"
                                                                             width="1180" height="787"
-                                                                            src="{{ asset('storage/evento/' . $eve->eve_banner) }}"
+                                                                            src="{{ asset('storage/evento_banners/' . $eve->eve_banner) }}"
                                                                             class="attachment-post-thumbnail size-post-thumbnail wp-post-image"
                                                                             alt="" />
                                                                     </a>

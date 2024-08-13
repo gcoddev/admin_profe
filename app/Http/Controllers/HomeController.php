@@ -31,8 +31,8 @@ class HomeController extends Controller
     public function index()
     {
         $programas = Programa::where('pro_estado', 'activo')->orderBy('pro_id', 'DESC')->get();
-        $eventos = Evento::where('eve_estado', 'activo')->orderBy('eve_id', 'DESC')->get();
-        $blogs = Blog::where('blog_estado', 'activo')->orderBy('blog_id', 'DESC')->get();
+        $eventos = Evento::where('eve_estado', 'activo')->orderBy('eve_id', 'DESC')->limit(6)->get();
+        $blogs = Blog::where('blog_estado', 'activo')->orderBy('blog_id', 'DESC')->limit(6)->get();
 
         return view('frontend.pages.inicio.index', compact('programas', 'eventos', 'blogs'));
     }

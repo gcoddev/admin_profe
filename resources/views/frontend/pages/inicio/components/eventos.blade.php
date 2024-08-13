@@ -50,7 +50,7 @@
                                                             href="events/basic-ui-ux-design-for-new-development/index.html"><img
                                                                 loading="lazy" decoding="async" width="1180"
                                                                 height="787"
-                                                                src="{{ asset('frontend/wp-content/uploads/2023/03/evn-img-1.jpg') }}"
+                                                                src="{{ asset('storage/evento_banners/' . $eve->eve_banner) }}"
                                                                 class="attachment-post-thumbnail size-post-thumbnail wp-post-image"
                                                                 alt="" /></a></div>
                                                     <div class="event-content">

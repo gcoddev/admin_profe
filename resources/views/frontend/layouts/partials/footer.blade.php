@@ -31,7 +31,7 @@
                         </li>
                     </ul>
                 </div>
-                <div class="col-xl-2 col-lg-2 col-sm-6 redux-footer">
+                <div class="col-xl-4 col-lg-4 col-sm-6 redux-footer">
                     <ul class="footer-widget f-menu-content footer-link mb-30">
                         <li id="nav_menu-1" class="widget widget_nav_menu">
                             <h2 class="widgettitle">Nuestros enlaces</h2>
@@ -61,14 +61,14 @@
                         </li>
                     </ul>
                 </div>
-                <div class="col-xl-3 col-lg-3 col-sm-6 redux-footer">
+                {{-- <div class="col-xl-3 col-lg-3 col-sm-6 redux-footer">
                     <ul class="footer-widget f-menu-content footer-link mb-30">
                         <li id="custom_html-6" class="widget_text widget widget_custom_html">
                             <h2 class="widgettitle">Última publicación</h2>
                             <div class="textwidget custom-html-widget">
                                 <div class="recent-blog-footer">
                                     <ul>
-                                        {{-- @if (count($blogs) > 0)
+                                        @if (count($blogs) > 0)
                                             @php
                                                 $i = 0;
                                             @endphp
@@ -97,14 +97,14 @@
                                             <div class="text">
                                                 Aun no hay publicaciones
                                             </div>
-                                        @endif --}}
+                                        @endif
                                     </ul>
                                 </div>
                             </div>
                         </li>
                     </ul>
-                </div>
-                <div class="col-xl-3 col-lg-3 col-sm-6 redux-footer">
+                </div> --}}
+                <div class="col-xl-4 col-lg-4 col-sm-6 redux-footer">
                     <ul class="footer-widget weight footer-link mb-30">
                         <li id="custom_html-2" class="widget_text widget widget_custom_html">
                             <h2 class="widgettitle">Contáctenos</h2>

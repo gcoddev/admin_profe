@@ -33,7 +33,7 @@
                                                             href="cras-accumsan-nulla-nec-lacus-ultricies-placerat/index.html"><img
                                                                 loading="lazy" decoding="async" width="1109"
                                                                 height="752"
-                                                                src="{{ asset('frontend/wp-content/uploads/2022/01/inner_b1.jpg') }}"
+                                                                src="{{ asset('storage/blog/' . $blog->blog_imagen) }}"
                                                                 class="attachment-qeducato-featured-large size-qeducato-featured-large wp-post-image"
                                                                 alt="" /></a>
                                                         <div class="date-home">
@@ -42,7 +42,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="blog-content2">
-                                                        <div class="b-meta">
+                                                        {{-- <div class="b-meta">
                                                             <div class="meta-info">
                                                                 <ul>
                                                                     <li><i class="fal fa-user"></i> By admin
@@ -51,17 +51,19 @@
                                                                         Comments</li>
                                                                 </ul>
                                                             </div>
-                                                        </div>
+                                                        </div> --}}
                                                         <h4><a
-                                                                href="cras-accumsan-nulla-nec-lacus-ultricies-placerat/index.html">Cras
-                                                                accumsan nulla nec lacus ultricies
-                                                                placerat.</a></h4>
-                                                        <p>Lorem ipsum dolor sit amet, consectetur
-                                                            adipisicing elit, sed do eiusmod tempor
-                                                            incididunt ut labore et dolore magna ali</p>
+                                                                href="cras-accumsan-nulla-nec-lacus-ultricies-placerat/index.html">
+                                                                {{ $blog->blog_titulo }}
+                                                            </a>
+                                                        </h4>
+                                                        <p>
+                                                            {!! Str::words($blog->blog_descripcion, 20, '...') !!}
+                                                        </p>
                                                         <div class="blog-btn"><a
-                                                                href="cras-accumsan-nulla-nec-lacus-ultricies-placerat/index.html">Read
-                                                                More <i class="fal fa-long-arrow-right"></i></a>
+                                                                href="cras-accumsan-nulla-nec-lacus-ultricies-placerat/index.html">
+                                                                Leer mas <i class="fal fa-long-arrow-right"></i>
+                                                            </a>
                                                         </div>
                                                     </div>
                                                 </div>

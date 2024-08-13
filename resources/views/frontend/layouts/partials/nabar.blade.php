@@ -93,7 +93,7 @@
                                     </li>
                                     <li id="menu-item-115"
                                         class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-115">
-                                        <a href="{{ route('programas') }}">Programas</a>
+                                        <a href="{{ route('programa') }}">Programas</a>
                                         {{-- <ul class="sub-menu">
                                             <li id="menu-item-2866"
                                                 class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2866">
@@ -133,11 +133,11 @@
                                     </li>
                                     <li id="menu-item-117"
                                         class="menu-item menu-item-type-post_type menu-item-object-page menu-item-117">
-                                        <a href="blog/index.html">Blogs</a>
+                                        <a href="{{ route('blog') }}">Blogs</a>
                                     </li>
                                     <li id="menu-item-118"
                                         class="menu-item menu-item-type-post_type menu-item-object-page menu-item-118">
-                                        <a href="{{ route('eventos') }}">Eventos</a>
+                                        <a href="{{ route('evento') }}">Eventos</a>
                                     </li>
                                     <li id="menu-item-119"
                                         class="menu-item menu-item-type-post_type menu-item-object-page menu-item-119">

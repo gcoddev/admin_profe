@@ -7,7 +7,7 @@
     <meta property="og:locale" content="es_ES" />
     {{-- <meta property="og:type" content="article" /> --}}
     <meta property="og:title"
-        content="Taller - Prevención actuación de la violencia y resolución de conflictos en el ámbito educativo." />
+        content="Taller - {{ $evento->eve_nombre }}" />
     <meta property="og:description" content="Formulario de preinscripción." />
     <meta property="og:image" content="https://profe.minedu.gob.bo/assets/evento/08082024_banner2.jpg" />
     {{-- <meta property="og:url" content="{{ url()->current() }}" /> --}}

@@ -34,15 +34,20 @@ Route::get('/evento/26', 'Frontend\EventoController@show')->name('evento.show');
 
 Route::get('/', 'HomeController@index')->name('home');
 
-Route::controller('Frontend\ProgramaController')->group(function () {
-    Route::get('/programa', 'index')->name('programas');
-    Route::get('/programa/{pro_id}', 'programa')->name('programa');
+Route::group(['prefix' => 'programa', 'controller' => 'Frontend\ProgramaController'], function () {
+    Route::get('/', 'index')->name('programa');
+    Route::get('/{pro_id}', 'show')->name('programa.show');
 });
 
 Route::group(['prefix' => 'evento', 'controller' => 'Frontend\EventoController'], function () {
-    Route::get('/', 'eventos')->name('eventos');
+    Route::get('/', 'eventos')->name('evento');
     Route::get('/detalle/{eve_id}', 'detalle')->name('eventoDetalle');
-    Route::get('/{eve_id}', 'evento')->name('evento');
+    Route::get('/{eve_id}', 'evento')->name('evento.show');
+});
+
+Route::group(['prefix' => 'blog', 'controller' => 'Frontend\BlogController'], function () {
+    Route::get('/', 'index')->name('blog');
+    Route::get('/{blog_id}', 'show')->name('blog.show');
 });
 
 /**

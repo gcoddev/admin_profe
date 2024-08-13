@@ -160,6 +160,16 @@
                                 </div>
                             </div> --}}
                         </div>
+                        <div class="upper-box">
+                            <div class="single-item-carousel owl-carousel owl-theme d-flex justify-content-center">
+                                <a href="{{ asset('storage/programa_afiches/' . $programa->pro_afiche) }}" target="_blank">
+                                    <img fetchpriority="high" width="500" height="1200"
+                                        src="{{ asset('storage/programa_afiches/' . $programa->pro_afiche) }}"
+                                        class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt=""
+                                        decoding="async" />
+                                </a>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-lg-3">
                         <aside class="sidebar-widget info-column">
@@ -203,7 +213,8 @@
                                             ({{ $programa->version->pv_numero }})</span>
                                     </li>
                                     <li> <span class="icon fal fa-users"></span> <strong>Tipo: </strong>
-                                        <span>{{ $programa->tipo->pro_tip_nombre }}</span></li>
+                                        <span>{{ $programa->tipo->pro_tip_nombre }}</span>
+                                    </li>
                                     <li> <span class="icon fal fa-globe"></span> <strong>Modalidad: </strong>
                                         <span>{{ $programa->modalidad->pm_nombre }}</span>
                                     </li>

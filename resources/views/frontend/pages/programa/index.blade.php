@@ -45,7 +45,7 @@
                                                         <div class="col-lg-4 col-md-6 ">
                                                             <div class="courses-item mb-30 hover-zoomin">
                                                                 <div class="thumb fix">
-                                                                    <a href="{{ route('programa', $pro->pro_id) }}">
+                                                                    <a href="{{ route('programa.show', $pro->pro_id) }}">
                                                                         <img decoding="async" width="1180" height="664"
                                                                             src="{{ asset('storage/programa_banners/' . $pro->pro_banner) }}"
                                                                             class="attachment-post-thumbnail size-post-thumbnail wp-post-image"
@@ -58,7 +58,7 @@
                                                                         {{ $pro->pro_nombre_abre }}
                                                                     </div>
                                                                     <h3>
-                                                                        <a href="{{ route('programa', $pro->pro_id) }}">
+                                                                        <a href="{{ route('programa.show', $pro->pro_id) }}">
                                                                             {{ $pro->pro_nombre }}
                                                                         </a>
                                                                     </h3>
