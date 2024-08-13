@@ -13,6 +13,7 @@ use App\Models\ProgramaInscripcion;
 use App\Models\ProgramaModalidad;
 use App\Models\ProgramaInscripcionEstado;
 use App\Models\ProgramaVersion;
+use App\Models\CalificacionParticipante;
 use App\Models\ProgramaRestriccion;
 use App\Models\ProgramaTipo;
 use App\Imports\DepartamentoImport;
@@ -25,9 +26,8 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Log;
 
-class InscripcionController extends Controller
+class CalificacionController extends Controller
 {
     public $user;
 
@@ -40,203 +40,67 @@ class InscripcionController extends Controller
     }
     public function index(Request $request)
     {
-        if (is_null($this->user) || !$this->user->can('inscripcion.view')) {
-            abort(403, 'Lo siento !! ¡No estás autorizado a ver ningún inscripcion!');
+        if (is_null($this->user) || !$this->user->can('calificacion.view')) {
+            abort(403, 'Lo siento !! ¡No estás autorizado a ver ningún calificacion!');
         }
 
         $sede_id = $request->sede_id;
+        
         $inscripciones = DB::table('programa_inscripcion')
-        ->join('map_persona', 'programa_inscripcion.per_id', '=', 'map_persona.per_id')
-        ->join('map_especialidad', 'map_persona.esp_id', '=', 'map_especialidad.esp_id')
-        ->join('map_cargo', 'map_persona.car_id', '=', 'map_cargo.car_id')
-        ->join('map_nivel', 'map_persona.niv_id', '=', 'map_nivel.niv_id')
-        ->join('map_categoria', 'map_persona.cat_id', '=', 'map_categoria.cat_id')
-        ->join('map_subsistema', 'map_persona.sub_id', '=', 'map_subsistema.sub_id')
-        ->join('genero', 'map_persona.gen_id', '=', 'genero.gen_id')
-        ->join('programa', 'programa_inscripcion.pro_id', '=', 'programa.pro_id')
-        ->join('programa_turno', 'programa_inscripcion.pro_tur_id', '=', 'programa_turno.pro_tur_id')
-        ->join('sede', 'programa_inscripcion.sede_id', '=', 'sede.sede_id')
-        ->join('departamento', 'sede.dep_id', '=', 'departamento.dep_id')
-        ->join('programa_inscripcion_estado', 'programa_inscripcion.pie_id', '=', 'programa_inscripcion_estado.pie_id')
-        ->where('sede.sede_id', decrypt($sede_id))
-        ->select('programa_inscripcion.*', 'map_persona.*', 'map_especialidad.esp_nombre', 'map_cargo.car_nombre',
-                    'programa.pro_nombre', 'programa.pro_nombre_abre', 'programa.pro_costo', 'map_subsistema.sub_nombre', 'map_nivel.niv_nombre',
-                    'map_categoria.cat_nombre', 'genero.gen_nombre',
-                    'programa_turno.pro_tur_nombre', 'sede.sede_nombre','sede.sede_nombre_abre', 'departamento.dep_nombre', 'programa_inscripcion_estado.pie_nombre');
+            ->join('map_persona', 'programa_inscripcion.per_id', '=', 'map_persona.per_id')
+            ->join('programa', 'programa_inscripcion.pro_id', '=', 'programa.pro_id')
+            ->join('programa_turno', 'programa_inscripcion.pro_tur_id', '=', 'programa_turno.pro_tur_id')
+            ->join('sede', 'programa_inscripcion.sede_id', '=', 'sede.sede_id')
+            ->join('departamento', 'sede.dep_id', '=', 'departamento.dep_id')
+            ->join('programa_inscripcion_estado', 'programa_inscripcion.pie_id', '=', 'programa_inscripcion_estado.pie_id')
+            ->where('sede.sede_id', decrypt($sede_id))
+            ->select(
+                        'programa_inscripcion.*', 
+                        'map_persona.*', 
+                        'programa.pro_id', 
+                        'programa.pro_nombre', 
+                        'programa.pro_nombre_abre', 
+                        'programa.pro_costo', 
+                        'programa_turno.pro_tur_nombre', 
+                        'sede.sede_nombre',
+                        'sede.sede_nombre_abre', 
+                        'departamento.dep_nombre', 
+                        'programa_inscripcion_estado.pie_nombre'
+            );
         
         if (!is_null($this->user->pro_ids)) {
             $proIds = json_decode($this->user->pro_ids);
-            if (!empty($proIds)) { // Verifica si $sedesIds no está vacío
+            if (!empty($proIds)) { // Verifica si $proIds no está vacío
                 $inscripciones->whereIn('programa.pro_id', $proIds);
             }
         }
         $inscripciones = $inscripciones->get();
-        // Agregar verificación de restricciones
-        foreach ($inscripciones as $inscripcion) {
-            $inscripcion->cumple_restricciones = true; // Inicialmente asumimos que cumple
-            $inscripcion->porque_no_cumple = null; // Inicialmente no hay motivo
-            $restriccion = ProgramaRestriccion::where('pro_id', $inscripcion->pro_id)->first();
-            // Verificar si la restricción existe y realizar las verificaciones
-            if ($restriccion) {
-                // Verificamos si las propiedades no son null antes de usar in_array()
-                if (!is_null($restriccion->gen_ids) && is_array(json_decode($restriccion->gen_ids))) {
-                    if (!in_array($inscripcion->gen_id, json_decode($restriccion->gen_ids))) {
-                        $inscripcion->cumple_restricciones = false;
-                        $inscripcion->porque_no_cumple = $inscripcion->gen_nombre;
-                    }
-                }
-                if (!is_null($restriccion->sub_ids) && is_array(json_decode($restriccion->sub_ids))) {
-                    if (!in_array($inscripcion->sub_id, json_decode($restriccion->sub_ids))) {
-                        $inscripcion->cumple_restricciones = false;
-                        $inscripcion->porque_no_cumple = $inscripcion->sub_nombre;
-                    }
-                }
-                if (!is_null($restriccion->niv_ids) && is_array(json_decode($restriccion->niv_ids))) {
-                    if (!in_array($inscripcion->niv_id, json_decode($restriccion->niv_ids))) {
-                        $inscripcion->cumple_restricciones = false;
-                        $inscripcion->porque_no_cumple = $inscripcion->niv_nombre;
-                    }
-                }
-                if (!is_null($restriccion->cat_ids) && is_array(json_decode($restriccion->cat_ids))) {
-                    if (!in_array($inscripcion->cat_id, json_decode($restriccion->cat_ids))) {
-                        $inscripcion->cumple_restricciones = false;
-                        $inscripcion->porque_no_cumple = $inscripcion->cat_nombre;
-                    }
-                }
-                if (!is_null($restriccion->esp_ids) && is_array(json_decode($restriccion->esp_ids))) {
-                    if (!in_array($inscripcion->esp_id, json_decode($restriccion->esp_ids))) {
-                        $inscripcion->cumple_restricciones = false;
-                        $inscripcion->porque_no_cumple = $inscripcion->esp_nombre;
-                    }
-                }
-                if (!is_null($restriccion->esp_nombres) && is_array(json_decode($restriccion->esp_nombres))) {
-                    if (!Str::contains($inscripcion->esp_nombre, json_decode($restriccion->esp_nombres))) {
-                        $inscripcion->cumple_restricciones = false;
-                        $inscripcion->porque_no_cumple = $inscripcion->esp_nombre;
-                    }
-                }
-                if (!is_null($restriccion->car_ids) && is_array(json_decode($restriccion->car_ids))) {
-                    if (!in_array($inscripcion->car_id, json_decode($restriccion->car_ids))) {
-                        $inscripcion->cumple_restricciones = false;
-                        $inscripcion->porque_no_cumple = $inscripcion->car_nombre;
-                    }
-                }
-                if (!is_null($restriccion->car_nombres) && is_array(json_decode($restriccion->car_nombres)) && $restriccion->car_nombres !==null) {
-                    if (!Str::contains($inscripcion->car_nombre, json_decode($restriccion->car_nombres))) {
-                        $inscripcion->cumple_restricciones = false;
-                        $inscripcion->porque_no_cumple = $inscripcion->car_nombre;
-                    }
-                }
-            }
-        }
+        $calificaciones = DB::table('calificacion_participante')->get();
+        $modulos = DB::table('programa_modulo')
+            ->join('programa', 'programa.pro_id', "=", "programa_modulo.pro_id")
+            ->join('programa_tipo', 'programa.pro_tip_id', "=", "programa_tipo.pro_tip_id")
+            ->join('programa_calificacion', 'programa_tipo.pro_tip_id', "=", "programa_calificacion.pro_tip_id")
+            ->join('programa_tipo_calificacion', 'programa_calificacion.ptc_id', "=", "programa_tipo_calificacion.ptc_id")
+            ->select(
+                    'programa_modulo.pm_id', 
+                    'programa_modulo.pm_nombre', 
+                    'programa_modulo.pro_id', 
+                    'programa_calificacion.pc_id', 
+                    'programa_tipo_calificacion.ptc_id', 
+                    'programa_tipo_calificacion.ptc_nombre', 
+                    'programa_tipo_calificacion.ptc_nota', 
+            )->where('programa_modulo.pm_estado','activo')
+            ->orderBy('programa_modulo.pm_nombre')
+            ->orderBy('programa_tipo_calificacion.ptc_id')
+            ->get();
+        
         // Agrupar las inscripciones por pro_id
-        $baucheres= ProgramaBaucher::all();
+        // $baucheres= ProgramaBaucher::all();
         // Contar los baucheres por sede usando el sede_id
-        $totalBaucheresPorSede = DB::table('programa_baucher')
-            ->join('programa_inscripcion', 'programa_baucher.pi_id', '=', 'programa_inscripcion.pi_id')
-            ->join('sede', 'programa_inscripcion.sede_id', '=', 'sede.sede_id')
-            ->where('sede.sede_id', '=', decrypt($sede_id))
-            ->select('sede.sede_nombre', DB::raw('count(programa_baucher.pro_bau_id) as total_baucheres'))
-            ->groupBy('sede.sede_nombre')
-            ->first();
+       
         //$mapPersona = MapPersona::paginate(100);
-        return view('backend.pages.inscripcion.index', compact(['inscripciones','baucheres','sede_id','totalBaucheresPorSede']));
+        return view('backend.pages.calificacion.index', compact(['inscripciones','sede_id', 'modulos', 'calificaciones']));
     }
-    public function buscadorPersona(Request $request)
-    {
-        if (is_null($this->user) || !$this->user->can('comunicado.view')) {
-            abort(403, 'Lo siento !! ¡No estás autorizado a ver ningún inscripcion!');
-        }
-
-        $searchTerm = $request->input('search', '');
-
-        $inscripciones = DB::table('programa_inscripcion')
-            ->join('map_persona', 'programa_inscripcion.per_id', '=', 'map_persona.per_id')
-            ->join('map_especialidad', 'map_persona.esp_id', '=', 'map_especialidad.esp_id')
-            ->join('map_cargo', 'map_persona.car_id', '=', 'map_cargo.car_id')
-            ->join('map_nivel', 'map_persona.niv_id', '=', 'map_nivel.niv_id')
-            ->join('map_categoria', 'map_persona.cat_id', '=', 'map_categoria.cat_id')
-            ->join('map_subsistema', 'map_persona.sub_id', '=', 'map_subsistema.sub_id')
-            ->join('genero', 'map_persona.gen_id', '=', 'genero.gen_id')
-            ->join('programa', 'programa_inscripcion.pro_id', '=', 'programa.pro_id')
-            ->join('programa_turno', 'programa_inscripcion.pro_tur_id', '=', 'programa_turno.pro_tur_id')
-            ->join('sede', 'programa_inscripcion.sede_id', '=', 'sede.sede_id')
-            ->join('departamento', 'sede.dep_id', '=', 'departamento.dep_id')
-            ->join('programa_inscripcion_estado', 'programa_inscripcion.pie_id', '=', 'programa_inscripcion_estado.pie_id')
-            ->where(function($query) use ($searchTerm) {
-                $query->where('map_persona.per_nombre1', 'like', "%{$searchTerm}%")
-                    ->orWhere('map_persona.per_nombre2', 'like', "%{$searchTerm}%")
-                    ->orWhere('map_persona.per_apellido1', 'like', "%{$searchTerm}%")
-                    ->orWhere('map_persona.per_apellido2', 'like', "%{$searchTerm}%")
-                    ->orWhere('map_persona.per_rda', 'like', "%{$searchTerm}%")
-                    ->orWhere('map_persona.per_ci', 'like', "%{$searchTerm}%");
-            })
-            ->select('programa_inscripcion.*', 'map_persona.*', 'map_especialidad.esp_nombre', 'map_cargo.car_nombre',
-                    'programa.pro_nombre', 'programa.pro_nombre_abre', 'programa.pro_costo', 'map_subsistema.sub_nombre', 'map_nivel.niv_nombre',
-                    'map_categoria.cat_nombre', 'genero.gen_nombre',
-                    'programa_turno.pro_tur_nombre', 'sede.sede_nombre', 'sede.sede_nombre_abre', 'departamento.dep_nombre', 'programa_inscripcion_estado.pie_nombre')
-            ->when(!is_null($this->user->sede_ids), function($query) {
-                $sedeIds = json_decode($this->user->sede_ids);
-                if (!empty($sedeIds)) {
-                    $query->whereIn('sede.sede_id', $sedeIds);
-                }
-            })
-            ->get();
-
-        // Calcular el monto total y agregarlo a cada inscripción
-        $inscripciones = $inscripciones->map(function($inscripcion) {
-            $inscripcion->totalMonto = 0; // Asegúrate de calcular el totalMonto según sea necesario
-            return $inscripcion;
-        });
-
-        // Renderizar la vista con los datos
-        return view('backend.pages.inscripcion.buscarpersona', compact('inscripciones'));
-    }
-    public function buscadorPersona2(Request $request)
-    {
-        if (is_null($this->user) || !$this->user->can('inscripcion.view')) {
-            abort(403, 'Lo siento !! ¡No estás autorizado a ver ninguna inscripción!');
-        }
-
-        $searchTerm = $request->input('search', '');
-
-        $inscripciones = DB::table('programa_inscripcion')
-            ->join('map_persona', 'programa_inscripcion.per_id', '=', 'map_persona.per_id')
-            ->join('map_especialidad', 'map_persona.esp_id', '=', 'map_especialidad.esp_id')
-            ->join('map_cargo', 'map_persona.car_id', '=', 'map_cargo.car_id')
-            ->join('map_nivel', 'map_persona.niv_id', '=', 'map_nivel.niv_id')
-            ->join('map_categoria', 'map_persona.cat_id', '=', 'map_categoria.cat_id')
-            ->join('map_subsistema', 'map_persona.sub_id', '=', 'map_subsistema.sub_id')
-            ->join('genero', 'map_persona.gen_id', '=', 'genero.gen_id')
-            ->join('programa', 'programa_inscripcion.pro_id', '=', 'programa.pro_id')
-            ->join('programa_turno', 'programa_inscripcion.pro_tur_id', '=', 'programa_turno.pro_tur_id')
-            ->join('sede', 'programa_inscripcion.sede_id', '=', 'sede.sede_id')
-            ->join('departamento', 'sede.dep_id', '=', 'departamento.dep_id')
-            ->join('programa_inscripcion_estado', 'programa_inscripcion.pie_id', '=', 'programa_inscripcion_estado.pie_id')
-            ->where(function($query) use ($searchTerm) {
-                $query->where('map_persona.per_nombre1', 'like', "%{$searchTerm}%")
-                    ->orWhere('map_persona.per_nombre2', 'like', "%{$searchTerm}%")
-                    ->orWhere('map_persona.per_apellido1', 'like', "%{$searchTerm}%")
-                    ->orWhere('map_persona.per_apellido2', 'like', "%{$searchTerm}%")
-                    ->orWhere('map_persona.per_rda', 'like', "%{$searchTerm}%")
-                    ->orWhere('map_persona.per_ci', 'like', "%{$searchTerm}%");
-            })
-            ->select('programa_inscripcion.*', 'map_persona.*', 'map_especialidad.esp_nombre', 'map_cargo.car_nombre',
-                    'programa.pro_nombre', 'programa.pro_nombre_abre', 'programa.pro_costo', 'map_subsistema.sub_nombre', 'map_nivel.niv_nombre',
-                    'map_categoria.cat_nombre', 'genero.gen_nombre',
-                    'programa_turno.pro_tur_nombre', 'sede.sede_nombre', 'sede.sede_nombre_abre', 'departamento.dep_nombre', 'programa_inscripcion_estado.pie_nombre')
-            ->get();
-
-        // Calcular el monto total y agregarlo a cada inscripción
-        $inscripciones = $inscripciones->map(function($inscripcion) {
-            $inscripcion->totalMonto = 0; // Asegúrate de calcular el totalMonto según sea necesario
-            return $inscripcion;
-        });
-
-        // Devolver la respuesta JSON
-        return response()->json($inscripciones);
-    }
-
 
     /**
      * Show the form for creating a new resource.
@@ -265,57 +129,31 @@ class InscripcionController extends Controller
 
         return view('backend.pages.inscripcion.create', compact('sede','programa'));
     }
-    public function getTurnos(Request $request)
+    public function storeCalificacion(Request $request, $pi_id, $pm_id, $pc_id)
     {
-        if (is_null($this->user) || !$this->user->can('inscripcion.edit')) {
-            abort(403, 'Sorry !! You are Unauthorized to create any admin !');
-        }
-        try {
-            $sedeId = $request->input('sede_id');
-            $proId = $request->input('pro_id');
+        // Validación de los datos del formulario
+        $request->validate([
+            'cp_puntaje' => 'required|numeric|min:0|max:100', // Ejemplo de validación
+        ]);
 
-            $turnos = DB::table('programa_sede_turno')
-                ->where('sede_id', $sedeId)
-                ->where('pro_id', $proId)
-                ->where('pst_estado', 'activo')
-                ->pluck('pro_tur_ids');
+        // Buscar la calificación existente o crear una nueva instancia
+        $calificacion = CalificacionParticipante::firstOrNew([
+            'pi_id' => $pi_id,
+            'pm_id' => $pm_id,
+            'pc_id' => $pc_id
+        ]);
+        // Asegúrate de que pc_id esté asignado
+        $calificacion->pc_id = $pc_id;
+        $calificacion->pi_id = $pi_id;
+        $calificacion->pm_id = $pm_id;
+        // Asignar el puntaje del formulario
+        $calificacion->cp_puntaje = $request->cp_puntaje;
 
-            if ($turnos->isNotEmpty()) {
-                $turnoIds = json_decode($turnos[0], true);
+        // Guardar la calificación (ya sea actualización o nueva)
+        $calificacion->save();
 
-                $turnoDetalles = DB::table('programa_turno')
-                    ->whereIn('pro_tur_id', $turnoIds)
-                    ->where('pro_tur_estado', 'activo')
-                    ->get();
-
-                return response()->json($turnoDetalles);
-            } else {
-                return response()->json([]);
-            }
-        } catch (\Exception $e) {
-            Log::error('Error fetching turnos: ' . $e->getMessage());
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-    }
-    public function searchRda(Request $request)
-    {
-        if (is_null($this->user) || !$this->user->can('inscripcion.create') || !$this->user->can('inscripcion.edit')) {
-            abort(403, 'Sorry !! You are Unauthorized to create any admin !');
-        }
-        $rda = $request->rda;
-        $person = MapPersona::where('per_rda', $rda)->first();
-
-        if ($person) {
-            return response()->json([
-                'success' => true,
-                'person' => $person,
-            ]);
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => 'Persona no encontrada',
-            ]);
-        }
+        // Redireccionar con mensaje de éxito
+        return redirect()->back()->with('success', 'Calificación guardada correctamente.');
     }
     /**
      * Store a newly created resource in storage.
@@ -798,10 +636,10 @@ class InscripcionController extends Controller
                     'admins.cargo',
                     'admins.sede_ids'
                 )
-                        ->join('model_has_roles', 'admins.id', 'model_has_roles.model_id')
-                        ->whereJsonContains('admins.sede_ids', $sedeId)
-                        ->where('model_has_roles.role_id', '=', 2)
-                        ->first();
+                    ->join('model_has_roles', 'admins.id', 'model_has_roles.model_id')
+                    ->whereJsonContains('admins.sede_ids', $sedeId)
+                    ->where('model_has_roles.role_id', '=', 2)
+                    ->first();
         if ($responsable) {
             // Acceder a las propiedades solo si $responsable no es null
             $nombre = $responsable->nombre;
@@ -855,5 +693,189 @@ class InscripcionController extends Controller
         //
         return $pdf->download('formularioInscripcion' . $programaInscripcion->per_rda . '.pdf');
         // return $pdf->stream('formularioPreinscripcion'.$per_rda.'.pdf');
+    }
+    public function reporteInscritoPdf($sede_id, $pro_id)
+    {
+        
+        // Desencriptar los IDs
+        $sede_id = decrypt($sede_id);
+        $pro_id = decrypt($pro_id);
+
+        // dd($sede_id, $pro_id); // Verifica los valores desencriptados
+        $inscripciones = DB::table('programa_inscripcion')
+            ->join('map_persona', 'programa_inscripcion.per_id', '=', 'map_persona.per_id')
+            ->join('map_especialidad', 'map_persona.esp_id', '=', 'map_especialidad.esp_id')
+            ->join('map_cargo', 'map_persona.car_id', '=', 'map_cargo.car_id')
+            ->join('map_nivel', 'map_persona.niv_id', '=', 'map_nivel.niv_id')
+            ->leftJoin('programa_baucher', 'programa_baucher.pi_id', '=', 'programa_inscripcion.pi_id')
+            ->join('map_categoria', 'map_persona.cat_id', '=', 'map_categoria.cat_id')
+            ->join('map_subsistema', 'map_persona.sub_id', '=', 'map_subsistema.sub_id')
+            ->join('genero', 'map_persona.gen_id', '=', 'genero.gen_id')
+            ->join('programa', 'programa_inscripcion.pro_id', '=', 'programa.pro_id')
+            ->join('programa_turno', 'programa_inscripcion.pro_tur_id', '=', 'programa_turno.pro_tur_id')
+            ->join('sede', 'programa_inscripcion.sede_id', '=', 'sede.sede_id')
+            ->join('departamento', 'sede.dep_id', '=', 'departamento.dep_id')
+            ->join('programa_inscripcion_estado', 'programa_inscripcion.pie_id', '=', 'programa_inscripcion_estado.pie_id')
+            ->where('sede.sede_id', $sede_id)
+            ->where('programa_inscripcion.pro_id', $pro_id)  
+            ->select(
+                'programa_inscripcion.pi_id', 
+                'programa_inscripcion.pro_id', 
+                'programa_inscripcion.updated_at', 
+                'map_persona.per_id', 
+                'map_persona.gen_id', 
+                'map_persona.esp_id', 
+                'map_persona.cat_id', 
+                'map_persona.car_id', 
+                'map_persona.sub_id', 
+                'map_persona.niv_id',  
+                'map_persona.per_nombre1', 
+                'map_persona.per_nombre2', 
+                'map_persona.per_apellido1', 
+                'map_persona.per_apellido2', 
+                'map_persona.per_rda', 
+                'map_persona.per_ci', 
+                'map_persona.per_complemento', 
+                'map_persona.per_fecha_nacimiento', 
+                'map_persona.per_celular', 
+                'map_persona.per_correo', 
+                'map_persona.per_en_funcion', 
+                'map_especialidad.esp_nombre', 
+                'map_cargo.car_nombre',
+                'programa.pro_nombre', 
+                'programa.pro_nombre_abre', 
+                'programa.pro_costo', 
+                'map_subsistema.sub_nombre', 
+                'map_nivel.niv_nombre',
+                'map_categoria.cat_nombre', 
+                'genero.gen_nombre',
+                'programa_turno.pro_tur_nombre', 
+                'sede.sede_nombre',
+                'sede.sede_nombre_abre', 
+                'departamento.dep_nombre', 
+                'programa_inscripcion_estado.pie_nombre',
+                DB::raw('COALESCE(SUM(programa_baucher.pro_bau_monto), 0) AS total_pagado'),
+                DB::raw('(programa.pro_costo - COALESCE(SUM(programa_baucher.pro_bau_monto), 0)) AS restante'),
+                DB::raw('CASE
+                            WHEN COALESCE(SUM(programa_baucher.pro_bau_monto), 0) >= programa.pro_costo THEN "Completado"
+                            WHEN COALESCE(SUM(programa_baucher.pro_bau_monto), 0) < programa.pro_costo THEN "Incompleto"
+                            ELSE "Desconocido"
+                        END AS estado_pago')
+            )
+            ->groupBy(
+                'programa_inscripcion.pi_id', 
+                'programa_inscripcion.pro_id', 
+                'programa_inscripcion.updated_at', 
+                'map_persona.per_id', 
+                'map_persona.gen_id', 
+                'map_persona.esp_id', 
+                'map_persona.cat_id', 
+                'map_persona.car_id', 
+                'map_persona.sub_id', 
+                'map_persona.niv_id', 
+                'map_persona.per_nombre1', 
+                'map_persona.per_nombre2', 
+                'map_persona.per_apellido1', 
+                'map_persona.per_apellido2', 
+                'map_persona.per_rda', 
+                'map_persona.per_ci', 
+                'map_persona.per_complemento', 
+                'map_persona.per_fecha_nacimiento', 
+                'map_persona.per_celular', 
+                'map_persona.per_correo', 
+                'map_persona.per_en_funcion', 
+                'map_especialidad.esp_nombre', 
+                'map_cargo.car_nombre',
+                'programa.pro_nombre', 
+                'programa.pro_nombre_abre', 
+                'programa.pro_costo', 
+                'map_subsistema.sub_nombre', 
+                'map_nivel.niv_nombre',
+                'map_categoria.cat_nombre',
+                'genero.gen_nombre',
+                'programa_turno.pro_tur_nombre', 
+                'sede.sede_nombre',
+                'sede.sede_nombre_abre', 
+                'departamento.dep_nombre', 
+                'programa_inscripcion_estado.pie_nombre'
+            )->get();
+        // Obtener responsable
+        $sede_id = (string) $sede_id;
+        $pro_id = (string) $pro_id;
+        $responsable = DB::table('admins')
+            ->select(
+                'admins.nombre',
+                'admins.apellidos',
+                'admins.cargo',
+                'admins.sede_ids',
+                'roles.name'
+            )
+            ->join('model_has_roles', 'admins.id', 'model_has_roles.model_id')
+            ->join('roles', 'roles.id', 'model_has_roles.role_id')
+            ->whereJsonContains('admins.sede_ids', $sede_id)
+            ->where('model_has_roles.role_id', '=', 2)
+            ->first();
+
+        // Obtener facilitador
+        $facilitador = DB::table('admins')
+            ->select(
+                'admins.nombre',
+                'admins.apellidos',
+                'admins.cargo',
+                'admins.sede_ids',
+                'roles.name'
+            )
+            ->join('model_has_roles', 'admins.id', 'model_has_roles.model_id')
+            ->join('roles', 'roles.id', 'model_has_roles.role_id')
+            ->whereJsonContains('admins.sede_ids', $sede_id)
+            ->whereJsonContains('admins.pro_ids', $pro_id)
+            ->where('model_has_roles.role_id', '=', 3)
+            ->first();
+        // dd($facilitador);
+        // Manejar la información del responsable
+        if ($responsable) {
+            $responsable_nombre = $responsable->nombre;
+            $responsable_apellidos = $responsable->apellidos;
+            $responsable_cargo = $responsable->name;
+        } else {
+            $responsable_nombre = 'No encontrado';
+            $responsable_apellidos = 'No encontrado';
+            $responsable_cargo = 'No encontrado';
+        }
+
+        // Manejar la información del facilitador
+        if ($facilitador) {
+            $facilitador_nombre = $facilitador->nombre;
+            $facilitador_apellidos = $facilitador->apellidos;
+            $facilitador_cargo = $facilitador->name;
+        } else {
+            $facilitador_nombre = 'No encontrado';
+            $facilitador_apellidos = 'No encontrado';
+            $facilitador_cargo = 'No encontrado';
+        }
+         
+        //
+        $imagen1 = public_path() . "/img/logos/logominedu.jpg";
+        $logo1 = base64_encode(file_get_contents($imagen1));
+
+        $imagen2 = public_path() . "/img/logos/logoprofe.jpg";
+        $logo2 = base64_encode(file_get_contents($imagen2));
+
+        $imagen3 = public_path() . "/img/iconos/alerta.png";
+        $logo3 = base64_encode(file_get_contents($imagen3));
+
+        $imagen4 = public_path() . "/img/logos/fondo.jpg";
+        $fondo = base64_encode(file_get_contents($imagen4));
+
+
+        $pdf = PDF::loadView('backend.pages.inscripcion.partials.reporteInscritosPdf', compact('inscripciones', 'responsable_nombre', 'responsable_apellidos', 'responsable_cargo',
+        'facilitador_nombre', 'facilitador_apellidos', 'facilitador_cargo','logo1', 'logo2', 'logo3', 'fondo'));
+        // VERTICAL
+        $pdf->setPaper('Letter', 'portrait');
+        // HORIZONTAL
+        // $pdf->setPaper('Letter', 'landscape');
+        //
+        return $pdf->stream('Reporte' . $inscripciones[0]->pro_nombre_abre . '.pdf');
+        // return $pdf->download('mi-archivo.pdf');
     }
 }
