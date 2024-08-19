@@ -76,113 +76,121 @@
 
             </li>
             @if ($usr->can('migracion.view'))
-            <li class="pcoded-hasmenu">
+                <li class="pcoded-hasmenu">
 
-                <a href="javascript:void(0)">
-                    <span class="pcoded-micon"><i class="feather icon-sidebar"></i></span>
-                    <span class="pcoded-mtext">Migraciones</span>
-                    {{-- <span class="pcoded-badge label label-warning">NEW</span> --}}
-                </a>
+                    <a href="javascript:void(0)">
+                        <span class="pcoded-micon"><i class="feather icon-sidebar"></i></span>
+                        <span class="pcoded-mtext">Migraciones</span>
+                        {{-- <span class="pcoded-badge label label-warning">NEW</span> --}}
+                    </a>
 
-                <ul class="pcoded-submenu">
-                    <li class="pcoded-hasmenu">
-                        <a href="javascript:void(0)">
-                            <span class="pcoded-mtext">Ciudad</span>
-                        </a>
-                        <ul class="pcoded-submenu">
-                            <li class=" ">
-                                <a href="{{ route('migration.distrito.index') }}">
-                                    <span class="pcoded-mtext">Distrito</span>
-                                </a>
-                            </li>
-                            <li class=" ">
-                                <a href="{{ route('migration.departamento.index') }}">
-                                    <span class="pcoded-mtext">Departamento</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="pcoded-hasmenu">
-                        <a href="javascript:void(0)">
-                            <span class="pcoded-mtext">Otros</span>
-                        </a>
-                        <ul class="pcoded-submenu">
-                            <li class=" ">
-                                <a href="{{ route('migration.especialidad.index') }}">
-                                    <span class="pcoded-mtext">Especialidad</span>
-                                </a>
-                            </li>
-                            <li class=" ">
-                                <a href="{{ route('migration.cargo.index') }}">
-                                    <span class="pcoded-mtext">Cargo</span>
-                                </a>
-                            </li>
-                            <li class=" ">
-                                <a href="{{ route('migration.unidadeducativa.index') }}">
-                                    <span class="pcoded-mtext">Unidad Educativa</span>
-                                </a>
-                            </li>
-                            <li class="">
-                                <a href="{{ route('migration.otros.index') }}">
-                                    <span class="pcoded-mtext">Otros</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class=" ">
-                        <a href="{{ route('migration.usuarios.index') }}">
-                            <span class="pcoded-mtext">Personas</span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="{{ route('migration.inscripciones.index') }}">
-                            <span class="pcoded-mtext">Inscripciones</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
+                    <ul class="pcoded-submenu">
+                        <li class="pcoded-hasmenu">
+                            <a href="javascript:void(0)">
+                                <span class="pcoded-mtext">Ciudad</span>
+                            </a>
+                            <ul class="pcoded-submenu">
+                                <li class=" ">
+                                    <a href="{{ route('migration.distrito.index') }}">
+                                        <span class="pcoded-mtext">Distrito</span>
+                                    </a>
+                                </li>
+                                <li class=" ">
+                                    <a href="{{ route('migration.departamento.index') }}">
+                                        <span class="pcoded-mtext">Departamento</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="pcoded-hasmenu">
+                            <a href="javascript:void(0)">
+                                <span class="pcoded-mtext">Otros</span>
+                            </a>
+                            <ul class="pcoded-submenu">
+                                <li class=" ">
+                                    <a href="{{ route('migration.especialidad.index') }}">
+                                        <span class="pcoded-mtext">Especialidad</span>
+                                    </a>
+                                </li>
+                                <li class=" ">
+                                    <a href="{{ route('migration.cargo.index') }}">
+                                        <span class="pcoded-mtext">Cargo</span>
+                                    </a>
+                                </li>
+                                <li class=" ">
+                                    <a href="{{ route('migration.unidadeducativa.index') }}">
+                                        <span class="pcoded-mtext">Unidad Educativa</span>
+                                    </a>
+                                </li>
+                                <li class="">
+                                    <a href="{{ route('migration.otros.index') }}">
+                                        <span class="pcoded-mtext">Otros</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class=" ">
+                            <a href="{{ route('migration.usuarios.index') }}">
+                                <span class="pcoded-mtext">Personas</span>
+                            </a>
+                        </li>
+                        <li class=" ">
+                            <a href="{{ route('migration.inscripciones.index') }}">
+                                <span class="pcoded-mtext">Inscripciones</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
             @endif
             @if ($usr->can('configuracion_programa.view'))
-            <li class="pcoded-hasmenu">
+                <li class="pcoded-hasmenu">
 
-                <a href="javascript:void(0)">
-                    <span class="pcoded-micon"><i class="feather icon-sidebar"></i></span>
-                    <span class="pcoded-mtext">Configuraciones</span>
-                    {{-- <span class="pcoded-badge label label-warning">NEW</span> --}}
-                </a>
+                    <a href="javascript:void(0)">
+                        <span class="pcoded-micon"><i class="feather icon-sidebar"></i></span>
+                        <span class="pcoded-mtext">Configuraciones</span>
+                        {{-- <span class="pcoded-badge label label-warning">NEW</span> --}}
+                    </a>
 
-                <ul class="pcoded-submenu">
-                    <li class=" ">
-                        <a href="{{ route('configuracion.programa.index') }}">
-                            <span class="pcoded-mtext">Programa</span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="{{ route('configuracion.sede.index') }}">
-                            <span class="pcoded-mtext">Sede Cupos - Turnos</span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="{{ route('configuracion.programa.index') }}">
-                            <span class="pcoded-mtext">Evento</span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="{{ route('configuracion.restriccion.index') }}">
-                            <span class="pcoded-mtext">Programa Restricciones</span>
-                        </a>
-                    </li>
+                    <ul class="pcoded-submenu">
+                        <li class=" ">
+                            <a href="{{ route('configuracion.programa.index') }}">
+                                <span class="pcoded-mtext">Programa</span>
+                            </a>
+                        </li>
+                        <li class=" ">
+                            <a href="{{ route('configuracion.sede.index') }}">
+                                <span class="pcoded-mtext">Sede Cupos - Turnos</span>
+                            </a>
+                        </li>
+                        <li class=" ">
+                            <a href="{{ route('configuracion.programa.index') }}">
+                                <span class="pcoded-mtext">Evento</span>
+                            </a>
+                        </li>
+                        <li class=" ">
+                            <a href="{{ route('configuracion.restriccion.index') }}">
+                                <span class="pcoded-mtext">Programa Restricciones</span>
+                            </a>
+                        </li>
 
-                </ul>
-            </li>
+                    </ul>
+                </li>
+            @endif
+            @if ($usr->can('profe.view'))
+                <li class>
+                    <a href="{{ route('admin.profe.index') }}">
+                        <span class="pcoded-micon"><i class="feather icon-menu"></i></span>
+                        <span class="pcoded-mtext">Información</span>
+                    </a>
+                </li>
             @endif
             @if ($usr->can('programa.view'))
-            <li class>
-                <a href="{{ route('admin.programa.index') }}">
-                    <span class="pcoded-micon"><i class="feather icon-menu"></i></span>
-                    <span class="pcoded-mtext">Programas</span>
-                </a>
-            </li>
+                <li class>
+                    <a href="{{ route('admin.programa.index') }}">
+                        <span class="pcoded-micon"><i class="feather icon-menu"></i></span>
+                        <span class="pcoded-mtext">Programas</span>
+                    </a>
+                </li>
             @endif
             @if ($usr->can('comunicado.view'))
                 <li class>
@@ -193,12 +201,12 @@
                 </li>
             @endif
             @if ($usr->can('sede.view'))
-            <li class>
-                <a href="{{ route('admin.sede.index') }}">
-                    <span class="pcoded-micon"><i class="feather icon-menu"></i></span>
-                    <span class="pcoded-mtext">Sedes</span>
-                </a>
-            </li>
+                <li class>
+                    <a href="{{ route('admin.sede.index') }}">
+                        <span class="pcoded-micon"><i class="feather icon-menu"></i></span>
+                        <span class="pcoded-mtext">Sedes</span>
+                    </a>
+                </li>
             @endif
             @if ($usr->can('inscripcion.view'))
                 <li class="pcoded-hasmenu">
@@ -207,11 +215,12 @@
                         <span class="pcoded-mtext">Inscripciones</span>
                     </a>
                     <ul class="pcoded-submenu">
-                        @foreach($sedes as $sede)
+                        @foreach ($sedes as $sede)
                             @if (!is_null($usr->sede_ids) && !empty(json_decode($usr->sede_ids)))
                                 @if (in_array($sede->sede_id, json_decode($usr->sede_ids)))
                                     <li>
-                                        <a href="{{ route('admin.inscripcion.index', ['sede_id' => encrypt($sede->sede_id)]) }}">
+                                        <a
+                                            href="{{ route('admin.inscripcion.index', ['sede_id' => encrypt($sede->sede_id)]) }}">
                                             <span class="pcoded-micon"><i class="feather icon-menu"></i></span>
                                             <span class="pcoded-mtext">{{ $sede->sede_nombre }}</span>
                                         </a>
@@ -219,7 +228,8 @@
                                 @endif
                             @else
                                 <li>
-                                    <a href="{{ route('admin.inscripcion.index', ['sede_id' => encrypt($sede->sede_id)]) }}">
+                                    <a
+                                        href="{{ route('admin.inscripcion.index', ['sede_id' => encrypt($sede->sede_id)]) }}">
                                         <span class="pcoded-micon"><i class="feather icon-menu"></i></span>
                                         <span class="pcoded-mtext">{{ $sede->sede_nombre }}</span>
                                     </a>

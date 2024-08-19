@@ -12,22 +12,21 @@
                         <section id="home" class="slider-area fix p-relative">
                             <div class="slider-active" style="background: #141b22;">
                                 <div class="single-slider slider-bg"
-                                    style="background-image: url(frontend/images/banner-minedu.jpg); background-size: cover;">
+                                    style="background-image: url(storage/profe/{{ $profe->profe_banner }}); background-size: cover;">
                                     <div class="container">
                                         <div class="row">
                                             <div class="col-lg-7 col-md-7">
                                                 <div class="slider-content s-slider-content mt-130">
                                                     <h5 data-animation="fadeInUp" data-delay=".4s"
-                                                        style="color:#232323">
-                                                        Bienvenido a PROFE</h5>
-                                                    <h2 data-animation="fadeInUp" data-delay=".4s">
-                                                        {{-- Education is the best key success in life --}}
-                                                    </h2>
+                                                        style="color:#232323!important">
+                                                        Bienvenido</h5>
+                                                    <h2 data-animation="fadeInUp" data-delay=".4s"
+                                                        style="color:#232323!important">
+                                                        {{ $profe->profe_nombre }}</h2>
                                                     <p data-animation="fadeInUp" data-delay=".6s">
-                                                        {{-- Donec vitae libero non enim placerat
-                                                                        eleifend aliquam erat volutpat. Curabitur
-                                                                        diam ex, dapibus purus sapien, cursus sed
-                                                                        nisl tristique, commodo gravida lectus non. --}}
+                                                    <div style="color:#232323!important">
+                                                        {!! $profe->profe_actividad !!}
+                                                    </div>
                                                     </p>
                                                     {{-- <div class="slider-btn mt-30"> <a
                                                                             href="about-us/index.html"
@@ -54,9 +53,9 @@
                                             <div class="col-lg-7 col-md-7">
                                                 <div class="slider-content s-slider-content mt-130">
                                                     <h5 data-animation="fadeInUp" data-delay=".4s">
-                                                        Bienvenido a PROFE</h5>
+                                                        Bienvenido</h5>
                                                     <h2 data-animation="fadeInUp" data-delay=".4s">
-                                                        {{-- Education is the best key success in life --}}
+                                                        {{ $profe->profe_nombre }}
                                                     </h2>
                                                     <p data-animation="fadeInUp" data-delay=".6s">
                                                         {{-- Donec vitae libero non enim placerat

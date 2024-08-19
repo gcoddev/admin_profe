@@ -62,3 +62,5 @@ ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "ee6b7db5b51705a13dc2339db3eda
 <script type="text/javascript" src="{{ asset('backend/files/assets/pages/dashboard/custom-dashboard.js') }}"></script>
 <script src="{{ asset('backend/files/assets/js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('backend/files/assets/js/script.min.js') }}"></script>
+
+@include('sweetalert::alert')
