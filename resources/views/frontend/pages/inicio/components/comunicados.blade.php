@@ -1,6 +1,6 @@
 <section
     class="elementor-section elementor-top-section elementor-element elementor-element-64fd482 elementor-section-full_width elementor-section-height-default elementor-section-height-default"
-    data-id="64fd482" data-element_type="section" style="background-color:#EFF7FF">
+    data-id="64fd482" data-element_type="section">
     <div class="elementor-container elementor-column-gap-no">
         <div class="elementor-column elementor-col-100 elementor-top-column elementor-element elementor-element-281d83f"
             data-id="281d83f" data-element_type="column">
@@ -20,34 +20,34 @@
                                             data-animation="fadeInDown" data-delay=".4s">
                                             <h5>
                                                 <i class="fal fa-graduation-cap"></i>
-                                                Nuestros programas
+                                                Nuestros comunicados
                                             </h5>
-                                            <h2> PROGRAMAS</h2>
+                                            <h2> COMUNICADOS</h2>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row class-active">
-                                    @if (count($programas) > 0)
-                                        @foreach ($programas as $pro)
+                                    @if (count($comunicados) > 0)
+                                        @foreach ($comunicados as $comunicado)
                                             <div class="col-lg-4 col-md-6 ">
                                                 <div class="courses-item mb-30 hover-zoomin">
                                                     <div class="thumb fix"> <a
-                                                            href="{{ route('programa.show', $pro->pro_id) }}">
+                                                            href="{{ route('comunicado.show', $comunicado->comun_id) }}">
                                                             <img fetchpriority="high" decoding="async" width="1180"
                                                                 height="664"
-                                                                src="{{ asset('storage/programa_banners/' . $pro->pro_banner) }}"
+                                                                src="{{ asset('storage/comunicado/' . $comunicado->comun_imagen) }}"
                                                                 class="attachment-post-thumbnail size-post-thumbnail wp-post-image"
                                                                 alt="" /> </a></div>
                                                     <div class="courses-content">
                                                         <div class="cat"><i class="fal fa-graduation-cap"></i>
-                                                            {{ $pro->pro_nombre_abre }}</div>
+                                                            {{ $comunicado->comun_importancia }}</div>
                                                         <h3><a
-                                                                href="{{ route('programa.show', $pro->pro_id) }}">{{ $pro->pro_nombre }}</a>
+                                                                href="{{ route('comunicado.show', $comunicado->comun_id) }}">{{ $comunicado->comun_nombre }}</a>
                                                         </h3>
                                                         <p>
-                                                            {!! Str::words($pro->pro_contenido, 20, '...') !!}
+                                                            {!! Str::words($comunicado->comun_contenido, 20, '...') !!}
                                                         </p>
-                                                        <a href="{{ route('programa.show', $pro->pro_id) }}"
+                                                        <a href="{{ route('comunicado.show', $comunicado->comun_id) }}"
                                                             class="readmore">Leer
                                                             mas
                                                             <i class="fal fa-long-arrow-right"></i></a>

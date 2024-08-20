@@ -14,6 +14,7 @@
             <div data-elementor-type="wp-page" data-elementor-id="9" class="elementor elementor-9">
                 @include('frontend.pages.inicio.components.portada')
                 @include('frontend.pages.inicio.components.acerca')
+                @include('frontend.pages.inicio.components.comunicados')
                 @include('frontend.pages.inicio.components.programas')
                 @include('frontend.pages.inicio.components.eventos')
                 @include('frontend.pages.inicio.components.blogs')

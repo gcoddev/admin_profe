@@ -39,6 +39,11 @@ Route::group(['prefix' => 'programa', 'controller' => 'Frontend\ProgramaControll
     Route::get('/{pro_id}', 'show')->name('programa.show');
 });
 
+Route::group(['prefix' => 'comunicado', 'controller' => 'Frontend\ComunicadoController'], function () {
+    Route::get('/', 'index')->name('comunicado');
+    Route::get('/{pro_id}', 'show')->name('comunicado.show');
+});
+
 Route::group(['prefix' => 'evento', 'controller' => 'Frontend\EventoController'], function () {
     Route::get('/', 'eventos')->name('evento');
     Route::get('/detalle/{eve_id}', 'detalle')->name('eventoDetalle');

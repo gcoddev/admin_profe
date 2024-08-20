@@ -87,10 +87,10 @@
                                             </li>
                                         </ul> --}}
                                     </li>
-                                    <li id="menu-item-114"
+                                    {{-- <li id="menu-item-114"
                                         class="menu-item menu-item-type-post_type menu-item-object-page menu-item-114">
                                         <a href="about-us/index.html">Sobre nosotros</a>
-                                    </li>
+                                    </li> --}}
                                     <li id="menu-item-115"
                                         class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-115">
                                         <a href="{{ route('programa') }}">Programas</a>
@@ -107,7 +107,7 @@
                                     </li>
                                     <li id="menu-item-116"
                                         class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-116">
-                                        <a href="#">Comunicados</a>
+                                        <a href="{{ route('comunicado') }}">Comunicados</a>
                                         {{-- <ul class="sub-menu">
                                             <li id="menu-item-123"
                                                 class="menu-item menu-item-type-post_type menu-item-object-page menu-item-123">
