@@ -1,7 +1,7 @@
 @extends('backend.layouts.master')
 
 @section('title')
-    Users - Admin Panel
+    Responsables - Admin Panel
 @endsection
 
 @section('styles')
@@ -23,8 +23,8 @@
                     <div class="col-lg-8">
                         <div class="page-header-title">
                             <div class="d-inline">
-                                <h4>Programas</h4>
-                                <span>Lista de Programas existentes</span>
+                                <h4>Responsables</h4>
+                                <span>Lista de Responsables existentes</span>
                             </div>
                         </div>
                     </div>
@@ -40,7 +40,7 @@
                                     <a href="{{ route('admin.dashboard') }}">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item" style="float: left">
-                                    <a href="#!">Lista de Programas</a>
+                                    <a href="#!">Lista de Responsables</a>
                                 </li>
                             </ul>
                         </div>
@@ -53,13 +53,13 @@
                     <div class="col-sm-12">
                         <div class="card">
                             <div class="card-header">
-                                <h5>Programas</h5>
+                                <h5>Blogs</h5>
                                 <span></span>
                                 <br />
                                 @include('backend.layouts.partials.messages')
-                                @if (Auth::guard('admin')->user()->can('programa.create'))
+                                @if (Auth::guard('admin')->user()->can('admin.create'))
                                     <a class="btn btn-out btn-primary btn-square"
-                                        href="{{ route('admin.programa.create') }}">Agregar
+                                        href="{{ route('admin.responsable.create') }}">Agregar
                                     </a>
                                 @endif
                             </div>
@@ -70,36 +70,49 @@
                                         <thead>
                                             <tr>
                                                 <th>Nro</th>
-                                                <th>Nombre</th>
+                                                <th>Nombre completo</th>
                                                 <th>Estado</th>
                                                 <th>Fecha Actualizado</th>
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($programas as $programa)
+                                            @foreach ($responsables as $resp)
                                                 <tr>
                                                     <td>{{ $loop->index + 1 }}</td>
-                                                    <td>{{ $programa->pro_nombre }}</td>
                                                     <td>
-                                                        <a href="{{ route('admin.programa.estado', $programa->pro_id) }}"
-                                                            class="btn btn-{{ $programa->pro_estado == 'activo' ? 'success' : 'danger' }}">
-                                                            {{ $programa->pro_estado }}
-                                                        </a>
+                                                        {{ $resp->resp_profe_nombre_completo }}
                                                     </td>
-                                                    <td>{{ $programa->updated_at }}</td>
                                                     <td>
-                                                        <a href="{{ route('admin.programa.edit', $programa->pro_id) }}"
-                                                            class="btn btn-outline-info waves-effect waves-light m-r-20">
-                                                            <i class="icofont icofont-edit-alt"></i>
-                                                            <!-- Ícono de Font Awesome -->
-                                                        </a>
-                                                        <a href="{{ route('admin.programa.destroy', $programa->pro_id) }}"
-                                                            class="btn btn-outline-danger waves-effect waves-light m-r-20"
-                                                            {{-- onclick="_gaq.push(['_trackEvent', 'example', 'try', 'alert-success-cancel']);" --}} data-confirm-delete="true">
-                                                            <i class="icofont icofont-ui-delete"></i>
-                                                            <!-- Ícono de Font Awesome -->
-                                                        </a>
+                                                        @if (Auth::guard('admin')->user()->can('admin.edit'))
+                                                            <a href="{{ route('admin.responsable.estado', $resp->resp_profe_id) }}"
+                                                                class="btn btn-{{ $resp->resp_profe_estado == 'activo' ? 'success' : 'danger' }}">
+                                                                {{ $resp->resp_profe_estado }}
+                                                            </a>
+                                                        @else
+                                                            <a href=""
+                                                                class="btn btn-{{ $resp->resp_profe_estado == 'activo' ? 'success' : 'danger' }}">
+                                                                {{ $resp->resp_profe_estado }}
+                                                            </a>
+                                                        @endif
+                                                    </td>
+                                                    <td>{{ $resp->updated_at }}</td>
+                                                    <td>
+                                                        @if (Auth::guard('admin')->user()->can('admin.edit'))
+                                                            <a href="{{ route('admin.responsable.edit', $resp->resp_profe_id) }}"
+                                                                class="btn btn-outline-warning waves-effect waves-light m-r-20">
+                                                                <i class="icofont icofont-edit-alt"></i>
+                                                                <!-- Ícono de Font Awesome -->
+                                                            </a>
+                                                        @endif
+                                                        @if (Auth::guard('admin')->user()->can('admin.delete'))
+                                                            <a href="{{ route('admin.responsable.destroy', $resp->resp_profe_id) }}"
+                                                                class="btn btn-outline-danger waves-effect waves-light m-r-20"
+                                                                {{-- onclick="_gaq.push(['_trackEvent', 'example', 'try', 'alert-success-cancel']);" --}} data-confirm-delete="true">
+                                                                <i class="icofont icofont-ui-delete"></i>
+                                                                <!-- Ícono de Font Awesome -->
+                                                            </a>
+                                                        @endif
                                                     </td>
 
                                                 </tr>
@@ -108,7 +121,7 @@
                                         <tfoot>
                                             <tr>
                                                 <th>Nro</th>
-                                                <th>Nombre</th>
+                                                <th>Nombre completo</th>
                                                 <th>Estado</th>
                                                 <th>Fecha Actualizado</th>
                                                 <th>Acciones</th>
@@ -153,7 +166,7 @@
     <script src="{{ asset('backend/files/assets/pages/data-table/js/data-table-custom.js') }}"></script>
     <script>
         /*================================
-                                        datatable active
-                                        ==================================*/
+                                                                                    datatable active
+                                                                                    ==================================*/
     </script>
 @endsection

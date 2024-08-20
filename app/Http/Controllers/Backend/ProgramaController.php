@@ -311,4 +311,16 @@ class ProgramaController extends Controller
         return redirect()->route('admin.programa.index')
             ->with('success', 'Programa eliminado exitosamente.');
     }
+    public function estado(string $id)
+    {
+        $programa = Programa::where('pro_id', $id)->first();
+        if ($programa->pro_estado == 'activo') {
+            $programa->pro_estado = 'inactivo';
+        } else {
+            $programa->pro_estado = 'activo';
+        }
+        $programa->save();
+
+        return back()->with('success', 'Estado actualizado');
+    }
 }

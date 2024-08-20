@@ -163,7 +163,7 @@
                             </a>
                         </li>
                         <li class=" ">
-                            <a href="{{ route('configuracion.programa.index') }}">
+                            <a href="{{ route('configuracion.evento.index') }}">
                                 <span class="pcoded-mtext">Evento</span>
                             </a>
                         </li>
@@ -184,14 +184,74 @@
                     </a>
                 </li>
             @endif
-            @if ($usr->can('programa.view'))
+            @if (
+                $usr->can('admin.view') ||
+                    $usr->can('programa.view') ||
+                    $usr->can('comunicado.view') ||
+                    $usr->can('evento.view') ||
+                    $usr->can('blog.view' || $usr->can('galeria.view')))
+                <li class="pcoded-hasmenu">
+
+                    <a href="javascript:void(0)">
+                        <span class="pcoded-micon"><i class="feather icon-sidebar"></i></span>
+                        <span class="pcoded-mtext">Contenido</span>
+                        {{-- <span class="pcoded-badge label label-warning">NEW</span> --}}
+                    </a>
+
+                    <ul class="pcoded-submenu">
+                        @if ($usr->can('admin.view'))
+                            <li class=" ">
+                                <a href="{{ route('admin.responsable.index') }}">
+                                    <span class="pcoded-mtext">Responsable Profe</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if ($usr->can('programa.view'))
+                            <li class=" ">
+                                <a href="{{ route('admin.programa.index') }}">
+                                    <span class="pcoded-mtext">Programas</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if ($usr->can('comunicado.view'))
+                            <li class=" ">
+                                <a href="{{ route('admin.comunicado.index') }}">
+                                    <span class="pcoded-mtext">Comunicados</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if ($usr->can('evento.view'))
+                            <li class=" ">
+                                <a href="{{ route('admin.evento.index') }}">
+                                    <span class="pcoded-mtext">Eventos</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if ($usr->can('blog.view'))
+                            <li class=" ">
+                                <a href="{{ route('admin.blog.index') }}">
+                                    <span class="pcoded-mtext">Blogs</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if ($usr->can('galeria.view'))
+                            <li class=" ">
+                                <a href="{{ route('admin.galeria.index') }}">
+                                    <span class="pcoded-mtext">Galeria</span>
+                                </a>
+                            </li>
+                        @endif
+                    </ul>
+                </li>
+            @endif
+            {{-- @if ($usr->can('programa.view'))
                 <li class>
                     <a href="{{ route('admin.programa.index') }}">
                         <span class="pcoded-micon"><i class="feather icon-menu"></i></span>
                         <span class="pcoded-mtext">Programas</span>
                     </a>
                 </li>
-            @endif
+            @endif --}}
             @if ($usr->can('comunicado.view'))
                 <li class>
                     <a href="{{ route('admin.inscripcion.buscadorpersona') }}">

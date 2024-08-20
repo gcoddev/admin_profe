@@ -1,7 +1,7 @@
 @extends('backend.layouts.master')
 
 @section('title')
-    Users - Admin Panel
+    Eventos - Admin Panel
 @endsection
 
 @section('styles')
@@ -23,8 +23,8 @@
                     <div class="col-lg-8">
                         <div class="page-header-title">
                             <div class="d-inline">
-                                <h4>Programas</h4>
-                                <span>Lista de Programas existentes</span>
+                                <h4>Eventos</h4>
+                                <span>Lista de Eventos existentes</span>
                             </div>
                         </div>
                     </div>
@@ -40,7 +40,7 @@
                                     <a href="{{ route('admin.dashboard') }}">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item" style="float: left">
-                                    <a href="#!">Lista de Programas</a>
+                                    <a href="#!">Lista de Eventos</a>
                                 </li>
                             </ul>
                         </div>
@@ -53,13 +53,13 @@
                     <div class="col-sm-12">
                         <div class="card">
                             <div class="card-header">
-                                <h5>Programas</h5>
+                                <h5>Eventos</h5>
                                 <span></span>
                                 <br />
                                 @include('backend.layouts.partials.messages')
-                                @if (Auth::guard('admin')->user()->can('programa.create'))
+                                @if (Auth::guard('admin')->user()->can('evento.edit'))
                                     <a class="btn btn-out btn-primary btn-square"
-                                        href="{{ route('admin.programa.create') }}">Agregar
+                                        href="{{ route('admin.evento.create') }}">Agregar
                                     </a>
                                 @endif
                             </div>
@@ -71,35 +71,56 @@
                                             <tr>
                                                 <th>Nro</th>
                                                 <th>Nombre</th>
+                                                <th>Inscripciones</th>
                                                 <th>Estado</th>
                                                 <th>Fecha Actualizado</th>
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($programas as $programa)
+                                            @foreach ($eventos as $evento)
                                                 <tr>
                                                     <td>{{ $loop->index + 1 }}</td>
-                                                    <td>{{ $programa->pro_nombre }}</td>
                                                     <td>
-                                                        <a href="{{ route('admin.programa.estado', $programa->pro_id) }}"
-                                                            class="btn btn-{{ $programa->pro_estado == 'activo' ? 'success' : 'danger' }}">
-                                                            {{ $programa->pro_estado }}
-                                                        </a>
+                                                        {{ $evento->eve_nombre }}
                                                     </td>
-                                                    <td>{{ $programa->updated_at }}</td>
                                                     <td>
-                                                        <a href="{{ route('admin.programa.edit', $programa->pro_id) }}"
-                                                            class="btn btn-outline-info waves-effect waves-light m-r-20">
-                                                            <i class="icofont icofont-edit-alt"></i>
-                                                            <!-- Ícono de Font Awesome -->
-                                                        </a>
-                                                        <a href="{{ route('admin.programa.destroy', $programa->pro_id) }}"
-                                                            class="btn btn-outline-danger waves-effect waves-light m-r-20"
-                                                            {{-- onclick="_gaq.push(['_trackEvent', 'example', 'try', 'alert-success-cancel']);" --}} data-confirm-delete="true">
-                                                            <i class="icofont icofont-ui-delete"></i>
-                                                            <!-- Ícono de Font Awesome -->
-                                                        </a>
+                                                        @if ($evento->eve_inscripcion)
+                                                            <span class="badge bg-info">Habilitado</span>
+                                                        @else
+                                                            <span class="badge bg-primary">Deshabilitado</span>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if (Auth::guard('admin')->user()->can('evento.edit'))
+                                                            <a href="{{ route('admin.evento.estado', $evento->eve_id) }}"
+                                                                class="btn btn-{{ $evento->eve_estado == 'activo' ? 'success' : 'danger' }}">
+                                                                {{ $evento->eve_estado }}
+                                                            </a>
+                                                        @else
+                                                            <a href=""
+                                                                class="btn btn-{{ $evento->eve_estado == 'activo' ? 'success' : 'danger' }}">
+                                                                {{ $evento->eve_estado }}
+                                                            </a>
+                                                        @endif
+                                                    </td>
+                                                    <td>{{ $evento->updated_at }}</td>
+                                                    <td>
+                                                        @if (Auth::guard('admin')->user()->can('evento.edit'))
+                                                            <a href="{{ route('admin.evento.edit', $evento->eve_id) }}"
+                                                                class="btn btn-outline-warning waves-effect waves-light m-r-20">
+                                                                <i class="icofont icofont-edit-alt"></i>
+                                                                <!-- Ícono de Font Awesome -->
+                                                            </a>
+                                                        @endif
+                                                        @if (Auth::guard('admin')->user()->can('evento.delete'))
+                                                            <a href="{{ route('admin.evento.destroy', $evento->eve_id) }}"
+                                                                class="btn btn-outline-danger waves-effect waves-light m-r-20"
+                                                                {{-- onclick="_gaq.push(['_trackEvent', 'example', 'try', 'alert-success-cancel']);" --}} data-confirm-delete="true">
+                                                                <i class="icofont icofont-ui-delete"></i>
+                                                                <!-- Ícono de Font Awesome -->
+                                                            </a>
+                                                        @endif
                                                     </td>
 
                                                 </tr>
@@ -109,6 +130,7 @@
                                             <tr>
                                                 <th>Nro</th>
                                                 <th>Nombre</th>
+                                                <th>Inscripciones</th>
                                                 <th>Estado</th>
                                                 <th>Fecha Actualizado</th>
                                                 <th>Acciones</th>
@@ -153,7 +175,7 @@
     <script src="{{ asset('backend/files/assets/pages/data-table/js/data-table-custom.js') }}"></script>
     <script>
         /*================================
-                                        datatable active
-                                        ==================================*/
+                                                                    datatable active
+                                                                    ==================================*/
     </script>
 @endsection

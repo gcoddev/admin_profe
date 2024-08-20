@@ -1,7 +1,7 @@
 @extends('backend.layouts.master')
 
 @section('title')
-    Users - Admin Panel
+    Comunicados - Admin Panel
 @endsection
 
 @section('styles')
@@ -23,8 +23,8 @@
                     <div class="col-lg-8">
                         <div class="page-header-title">
                             <div class="d-inline">
-                                <h4>Programas</h4>
-                                <span>Lista de Programas existentes</span>
+                                <h4>Comunicados</h4>
+                                <span>Lista de Comunicados existentes</span>
                             </div>
                         </div>
                     </div>
@@ -40,7 +40,7 @@
                                     <a href="{{ route('admin.dashboard') }}">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item" style="float: left">
-                                    <a href="#!">Lista de Programas</a>
+                                    <a href="#!">Lista de Comunicados</a>
                                 </li>
                             </ul>
                         </div>
@@ -53,13 +53,13 @@
                     <div class="col-sm-12">
                         <div class="card">
                             <div class="card-header">
-                                <h5>Programas</h5>
+                                <h5>Comunicados</h5>
                                 <span></span>
                                 <br />
                                 @include('backend.layouts.partials.messages')
-                                @if (Auth::guard('admin')->user()->can('programa.create'))
+                                @if (Auth::guard('admin')->user()->can('comunicado.create'))
                                     <a class="btn btn-out btn-primary btn-square"
-                                        href="{{ route('admin.programa.create') }}">Agregar
+                                        href="{{ route('admin.comunicado.create') }}">Agregar
                                     </a>
                                 @endif
                             </div>
@@ -77,31 +77,43 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($programas as $programa)
+                                            @foreach ($comunicados as $comunicado)
                                                 <tr>
                                                     <td>{{ $loop->index + 1 }}</td>
-                                                    <td>{{ $programa->pro_nombre }}</td>
                                                     <td>
-                                                        <a href="{{ route('admin.programa.estado', $programa->pro_id) }}"
-                                                            class="btn btn-{{ $programa->pro_estado == 'activo' ? 'success' : 'danger' }}">
-                                                            {{ $programa->pro_estado }}
-                                                        </a>
+                                                        {{ $comunicado->comun_nombre }}
                                                     </td>
-                                                    <td>{{ $programa->updated_at }}</td>
                                                     <td>
-                                                        <a href="{{ route('admin.programa.edit', $programa->pro_id) }}"
-                                                            class="btn btn-outline-info waves-effect waves-light m-r-20">
-                                                            <i class="icofont icofont-edit-alt"></i>
-                                                            <!-- Ícono de Font Awesome -->
-                                                        </a>
-                                                        <a href="{{ route('admin.programa.destroy', $programa->pro_id) }}"
-                                                            class="btn btn-outline-danger waves-effect waves-light m-r-20"
-                                                            {{-- onclick="_gaq.push(['_trackEvent', 'example', 'try', 'alert-success-cancel']);" --}} data-confirm-delete="true">
-                                                            <i class="icofont icofont-ui-delete"></i>
-                                                            <!-- Ícono de Font Awesome -->
-                                                        </a>
+                                                        @if (Auth::guard('admin')->user()->can('comunicado.edit'))
+                                                            <a href="{{ route('admin.comunicado.estado', $comunicado->comun_id) }}"
+                                                                class="btn btn-{{ $comunicado->comun_estado == 'activo' ? 'success' : 'danger' }}">
+                                                                {{ $comunicado->comun_estado }}
+                                                            </a>
+                                                        @else
+                                                            <a href=""
+                                                                class="btn btn-{{ $comunicado->comun_estado == 'activo' ? 'success' : 'danger' }}">
+                                                                {{ $comunicado->comun_estado }}
+                                                            </a>
+                                                        @endif
                                                     </td>
-
+                                                    <td>{{ $comunicado->updated_at }}</td>
+                                                    <td>
+                                                        @if (Auth::guard('admin')->user()->can('comunicado.edit'))
+                                                            <a href="{{ route('admin.comunicado.edit', $comunicado->comun_id) }}"
+                                                                class="btn btn-outline-warning waves-effect waves-light m-r-20">
+                                                                <i class="icofont icofont-edit-alt"></i>
+                                                                <!-- Ícono de Font Awesome -->
+                                                            </a>
+                                                        @endif
+                                                        @if (Auth::guard('admin')->user()->can('comunicado.delete'))
+                                                            <a href="{{ route('admin.comunicado.destroy', $comunicado->comun_id) }}"
+                                                                class="btn btn-outline-danger waves-effect waves-light m-r-20"
+                                                                {{-- onclick="_gaq.push(['_trackEvent', 'example', 'try', 'alert-success-cancel']);" --}} data-confirm-delete="true">
+                                                                <i class="icofont icofont-ui-delete"></i>
+                                                                <!-- Ícono de Font Awesome -->
+                                                            </a>
+                                                        @endif
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -153,7 +165,7 @@
     <script src="{{ asset('backend/files/assets/pages/data-table/js/data-table-custom.js') }}"></script>
     <script>
         /*================================
-                                        datatable active
-                                        ==================================*/
+                                                                                                                datatable active
+                                                                                                                ==================================*/
     </script>
 @endsection

@@ -33,4 +33,10 @@ class Evento extends Model
     {
         return $this->belongsTo(TipoEvento::class, 'et_id');
     }
+
+    public function modalidades()
+    {
+        $pmIds = json_decode($this->pm_ids, true);
+        return ProgramaModalidad::whereIn('pm_id', $pmIds)->get();
+    }
 }

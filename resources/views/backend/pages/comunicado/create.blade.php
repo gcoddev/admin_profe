@@ -1,7 +1,7 @@
 @extends('backend.layouts.master')
 
 @section('title')
-    Crear Blog - PROFE
+    Crear Comunicado - PROFE
 @endsection
 
 @section('styles')
@@ -22,8 +22,8 @@
                     <div class="col-lg-8">
                         <div class="page-header-title">
                             <div class="d-inline">
-                                <h4>Blog</h4>
-                                <span>Crea nuevo Blog</span>
+                                <h4>Comunicado</h4>
+                                <span>Crea nuevo Comunicado</span>
                             </div>
                         </div>
                     </div>
@@ -34,9 +34,9 @@
                                     <a href="../index-2.html"> <i class="feather icon-home"></i>
                                     </a>
                                 </li>
-                                <li class="breadcrumb-item" style="float: left;"><a href="#!">Lista de Blogs</a>
+                                <li class="breadcrumb-item" style="float: left;"><a href="#!">Lista de Comunicados</a>
                                 </li>
-                                <li class="breadcrumb-item" style="float: left;"><a href="#!">Crear Blog</a>
+                                <li class="breadcrumb-item" style="float: left;"><a href="#!">Crear Comunicado</a>
                                 </li>
                             </ul>
                         </div>
@@ -46,33 +46,41 @@
                 <div class="col-12 mt-5">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="header-title">Agregar Blog</h4>
+                            <h4 class="header-title">Agregar Comunicado</h4>
                             @include('backend.layouts.partials.messages')
 
-                            <form action="{{ route('admin.blog.store') }}" method="POST" enctype="multipart/form-data"
-                                id="myForm">
+                            <form action="{{ route('admin.comunicado.store') }}" method="POST"
+                                enctype="multipart/form-data" id="myForm">
                                 @csrf
                                 <div class="row form-group">
                                     <div class="col-sm-2 col-form-label">
-                                        <label for="blog_titulo">Titulo del Blog</label>
+                                        <label for="comun_nombre">Nombre del comunicado</label>
                                     </div>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control " id="blog_titulo" name="blog_titulo"
+                                        <input type="text" class="form-control " id="comun_nombre" name="comun_nombre"
                                             placeholder="Ingrese el titulo del evento">
                                     </div>
                                 </div>
                                 <div class="row form-group">
                                     <div class="col-sm-2 col-form-label">
-                                        <label for="blog_descripcion ">Descripción</label>
+                                        <label for="comun_descripcion ">Descripción</label>
                                     </div>
                                     <div class="col-sm-10">
-                                        <textarea class="form-control " id="blog_descripcion" name="blog_descripcion"></textarea>
+                                        <textarea class="form-control " id="comun_descripcion" name="comun_descripcion"></textarea>
                                     </div>
                                 </div>
                                 <div class="row form-group">
                                     <label class="col-sm-2 col-form-label">Imagen</label>
-                                    <div class="col-sm-10">
-                                        <input type="file" class="form-control" id="blog_imagen" name="blog_imagen">
+                                    <div class="col-sm-4">
+                                        <input type="file" class="form-control" id="comun_imagen" name="comun_imagen">
+                                    </div>
+                                    <label class="col-sm-2 col-form-label">Importancia</label>
+                                    <div class="col-sm-4">
+                                        <select class="form-control" name="comun_importancia" id="comun_importancia">
+                                            <option value="">Seleccione importancia</option>
+                                            <option value="importante">Importante</option>
+                                            <option value="normal">Normal</option>
+                                        </select>
                                     </div>
                                 </div>
 

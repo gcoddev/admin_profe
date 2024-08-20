@@ -59,7 +59,12 @@ Route::group(['prefix' => 'admin'], function () {
     Route::resource('users', 'Backend\UsersController', ['names' => 'admin.users']);
     Route::resource('admins', 'Backend\AdminsController', ['names' => 'admin.admins']);
     Route::resource('profe', 'Backend\ProfeController', ['names' => 'admin.profe']);
+    Route::resource('responsable', 'Backend\ResponsableController', ['names' => 'admin.responsable']);
     Route::resource('programa', 'Backend\ProgramaController', ['names' => 'admin.programa']);
+    Route::resource('evento', 'Backend\EventoController', ['names' => 'admin.evento']);
+    Route::resource('blog', 'Backend\BlogController', ['names' => 'admin.blog']);
+    Route::resource('galeria', 'Backend\GaleriaController', ['names' => 'admin.galeria']);
+    Route::resource('comunicado', 'Backend\ComunicadoController', ['names' => 'admin.comunicado']);
     Route::resource('inscripcion', 'Backend\InscripcionController', ['names' => 'admin.inscripcion']);
     Route::get('inscripcionIn/{sede_id}', 'Backend\InscripcionController@index')->name('admin.inscripcion.index');
     Route::get('inscripcionI/{sede_id}', 'Backend\InscripcionController@create')->name('admin.inscripcion.create');
@@ -67,6 +72,14 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('inscripcionbuscadorper', 'Backend\InscripcionController@buscadorPersona2')->name('admin.inscripcion.buscadorper');
     // Route::get('inscripcion/{sede_id}', 'Backend\InscripcionController@indexSede', ['names' => 'admin.inscripcion.indexsede']);
     Route::resource('sede', 'Backend\SedeController', ['names' => 'admin.sede']);
+
+    // Estados
+    Route::get('responsable/estado/{resp_profe_id}', 'Backend\ResponsableController@estado')->name('admin.responsable.estado');
+    Route::get('programa/estado/{pro_id}', 'Backend\ProgramaController@estado')->name('admin.programa.estado');
+    Route::get('evento/estado/{eve_id}', 'Backend\EventoController@estado')->name('admin.evento.estado');
+    Route::get('blog/estado/{blog_id}', 'Backend\BlogController@estado')->name('admin.blog.estado');
+    Route::get('galeria/estado/{gal_id}', 'Backend\GaleriaController@estado')->name('admin.galeria.estado');
+    Route::get('comunicado/estado/{comun_id}', 'Backend\ComunicadoController@estado')->name('admin.comunicado.estado');
 
     // Login Routes
     Route::get('/login', 'Backend\Auth\LoginController@showLoginForm')->name('admin.login');
@@ -100,6 +113,7 @@ Route::group(['prefix' => 'configuracion'], function () {
 
     Route::resource('sede', 'Configuracion\SedeController', ['names' => 'configuracion.sede']);
 
+    Route::resource('evento', 'Configuracion\EventoController', ['names' => 'configuracion.evento']);
 });
 
 Route::group(['prefix' => 'migration'], function () {

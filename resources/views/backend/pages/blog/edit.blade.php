@@ -1,12 +1,15 @@
 @extends('backend.layouts.master')
 
 @section('title')
-    Editar Programa - PROFE
+    Editar Blog - PROFE
 @endsection
 
 @section('styles')
     <link rel="stylesheet" type="text/css" href="{{ asset('backend/files/assets/icon/ion-icon/css/ionicons.min.css') }}">
     <script src="{{ asset('backend/files/assets/ckeditor/ckeditor.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('backend/files/bower_components/select2/dist/css/select2.min.css') }}" />
+    <link rel="stylesheet" type="text/css"
+        href="{{ asset('backend/files/bower_components/multiselect/css/multi-select.css') }}" />
 @endsection
 
 
@@ -19,8 +22,8 @@
                     <div class="col-lg-8">
                         <div class="page-header-title">
                             <div class="d-inline">
-                                <h4>Programa</h4>
-                                <span>Editar programa</span>
+                                <h4>Blog</h4>
+                                <span>Editar Blog</span>
                             </div>
                         </div>
                     </div>
@@ -31,9 +34,9 @@
                                     <a href="../index-2.html"> <i class="feather icon-home"></i>
                                     </a>
                                 </li>
-                                <li class="breadcrumb-item" style="float: left;"><a href="#!">Lista de Programa</a>
+                                <li class="breadcrumb-item" style="float: left;"><a href="#!">Lista de Blogs</a>
                                 </li>
-                                <li class="breadcrumb-item" style="float: left;"><a href="#!">Editar programa</a>
+                                <li class="breadcrumb-item" style="float: left;"><a href="#!">Editar Blog</a>
                                 </li>
                             </ul>
                         </div>
@@ -43,147 +46,40 @@
                 <div class="col-12 mt-5">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="header-title">Editar Programa</h4>
+                            <h4 class="header-title">Actualizar Blog</h4>
                             @include('backend.layouts.partials.messages')
 
-                            <form action="{{ route('admin.programa.update', $programa->pro_id) }}" method="POST"
-                                enctype="multipart/form-data">
+                            <form action="{{ route('admin.blog.update', $blog->blog_id) }}" method="POST"
+                                enctype="multipart/form-data" id="myForm">
                                 @csrf
                                 @method('PUT')
                                 <div class="row form-group">
                                     <div class="col-sm-2 col-form-label">
-                                        <label for="name">Nombre del Programa</label>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <input type="text" class="form-control " id="pro_nombre" name="pro_nombre"
-                                            placeholder="Ingrese el titulo del programa"
-                                            value="{{ $programa->pro_nombre }}">
-                                    </div>
-                                    <div class="col-sm-2 col-form-label">
-                                        <label for="name">Nombre abreviado</label>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <input type="text" class="form-control " id="pro_nombre_abre"
-                                            name="pro_nombre_abre" placeholder="Ingrese nombre abreviado"
-                                            value="{{ $programa->pro_nombre_abre }}">
-                                    </div>
-                                </div>
-                                <div class="row form-group">
-                                    <div class="col-sm-2 col-form-label">
-                                        <label for="name ">Contenido</label>
+                                        <label for="blog_titulo">Titulo del Blog</label>
                                     </div>
                                     <div class="col-sm-10">
-                                        <textarea class="form-control " id="pro_contenido" name="pro_contenido">{!! $programa->pro_contenido !!}</textarea>
+                                        <input type="text" class="form-control " id="blog_titulo" name="blog_titulo"
+                                            placeholder="Ingrese el titulo del evento" value="{{ $blog->blog_titulo }}">
                                     </div>
                                 </div>
                                 <div class="row form-group">
-                                    <label class="col-sm-2 col-form-label">Carga Horaria</label>
-                                    <div class="col-sm-4">
-                                        <div class="input-group">
-                                            <input type="number" min="0" max="1000" class="form-control "
-                                                placeholder="Ingrese la carga Horaria" id="pro_carga_horaria"
-                                                name="pro_carga_horaria" value="{{ $programa->pro_carga_horaria }}">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">Hrs.</span>
-                                            </div>
-                                        </div>
-                                    </div>
                                     <div class="col-sm-2 col-form-label">
-                                        <label for="name ">Costo</label>
+                                        <label for="blog_descripcion ">Descripción</label>
                                     </div>
-                                    <div class="col-sm-4">
-                                        <div class="input-group">
-                                            <input type="number" class="form-control " id="pro_costo" name="pro_costo"
-                                                placeholder="Ingrese el costo" min="0" max="10000" step="0.01"
-                                                value="{{ $programa->pro_costo }}">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">Bs.</span>
-                                            </div>
-                                        </div>
+                                    <div class="col-sm-10">
+                                        <textarea class="form-control " id="blog_descripcion" name="blog_descripcion">{!! $blog->blog_descripcion !!}</textarea>
                                     </div>
                                 </div>
                                 <div class="row form-group">
-                                    <label class="col-sm-2 col-form-label">Inicio Inscripción</label>
-                                    <div class="col-sm-4">
-                                        <input type="date" class="form-control " id="pro_fecha_inicio_inscripcion"
-                                            name="pro_fecha_inicio_inscripcion" min="2023-01-01" max="2030-12-31"
-                                            value="{{ $programa->pro_fecha_inicio_inscripcion }}">
-                                    </div>
-                                    <label class="col-sm-2 col-form-label">Fin Inscripción</label>
-                                    <div class="col-sm-4">
-                                        <input type="date" class="form-control " id="pro_fecha_fin_inscripcion"
-                                            name="pro_fecha_fin_inscripcion" min="2023-01-01" max="2030-12-31"
-                                            value="{{ $programa->pro_fecha_fin_inscripcion }}">
-                                    </div>
-                                </div>
-                                <div class="row form-group">
-                                    <label class="col-sm-2 col-form-label">Inicio Clase</label>
-                                    <div class="col-sm-4">
-                                        <input type="date" class="form-control " id="pro_fecha_inicio_clase"
-                                            name="pro_fecha_inicio_clase" min="2023-01-01" max="2030-12-31"
-                                            value="{{ $programa->pro_fecha_inicio_clase }}">
-                                    </div>
-                                    <label class="col-sm-2 col-form-label">Duración</label>
-                                    <div class="col-sm-4">
-                                        <select name="pd_id" id="pd_id" class="form-control " required>
-                                            <option value="{{ $programa->pd_id }}">{{ $programa->duracion->pd_nombre }}
-                                            </option>
-                                            @foreach ($programaDuraciones as $duracion)
-                                                <option value="{{ $duracion->pd_id }}">{{ $duracion->pd_nombre }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row form-group">
-                                    <label class="col-sm-2 col-form-label">Tipo</label>
-                                    <div class="col-sm-4">
-                                        <select name="pro_tip_id" id="pro_tip_id" class="form-control " required>
-                                            <option value="{{ $programa->pro_tip_id }}">
-                                                {{ $programa->tipo->pro_tip_nombre }}</option>
-                                            @foreach ($programaTipos as $tipo)
-                                                <option value="{{ $tipo->pro_tip_id }}">{{ $tipo->pro_tip_nombre }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <label class="col-sm-2 col-form-label">Modalidad</label>
-                                    <div class="col-sm-4">
-                                        <select name="pm_id" id="pm_id" class="form-control" required>
-                                            <option value="{{ $programa->pm_id }}">{{ $programa->modalidad->pm_nombre }}
-                                            </option>
-                                            @foreach ($programaModalidades as $modalidad)
-                                                <option value="{{ $modalidad->pm_id }}">{{ $modalidad->pm_nombre }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row form-group">
-                                    <label class="col-sm-1 col-form-label">Banner</label>
-                                    <div class="col-sm-3">
-                                        <input type="file" class="form-control" id="pro_banner" name="pro_banner">
-                                    </div>
-                                    <label class="col-sm-1 col-form-label">Afiche</label>
-                                    <div class="col-sm-3">
-                                        <input type="file" class="form-control" id="pro_afiche" name="pro_afiche">
-                                    </div>
-                                    <label class="col-sm-1 col-form-label">Versión</label>
-                                    <div class="col-sm-3">
-                                        <select name="pv_id" id="pv_id" class="form-control " required>
-                                            <option value="{{ $programa->pv_id }}">{{ $programa->version->pv_nombre }}
-                                            </option>
-                                            @foreach ($programaVersiones as $version)
-                                                <option value="{{ $version->pv_id }}">{{ $version->pv_nombre }}
-                                                    {{ $version->pv_numero }}</option>
-                                            @endforeach
-                                        </select>
+                                    <label class="col-sm-2 col-form-label">Imagen</label>
+                                    <div class="col-sm-10">
+                                        <input type="file" class="form-control" id="blog_imagen" name="blog_imagen">
                                     </div>
                                 </div>
 
 
-                                <button type="submit" class="btn btn-primary mt-4 pr-4 pl-4" id="submitBtn">Guardar
-                                    Programa</button>
+                                <button type="submit" class="btn btn-primary mt-4 pr-4 pl-4" id="submitBtn">Editar
+                                    Blog</button>
                             </form>
                         </div>
                     </div>
@@ -203,10 +99,14 @@
                 var submitBtn = document.getElementById('submitBtn');
                 submitBtn.disabled = true;
                 submitBtn.innerText =
-                    'Guardando...'; // Opcional: Cambiar el texto del botón para indicar que se está procesando
+                    'Guardando ...';
             });
         </script>
         <script src="{{ asset('backend/files/assets/js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('backend/files/bower_components/select2/dist/js/select2.full.min.js') }}">
+        </script>
+        <script type="text/javascript" src="{{ asset('backend/files/assets/pages/advance-elements/select2-custom.js') }}">
+        </script>
         <script>
             // Initialize CKEditor
             ClassicEditor

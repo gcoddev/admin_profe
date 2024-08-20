@@ -1,7 +1,7 @@
 @extends('backend.layouts.master')
 
 @section('title')
-    Crear Blog - PROFE
+    Editar Galeria - PROFE
 @endsection
 
 @section('styles')
@@ -22,8 +22,8 @@
                     <div class="col-lg-8">
                         <div class="page-header-title">
                             <div class="d-inline">
-                                <h4>Blog</h4>
-                                <span>Crea nuevo Blog</span>
+                                <h4>Galeria</h4>
+                                <span>Actualizar Galeria</span>
                             </div>
                         </div>
                     </div>
@@ -34,9 +34,9 @@
                                     <a href="../index-2.html"> <i class="feather icon-home"></i>
                                     </a>
                                 </li>
-                                <li class="breadcrumb-item" style="float: left;"><a href="#!">Lista de Blogs</a>
+                                <li class="breadcrumb-item" style="float: left;"><a href="#!">Lista de Galerias</a>
                                 </li>
-                                <li class="breadcrumb-item" style="float: left;"><a href="#!">Crear Blog</a>
+                                <li class="breadcrumb-item" style="float: left;"><a href="#!">Editar Galeria</a>
                                 </li>
                             </ul>
                         </div>
@@ -46,39 +46,24 @@
                 <div class="col-12 mt-5">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="header-title">Agregar Blog</h4>
+                            <h4 class="header-title">Agregar Galeria</h4>
                             @include('backend.layouts.partials.messages')
 
-                            <form action="{{ route('admin.blog.store') }}" method="POST" enctype="multipart/form-data"
-                                id="myForm">
+                            <form action="{{ route('admin.galeria.update', $galeria->galeria_id) }}" method="POST"
+                                enctype="multipart/form-data" id="myForm">
                                 @csrf
-                                <div class="row form-group">
-                                    <div class="col-sm-2 col-form-label">
-                                        <label for="blog_titulo">Titulo del Blog</label>
-                                    </div>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control " id="blog_titulo" name="blog_titulo"
-                                            placeholder="Ingrese el titulo del evento">
-                                    </div>
-                                </div>
-                                <div class="row form-group">
-                                    <div class="col-sm-2 col-form-label">
-                                        <label for="blog_descripcion ">Descripción</label>
-                                    </div>
-                                    <div class="col-sm-10">
-                                        <textarea class="form-control " id="blog_descripcion" name="blog_descripcion"></textarea>
-                                    </div>
-                                </div>
+                                @method('PUT')
                                 <div class="row form-group">
                                     <label class="col-sm-2 col-form-label">Imagen</label>
                                     <div class="col-sm-10">
-                                        <input type="file" class="form-control" id="blog_imagen" name="blog_imagen">
+                                        <input type="file" class="form-control" id="galeria_imagen"
+                                            name="galeria_imagen">
                                     </div>
                                 </div>
 
 
-                                <button type="submit" class="btn btn-primary mt-4 pr-4 pl-4" id="submitBtn">Guardar
-                                    Blog</button>
+                                <button type="submit" class="btn btn-primary mt-4 pr-4 pl-4" id="submitBtn">Actualizar
+                                    Galeria</button>
                             </form>
                         </div>
                     </div>
